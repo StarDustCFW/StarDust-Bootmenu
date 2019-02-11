@@ -93,7 +93,7 @@ This payload will launch any CFW or payload.
 2. Change to prettier font
 
 ## Credits
-
+* __Guillem96__
 * __devkitPro__ for the [devkitA64](https://devkitpro.org/) toolchain.
 * __naehrwert__ and __st4rk__ for the original [hekate](https://github.com/nwert/hekate) project and its hwinit code base.
 * __CTCaer__ for the continued [hekate](https://github.com/CTCaer/hekate) and his **minerva** project.
