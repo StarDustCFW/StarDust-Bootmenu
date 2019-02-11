@@ -1,5 +1,5 @@
-# fork 
-# change dir paht for StarDustCFWpack
+# fork of ArgonNX
+# change dir paht for StarDustCFWpack and payload show on stairs
 <img src="img/splash.jpg" alt="banner">
 
 ![License badge](https://img.shields.io/badge/license-GPLv3-blue.svg)
