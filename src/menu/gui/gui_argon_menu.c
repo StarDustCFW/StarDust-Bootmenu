@@ -36,8 +36,8 @@
 #define COLUMNS 4  
 #define ROWS 2
 #define ELEM_SIZE 230
-#define MARGIN_TOP 130
-#define MARGIN_LEFT 45
+#define MARGIN_TOP 100
+#define MARGIN_LEFT 46
 
 static int tool_reboot_rcm(void* param);
 static int tool_power_off(void* param);
@@ -68,10 +68,10 @@ static void generate_payloads_entries(char* payloads, gui_menu_t* menu)
         char payload_logo[256];
         payload_logo_path(&payloads[i * 256], payload_logo);
 
-        u32 row = i / COLUMNS;
+			u32 row = i;
         u32 col = i % COLUMNS;
         u32 x = g_gfx_ctxt.width / COLUMNS * col + MARGIN_LEFT;
-        u32 y = g_gfx_ctxt.height / ROWS * row + MARGIN_TOP + (row == 0 ? 30 : -60);
+        u32 y = 140 / ROWS * row + MARGIN_TOP + MARGIN_TOP;
 
         const char* payload_wo_bin = str_replace(&payloads[i * 256], ".bin", "");
         gui_menu_append_entry(menu, 
@@ -87,6 +87,7 @@ static void generate_payloads_entries(char* payloads, gui_menu_t* menu)
 /* Init needed menus for ArgonNX */
 void gui_init_argon_menu(void)
 {
+
     /* Init pool for menu */
     gui_menu_pool_init();
 
@@ -95,14 +96,14 @@ void gui_init_argon_menu(void)
     generate_payloads_entries(dirlist(PAYLOADS_DIR, "*.bin", false), menu);
 
      gui_menu_append_entry(menu, 
-            gui_create_menu_entry_no_bitmap("Screenshot", 700, 680, 150, 100, (int (*)(void *))screenshot, NULL));
+            gui_create_menu_entry_no_bitmap("Screenshot", 400, 680, 150, 100, (int (*)(void *))screenshot, NULL));
 
     /* Generate reboot rcm and shutdown entry */
     gui_menu_append_entry(menu, 
-            gui_create_menu_entry_no_bitmap("Power off", 900, 680, 150, 100, tool_power_off, NULL));
+            gui_create_menu_entry_no_bitmap("Power off", 600, 680, 150, 100, tool_power_off, NULL));
 
     gui_menu_append_entry(menu, 
-            gui_create_menu_entry_no_bitmap("Reboot RCM", 1100, 680, 150, 100, tool_reboot_rcm, NULL));
+            gui_create_menu_entry_no_bitmap("Reboot RCM", 800, 680, 150, 100, tool_reboot_rcm, NULL));
 
     /* Start menu */
     gui_menu_open(menu);

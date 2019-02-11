@@ -70,13 +70,22 @@ static void gui_menu_draw_background(gui_menu_t* menu)
     if(!render_custom_background(menu->custom_gui))
         gfx_clear_color(&g_gfx_ctxt, 0xFF191414);
     
+gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
     /* Render title */
     if (!render_custom_title(menu->custom_gui)) 
     {
-        g_gfx_con.scale = 4;
-        gfx_con_setpos(&g_gfx_con, 480, 20);
+        g_gfx_con.scale = 2;
+        gfx_con_setpos(&g_gfx_con, 15, 10);
         gfx_printf(&g_gfx_con, "ArgonNX v%d.%d", MAJOR_VERSION, MINOR_VERSION);
     }
+	//render SDust ver
+	if (!render_custom_title(menu->custom_gui)) 
+    {
+        g_gfx_con.scale = 2;
+        gfx_con_setpos(&g_gfx_con, 1050, 10);
+        gfx_printf(&g_gfx_con, "StarDust v1.7", MAJOR_VERSION, MINOR_VERSION);
+    }
+gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
 }
 
 static void gui_menu_render_menu(gui_menu_t* menu) 
@@ -109,7 +118,8 @@ static int gui_menu_update(gui_menu_t *menu)
 
 int gui_menu_open(gui_menu_t *menu)
 {   
-    gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
+    
+	gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
     /* 
      * Render and flush at first render because blocking input won't allow us 
      * flush buffers
