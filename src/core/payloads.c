@@ -11,7 +11,12 @@ void payload_full_path(const char* payload, char* result)
     strcat(result, "/");
     strcat(result, payload);
 }
-
+void payload_full_back(const char* payload, char* result)
+{
+    strcpy(result, PAYBACK_DIR);
+    strcat(result, "/");
+    strcat(result, payload);
+}
 void payload_logo_path(const char* payload, char* result)
 {   
     char tmp[256];
