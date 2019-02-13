@@ -1,13 +1,13 @@
-# fork 
+![License badge](https://img.shields.io/badge/license-GPLv3-blue.svg)
+[![Homebrew Store](https://img.shields.io/badge/Homebrew%20Switch-store-%23ff4554.svg)](https://www.switchbru.com/appstore/#/app/argon-nx)
 # change dir paht for StarDustCFWpack
 # fork of ArgonNX
 # change dir paht for StarDustCFWpack and payload show on stairs
 
 
-<img src="img/splash.jpg" alt="banner">
 
-![License badge](https://img.shields.io/badge/license-GPLv3-blue.svg)
-[![Homebrew Store](https://img.shields.io/badge/Homebrew%20Switch-store-%23ff4554.svg)](https://www.switchbru.com/appstore/#/app/argon-nx)
+
+
 
 ## What Argon is?
 
@@ -38,9 +38,12 @@ argon
   │     default.bmp       # Default logo (logo for all payloads)
   │     fusee-primary.bmp # Logo for fusee-primary.bin payload
   │
-  └───payloads
-        fusee-primary.bin
-        ReiNX.bin         # Will be rendered using default logo
+  ├───payloads
+  │     fusee-primary.bin
+  │     ReiNX.bin         # Will be rendered using default logo
+  │     
+  └───playback
+      hekate
 ```
 
 - **Custom backgrounds** can be added by placing `background.bmp` file inside `argon` directory. **The background must be smaller or equal than 720x1280**.
@@ -95,6 +98,8 @@ This payload will launch any CFW or payload.
 
 1. Kind of config file
 2. Change to prettier font
+
+<img src="img/splash.jpg" alt="banner">
 
 ## Credits
 
