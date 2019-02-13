@@ -18,13 +18,17 @@
 
 #include "utils/types.h"
 
-#define PAYLOADS_DIR "argon/payloads"
-#define PAYLOADS_LOGOS_DIR "argon/logos"
+#define PAYBACK_DIR "StarDust/payback"
+
+#define PAYLOADS_DIR "StarDust/payloads"
+#define PAYLOADS_LOGOS_DIR "StarDust/logos"
 
 /* Generate full pyload directory */
 void payload_full_path(const char*, char*);
+void payload_full_back(const char*, char*);
 
 /* Get payload's logo from payload's name */
 void payload_logo_path(const char*, char*);
+
 
 #endif

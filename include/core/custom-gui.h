@@ -18,8 +18,8 @@
 
 #include "utils/types.h"
 
-#define CUSTOM_BG_PATH "argon/background.bmp"
-#define CUSTOM_TITLE_PATH "argon/title.bmp"
+#define CUSTOM_BG_PATH "StarDust/background.bmp"
+#define CUSTOM_TITLE_PATH "StarDust/title.bmp"
 
 typedef struct {
     u8* custom_bg;
