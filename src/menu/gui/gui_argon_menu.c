@@ -38,10 +38,10 @@
 #define ELEM_SIZE 230
 #define MARGIN_TOP 100
 #define MARGIN_LEFT 46
-
+u32 tog = 0;
 static int tool_reboot_rcm(void* param);
 static int tool_power_off(void* param);
-
+static int tool_menu_tog(void* param);
 /* Generate entries dynamically */
 static void generate_payloads_entries(char* payloads, gui_menu_t* menu)
 {
@@ -83,18 +83,59 @@ static void generate_payloads_entries(char* payloads, gui_menu_t* menu)
         i++;
     }
 }
+/* Second Menu */
+static void generate_payloads_back(char* payback, gui_menu_t* menu)
+{
+
+    u32 e = 0;
+    /* For each payload generate its logo, its name and its path */
+    while(payback[e * 256])
+    {
+        char* payload_path = (char*)malloc(256);
+        payload_full_back(&payback[e * 256], payload_path);
+        
+        char payload_logo[256];
+        payload_logo_path(&payback[e * 256], payload_logo);
+
+		u32 row = e / COLUMNS;
+        u32 col = e % COLUMNS;
+        u32 x = g_gfx_ctxt.width / COLUMNS * col + MARGIN_LEFT;
+        u32 y = g_gfx_ctxt.height / ROWS * row + MARGIN_TOP + (row == 0 ? 30 : -60);
+
+        const char* payload_wo_bin = str_replace(&payback[e * 256], ".bin", "");
+        gui_menu_append_entry(menu, 
+            gui_create_menu_entry(payload_wo_bin,
+                                    sd_file_read(payload_logo),
+                                    x, y,
+                                    200, 200,
+                                    (int (*)(void *))launch_payload, (void*)payload_path));
+        e++;
+	
+    }
+}
 
 /* Init needed menus for ArgonNX */
 void gui_init_argon_menu(void)
 {
-
     /* Init pool for menu */
     gui_menu_pool_init();
+gui_menu_t* menu = gui_menu_create("ArgonNX");
+ 
+if (tog == 0){
+//generate main menu
 
-    gui_menu_t* menu = gui_menu_create("ArgonNX");
+generate_payloads_entries(dirlist(PAYLOADS_DIR, "*.bin", false), menu);
+gui_menu_append_entry(menu, 
+    gui_create_menu_entry_no_bitmap("More", 250, 680, 150, 100, tool_menu_tog, NULL));
 
-    generate_payloads_entries(dirlist(PAYLOADS_DIR, "*.bin", false), menu);
+}else{
+//generate menu2
+generate_payloads_back(dirlist(PAYBACK_DIR, "*.bin", false), menu);
 
+gui_menu_append_entry(menu, 
+    gui_create_menu_entry_no_bitmap("Return", 250, 680, 150, 100, tool_menu_tog, NULL));
+
+}
      gui_menu_append_entry(menu, 
             gui_create_menu_entry_no_bitmap("Screenshot", 400, 680, 150, 100, (int (*)(void *))screenshot, NULL));
 
@@ -104,6 +145,7 @@ void gui_init_argon_menu(void)
 
     gui_menu_append_entry(menu, 
             gui_create_menu_entry_no_bitmap("Reboot RCM", 800, 680, 150, 100, tool_reboot_rcm, NULL));
+    
 
     /* Start menu */
     gui_menu_open(menu);
@@ -114,9 +156,20 @@ void gui_init_argon_menu(void)
 
 static int tool_reboot_rcm(void* param)
 {
+
     gui_menu_pool_cleanup();
     reboot_rcm();
     return 0;
+}
+static int tool_menu_tog(void* param)
+{if (tog == 0){
+tog = 1;
+}else{
+tog = 0;
+}
+gui_menu_pool_cleanup();
+gui_init_argon_menu();
+return 0;
 }
 
 static int tool_power_off(void* param)
