@@ -125,27 +125,26 @@ if (tog == 0){
 //generate main menu
 
 generate_payloads_entries(dirlist(PAYLOADS_DIR, "*.bin", false), menu);
-gui_menu_append_entry(menu, 
-    gui_create_menu_entry_no_bitmap("More", 250, 680, 150, 100, tool_menu_tog, NULL));
-
+//gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("More", 250, 650, 150, 100, tool_menu_tog, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowr.bmp"),250, 650, 70, 70, tool_menu_tog, NULL));
 }else{
 //generate menu2
 generate_payloads_back(dirlist(PAYBACK_DIR, "*.bin", false), menu);
-
-gui_menu_append_entry(menu, 
-    gui_create_menu_entry_no_bitmap("Return", 250, 680, 150, 100, tool_menu_tog, NULL));
-
+//gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Return", 100, 650, 150, 100, tool_menu_tog, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowl.bmp"),100, 650, 70, 70, tool_menu_tog, NULL));
 }
-     gui_menu_append_entry(menu, 
-            gui_create_menu_entry_no_bitmap("Screenshot", 400, 680, 150, 100, (int (*)(void *))screenshot, NULL));
+//    gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Screenshot", 400, 680, 150, 100, (int (*)(void *))screenshot, NULL));
+//    gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Power off", 600, 680, 150, 100, tool_power_off, NULL));
+//    gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Reboot RCM", 800, 680, 150, 100, tool_reboot_rcm, NULL));
 
-    /* Generate reboot rcm and shutdown entry */
-    gui_menu_append_entry(menu, 
-            gui_create_menu_entry_no_bitmap("Power off", 600, 680, 150, 100, tool_power_off, NULL));
+    /* Generate reboot rcm and shutdown entry **/
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/screenshot.bmp"),400, 650, 70, 70, (int (*)(void *))screenshot, NULL));
 
-    gui_menu_append_entry(menu, 
-            gui_create_menu_entry_no_bitmap("Reboot RCM", 800, 680, 150, 100, tool_reboot_rcm, NULL));
-    
+	
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),600, 650, 70, 70, tool_power_off, NULL));
+
+			
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/rcm.bmp"),800, 650, 70, 70, tool_reboot_rcm, NULL));
 
     /* Start menu */
     gui_menu_open(menu);
@@ -162,11 +161,14 @@ static int tool_reboot_rcm(void* param)
     return 0;
 }
 static int tool_menu_tog(void* param)
+
 {if (tog == 0){
 tog = 1;
 }else{
 tog = 0;
 }
+
+ gfx_printf(&g_gfx_con, "loading\n");
 gui_menu_pool_cleanup();
 gui_init_argon_menu();
 return 0;
