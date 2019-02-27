@@ -78,6 +78,13 @@ gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
         gfx_con_setpos(&g_gfx_con, 15, 10);
         gfx_printf(&g_gfx_con, "ArgonNX v%d.%d", MAJOR_VERSION, MINOR_VERSION);
     }
+	//render SDust ver
+	if (!render_custom_title(menu->custom_gui)) 
+    {
+        g_gfx_con.scale = 2;
+        gfx_con_setpos(&g_gfx_con, 1050, 10);
+        gfx_printf(&g_gfx_con, "StarDust v1.12", MAJOR_VERSION, MINOR_VERSION);
+    }
 gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
 }
 
