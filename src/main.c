@@ -88,7 +88,25 @@ void ipl_main()
     }
 
     /* If payload launch fails wait for user input to reboot the switch */
-    gfx_printf(&g_gfx_con, "Press power button to reboot into RCM...\n\n");
+    gfx_printf(&g_gfx_con, "Press power button to reboot into RCM or Vol+ to retry...\n\n\n\n");
     gfx_swap_buffer(&g_gfx_ctxt);
-    wait_for_button_and_reboot();
+		
+    u32 button;
+    while (true) {
+        button = btn_read();
+        if (button & BTN_POWER) {
+            reboot_rcm();
+        }
+        
+		if (button & BTN_VOL_UP) {
+		if (sd_mount()){
+		launch_payload("payload.bin");
+		}else{
+		gfx_printf(&g_gfx_con, "No sd card found...\n");
+		gfx_swap_buffer(&g_gfx_ctxt);
+		}
+		
+	}
+
+	}
 }
