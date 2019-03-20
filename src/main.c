@@ -60,7 +60,6 @@ void ipl_main()
     display_init();
     setup_gfx();
     display_backlight_pwm_init();
-    display_backlight_brightness(100, 1000);
 
 
     /* Train DRAM */
@@ -69,26 +68,43 @@ void ipl_main()
     g_gfx_con.mute = 0;
 
     /* Cofigure touch input */
-    touch_power_on();
     
     /* Mount Sd card and launch payload */
     if (sd_mount())
     {
         bool cancel_auto_chainloading = btn_read() & BTN_VOL_DOWN;
-        bool load_menu = cancel_auto_chainloading || launch_payload("StarDust/payload.bin");
+        bool load_menu = cancel_auto_chainloading || launch_payload("payload.bin");
         
-        gfx_printf(&g_gfx_con, "Autochainload canceled. Loading menu...\n");
-        gfx_swap_buffer(&g_gfx_ctxt);
+       
 
         if (load_menu)
-            gui_init_argon_menu();
+             gfx_printf(&g_gfx_con, "Autochainload canceled\n");
 
     } else {
         gfx_printf(&g_gfx_con, "No sd card found...\n");
     }
+    display_backlight_brightness(100, 1000);
 
     /* If payload launch fails wait for user input to reboot the switch */
-    gfx_printf(&g_gfx_con, "Press power button to reboot into RCM...\n\n");
+    gfx_printf(&g_gfx_con, "Press power button to reboot into RCM or Vol+ to retry...\n\n");
     gfx_swap_buffer(&g_gfx_ctxt);
-    wait_for_button_and_reboot();
+
+    u32 button;
+    while (true) {
+        button = btn_read();
+        if (button & BTN_POWER) {
+            reboot_rcm();
+        }
+        
+		if (button & BTN_VOL_UP) {
+		if (sd_mount()){
+		launch_payload("payload.bin");
+		}else{
+		gfx_printf(&g_gfx_con, "No sd card found...\n");
+		gfx_swap_buffer(&g_gfx_ctxt);
+		}
+		
+	}
+
+	}
 }
