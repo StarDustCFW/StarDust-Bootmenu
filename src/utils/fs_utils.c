@@ -117,3 +117,15 @@ bool sd_file_exists(const char* filename)
 
     return false;
 }
+
+void copyfile(const char* source, const char* target)
+{
+        FIL fp;
+        if (f_open(&fp, source, FA_READ) != FR_OK)
+                return NULL;
+
+        u32 size = f_size(&fp);
+	f_close(&fp);
+
+	sd_save_to_file(sd_file_read(source),size,target);
+}

@@ -20,6 +20,7 @@
 
 #include "utils/touch.h"
 #include "utils/btn.h"
+#include "utils/fs_utils.h"
 
 #include "gfx/gfx.h"
 
@@ -70,22 +71,26 @@ static void gui_menu_draw_background(gui_menu_t* menu)
     if(!render_custom_background(menu->custom_gui))
         gfx_clear_color(&g_gfx_ctxt, 0xFF191414);
     
-gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
     /* Render title */
     if (!render_custom_title(menu->custom_gui)) 
     {
         g_gfx_con.scale = 2;
         gfx_con_setpos(&g_gfx_con, 15, 10);
-        gfx_printf(&g_gfx_con, "ArgonNX v%d.%d", MAJOR_VERSION, MINOR_VERSION);
-    }
-	//render SDust ver
-	if (!render_custom_title(menu->custom_gui)) 
-    {
-        g_gfx_con.scale = 2;
+        gfx_printf(&g_gfx_con, "ArgonNX v%d.%d-2", MAJOR_VERSION, MINOR_VERSION);
         gfx_con_setpos(&g_gfx_con, 1050, 10);
-        gfx_printf(&g_gfx_con, "StarDust v1.19", MAJOR_VERSION, MINOR_VERSION);
+        char *str;
+	void *buf;
+	char minorversion[3];
+	char mayorversion[2];
+
+	buf = sd_file_read("StarDust/StarDustV.txt");
+	str = buf;
+	minorversion[0] = str[2];
+	minorversion[1] = str[3];
+	mayorversion[0] = str[0];
+	mayorversion[1] = 0;
+        gfx_printf(&g_gfx_con, "StarDust v%s.%s", mayorversion,minorversion);
     }
-gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
 }
 
 static void gui_menu_render_menu(gui_menu_t* menu) 
@@ -118,8 +123,7 @@ static int gui_menu_update(gui_menu_t *menu)
 
 int gui_menu_open(gui_menu_t *menu)
 {   
-    
-	gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
+    gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
     /* 
      * Render and flush at first render because blocking input won't allow us 
      * flush buffers

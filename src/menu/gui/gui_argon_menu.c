@@ -42,6 +42,12 @@ u32 tog = 0;
 static int tool_reboot_rcm(void* param);
 static int tool_power_off(void* param);
 static int tool_menu_tog(void* param);
+static int tool_menu_rem(void* param);
+static int tool_theme_one(void* param);
+static int tool_theme_two(void* param);
+static int tool_theme_tres(void* param);
+
+
 /* Generate entries dynamically */
 static void generate_payloads_entries(char* payloads, gui_menu_t* menu)
 {
@@ -136,15 +142,19 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icon
 //    gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Screenshot", 400, 680, 150, 100, (int (*)(void *))screenshot, NULL));
 //    gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Power off", 600, 680, 150, 100, tool_power_off, NULL));
 //    gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Reboot RCM", 800, 680, 150, 100, tool_reboot_rcm, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/themes.bmp"),1200, 40, 70, 70, tool_menu_rem, NULL));
 
     /* Generate reboot rcm and shutdown entry **/
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/screenshot.bmp"),400, 650, 70, 70, (int (*)(void *))screenshot, NULL));
 
-	
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),600, 650, 70, 70, tool_power_off, NULL));
-
-			
+	
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/rcm.bmp"),800, 650, 70, 70, tool_reboot_rcm, NULL));
+
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/1/icon.bmp"),1000, 650, 70, 70, tool_theme_one, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/2/icon.bmp"),1100, 650, 70, 70, tool_theme_two, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/3/icon.bmp"),1200, 650, 70, 70, tool_theme_tres, NULL));
+
 
     /* Start menu */
     gui_menu_open(menu);
@@ -161,16 +171,102 @@ static int tool_reboot_rcm(void* param)
     return 0;
 }
 static int tool_menu_tog(void* param)
-
 {if (tog == 0){
 tog = 1;
 }else{
 tog = 0;
 }
-
  gfx_printf(&g_gfx_con, "loading\n");
 gui_menu_pool_cleanup();
 gui_init_argon_menu();
+return 0;
+}
+
+static int tool_menu_rem(void* param)
+{
+ gfx_printf(&g_gfx_con, "loading\n");
+gui_menu_pool_cleanup();
+	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/common.szs");
+	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Entrance.szs");
+	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/ResidentMenu.szs");
+	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Set.szs");
+	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Flaunch.szs");
+	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Notification.szs");
+	f_unlink("/atmosphere/titles/0100000000001000/fsmitm.flag");
+	f_unlink("/atmosphere/titles/0100000000001013/romfs/lyt/MyPage.szs");
+	f_unlink("/atmosphere/titles/0100000000001013/romfs/lyt/fsmitm.flag");
+
+	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/common.szs");
+	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Entrance.szs");
+	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/ResidentMenu.szs");
+	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Set.szs");
+	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Flaunch.szs");
+	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Notification.szs");
+	f_unlink("/ReiNX/titles/0100000000001000/fsmitm.flag");
+	f_unlink("/ReiNX/titles/0100000000001013/romfs/lyt/MyPage.szs");
+	f_unlink("/ReiNX/titles/0100000000001013/romfs/lyt/fsmitm.flag");
+
+	f_unlink("/SXOS/titles/0100000000001000/romfs/lyt/common.szs");
+	f_unlink("/SXOS/titles/0100000000001000/romfs/lyt/Entrance.szs");
+	f_unlink("/SXOS/titles/0100000000001000/romfs/lyt/ResidentMenu.szs");
+	f_unlink("/SXOS/titles/0100000000001000/romfs/lyt/Set.szs");
+	f_unlink("/SXOS/titles/0100000000001000/romfs/lyt/Flaunch.szs");
+	f_unlink("/SXOS/titles/0100000000001000/romfs/lyt/Notification.szs");
+	f_unlink("/SXOS/titles/0100000000001000/fsmitm.flag");
+	f_unlink("/SXOS/titles/0100000000001013/romfs/lyt/MyPage.szs");
+	f_unlink("/SXOS/titles/0100000000001013/romfs/lyt/fsmitm.flag");
+launch_payload("payload.bin");
+return 0;
+}
+
+static int tool_theme_one(void* param)
+{
+ gfx_printf(&g_gfx_con, "loading\n");
+/*f_unlink("StarDust/background.bmp");
+f_unlink("StarDust/logos/Atmosphere.bmp");
+f_unlink("StarDust/logos/Reinx.bmp");
+f_unlink("StarDust/logos/sxos.bmp");
+f_unlink("StarDust/logos/zBackup.bmp");*/
+copyfile("StarDust/Atheme/1/background.bmp","StarDust/background.bmp");
+copyfile("StarDust/Atheme/1/logos/Atmosphere.bmp","StarDust/logos/Atmosphere.bmp");
+copyfile("StarDust/Atheme/1/logos/Reinx.bmp","StarDust/logos/Reinx.bmp");
+copyfile("StarDust/Atheme/1/logos/sxos.bmp","StarDust/logos/sxos.bmp");
+copyfile("StarDust/Atheme/1/logos/zBackup.bmp","StarDust/logos/zBackup.bmp");
+launch_payload("/payload.bin");
+return 0;
+}
+
+static int tool_theme_two(void* param)
+{
+ gfx_printf(&g_gfx_con, "loading\n");
+/*f_unlink("StarDust/background.bmp");
+f_unlink("StarDust/logos/Atmosphere.bmp");
+f_unlink("StarDust/logos/Reinx.bmp");
+f_unlink("StarDust/logos/sxos.bmp");
+f_unlink("StarDust/logos/zBackup.bmp");*/
+copyfile("StarDust/Atheme/2/background.bmp","StarDust/background.bmp");
+copyfile("StarDust/Atheme/2/logos/Atmosphere.bmp","StarDust/logos/Atmosphere.bmp");
+copyfile("StarDust/Atheme/2/logos/Reinx.bmp","StarDust/logos/Reinx.bmp");
+copyfile("StarDust/Atheme/2/logos/sxos.bmp","StarDust/logos/sxos.bmp");
+copyfile("StarDust/Atheme/2/logos/zBackup.bmp","StarDust/logos/zBackup.bmp");
+launch_payload("payload.bin");
+return 0;
+}
+
+static int tool_theme_tres(void* param)
+{
+ gfx_printf(&g_gfx_con, "loading\n");
+/*f_unlink("StarDust/background.bmp");
+f_unlink("StarDust/logos/Atmosphere.bmp");
+f_unlink("StarDust/logos/Reinx.bmp");
+f_unlink("StarDust/logos/sxos.bmp");
+f_unlink("StarDust/logos/zBackup.bmp");*/
+copyfile("StarDust/Atheme/3/background.bmp","StarDust/background.bmp");
+copyfile("StarDust/Atheme/3/logos/Atmosphere.bmp","StarDust/logos/Atmosphere.bmp");
+copyfile("StarDust/Atheme/3/logos/Reinx.bmp","StarDust/logos/Reinx.bmp");
+copyfile("StarDust/Atheme/3/logos/sxos.bmp","StarDust/logos/sxos.bmp");
+copyfile("StarDust/Atheme/3/logos/zBackup.bmp","StarDust/logos/zBackup.bmp");
+launch_payload("payload.bin");
 return 0;
 }
 

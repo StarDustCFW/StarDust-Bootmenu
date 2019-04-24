@@ -59,10 +59,43 @@ void reloc_patcher(u32 payload_size)
 
 int launch_payload(char *path)
 {
+
+    char *atm = "atmos";
+    char *rnx = "reinx";
+    char *sxos = "sxos";
+
+    u32 boot = 0;
+
+
+
+    if(strstr(path,atm) != NULL)
+    	boot=1;
+    if(strstr(path,rnx) != NULL)
+    	boot=2;
+    if(strstr(path,sxos) != NULL)
+    	boot=3;
+/*
+    u8* buffer = (u8*)malloc(4);
+    memcpy(buffer, &boot, 4);
+    sd_save_to_file(buffer, 4, "StarDust/boot.txt");
+*/
+    if(boot==1)
+    {
+	copyfile("atmosphere/fusee-secondary.bin","sept/payload.bin");
+
+    }
+
+    if(boot==2)
+    {
+	copyfile("sept/reinx.bin","sept/payload.bin");
+	
+    }
+	
+
     FIL fp;
     if (f_open(&fp, path, FA_READ))
     {
-        gfx_printf(&g_gfx_con, "Cannot find %s\n", path);
+        //gfx_printf(&g_gfx_con, "Cannot find %s\n", path);
         return 1;
     }
 
