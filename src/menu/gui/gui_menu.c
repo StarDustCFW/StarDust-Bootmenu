@@ -1,37 +1,19 @@
-/*  
- * Copyright (c) 2018 Guillem96
- *
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms and conditions of the GNU General Public License,
- * version 2, as published by the Free Software Foundation.
- *
- * This program is distributed in the hope it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 
 #include "menu/gui/gui_menu.h"
 #include "menu/gui/gui_menu_pool.h"
-
 #include "utils/touch.h"
 #include "utils/btn.h"
 #include "utils/fs_utils.h"
-
+#include "gfx/di.h"
 #include "gfx/gfx.h"
-
 #include "mem/heap.h"
-
+#include "power/max17050.h"
 #include "core/custom-gui.h"
-
 #include <string.h>
 
 #define MINOR_VERSION 3
 #define MAJOR_VERSION 0
+#define REVI_VERSION 6
 
 
 /* Render the menu */
@@ -76,9 +58,13 @@ static void gui_menu_draw_background(gui_menu_t* menu)
     {
         g_gfx_con.scale = 2;
         gfx_con_setpos(&g_gfx_con, 15, 10);
-        gfx_printf(&g_gfx_con, "ArgonNX v%d.%d-6", MAJOR_VERSION, MINOR_VERSION);
-        gfx_con_setpos(&g_gfx_con, 1050, 10);
-        char *str;
+        gfx_printf(&g_gfx_con, "ArgonNX v%d.%d-%d", MAJOR_VERSION, MINOR_VERSION,REVI_VERSION);
+		
+       //StarDust version
+if (g_sd_mounted)
+{
+	gfx_con_setpos(&g_gfx_con, 1050, 10);
+    char *str;
 	void *buf;
 	char minorversion[3];
 	char mayorversion[2];
@@ -89,9 +75,15 @@ static void gui_menu_draw_background(gui_menu_t* menu)
 	minorversion[1] = str[3];
 	mayorversion[0] = str[0];
 	mayorversion[1] = 0;
-        gfx_printf(&g_gfx_con, "StarDust v%s.%s", mayorversion,minorversion);
+	gfx_printf(&g_gfx_con, "StarDust v%s.%s", mayorversion,minorversion);
+}		
+		//battery
+		u32 battPercent = 0;
+		max17050_get_property(MAX17050_RepSOC, (int *)&battPercent);
+		gfx_con_setpos(&g_gfx_con, 455, 10);
+        gfx_printf(&g_gfx_con, "Battery: -%d%-", (battPercent >> 8) & 0xFF, (battPercent & 0xFF));
     }
-	gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
+
 }
 
 static void gui_menu_render_menu(gui_menu_t* menu) 
@@ -133,6 +125,27 @@ int gui_menu_open(gui_menu_t *menu)
 
 	while (gui_menu_update(menu))
     ;
+
+	return 0;
+}
+
+int gui_menu_open2(gui_menu_t *menu)
+{   
+	sd_unmount();
+    gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
+    /* 
+     * Render and flush at first render because blocking input won't allow us 
+     * flush buffers
+     */
+    gui_menu_render_menu(menu);
+
+	while (gui_menu_update(menu))
+	{
+		if (!g_sd_mounted)
+		{
+		display_backlight_brightness(5, 1000);
+		}
+	}
 
 	return 0;
 }
