@@ -178,7 +178,6 @@ static int tool_extr_rSD(void* param)
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Ya puedes extraer la SD, Al terminar ", 500, 100, 150, 100, NULL, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Pon la SD y presiona este icono", 520, 150, 150, 100, NULL, NULL));
 
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/screenshot.bmp"),400, 650, 70, 70, (int (*)(void *))screenshot, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/rcm.bmp"),800, 650, 70, 70, tool_reboot_rcm, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),550, 650, 70, 70, tool_power_off, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/extrDS.bmp"),1100, 520, 200, 200, NULL, NULL));
