@@ -143,7 +143,7 @@ int gui_menu_open2(gui_menu_t *menu)
 	{
 		if (!g_sd_mounted)
 		{
-		display_backlight_brightness(5, 1000);
+		display_backlight_brightness(1, 1000);
 		}
 	}
 
