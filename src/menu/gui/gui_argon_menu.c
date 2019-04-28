@@ -18,7 +18,7 @@
 #include "menu/gui/gui_argon_menu.h"
 #include "menu/gui/gui_menu.h"
 #include "menu/gui/gui_menu_pool.h"
-
+#include "core/custom-gui.h"
 #include "gfx/gfx.h"
 
 #include "utils/types.h"
@@ -26,7 +26,7 @@
 #include "utils/dirlist.h"
 #include "utils/util.h"
 #include "utils/touch.h"
-
+#include "utils/btn.h"
 #include "core/launcher.h"
 #include "core/payloads.h"
 #include "core/custom-gui.h"
@@ -39,6 +39,8 @@
 #define MARGIN_TOP 100
 #define MARGIN_LEFT 46
 u32 tog = 0;
+static int tool_menu_rSD(void* param);
+static int tool_extr_rSD(void* param);
 static int tool_reboot_rcm(void* param);
 static int tool_power_off(void* param);
 static int tool_menu_tog(void* param);
@@ -149,11 +151,14 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icon
 
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),600, 650, 70, 70, tool_power_off, NULL));
 	
+
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/rcm.bmp"),800, 650, 70, 70, tool_reboot_rcm, NULL));
 
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/1/icon.bmp"),1000, 650, 70, 70, tool_theme_one, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/2/icon.bmp"),1100, 650, 70, 70, tool_theme_two, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/3/icon.bmp"),1200, 650, 70, 70, tool_theme_tres, NULL));
+
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/SD.bmp"),1200, 140, 70, 70, tool_extr_rSD, NULL));
 
 
     /* Start menu */
@@ -165,11 +170,38 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Athe
 
 static int tool_reboot_rcm(void* param)
 {
-
-    gui_menu_pool_cleanup();
-    reboot_rcm();
+   reboot_rcm();
     return 0;
 }
+
+static int tool_extr_rSD(void* param)
+{
+
+    gui_menu_pool_cleanup();
+
+	gui_menu_pool_init();
+	gui_menu_t* menu = gui_menu_create("ArgonNX");
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Ya puedes extraer la SD, Al terminar ", 500, 100, 150, 100, NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Pon la SD y presiona este icono", 520, 150, 150, 100, NULL, NULL));
+
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),550, 650, 70, 70, tool_power_off, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/extrDS.bmp"),1100, 520, 200, 200, NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/extpower.bmp"),500, 250, 200, 200, tool_menu_rSD, NULL));
+    gui_menu_open(menu);
+    return 0;
+}
+
+static int tool_menu_rSD(void* param)
+{
+	sd_mount();
+		if (g_sd_mounted)
+		{
+		launch_payload("payload.bin");
+		}
+
+return 0;
+}
+
 static int tool_menu_tog(void* param)
 {if (tog == 0){
 tog = 1;

@@ -88,7 +88,7 @@ int launch_payload(char *path)
     if(boot==2)
     {
 	copyfile("sept/reinx.bin","sept/payload.bin");
-	
+	f_unlink("ReiNX/sysmodules/fs_mitm.kip");
     }
 	
 

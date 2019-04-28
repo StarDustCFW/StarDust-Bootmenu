@@ -78,6 +78,9 @@ void ipl_main()
         bool load_menu = cancel_auto_chainloading || launch_payload("StarDust/payload.bin");
         f_unlink("StarDust/payload.bin");
         f_unlink("StarDust/autobootecho.txt");
+		f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Set.szs");
+		f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Set.szs");
+
         gfx_printf(&g_gfx_con, "Autochainload canceled. Loading menu...\n");
         gfx_swap_buffer(&g_gfx_ctxt);
 

@@ -76,7 +76,7 @@ static void gui_menu_draw_background(gui_menu_t* menu)
     {
         g_gfx_con.scale = 2;
         gfx_con_setpos(&g_gfx_con, 15, 10);
-        gfx_printf(&g_gfx_con, "ArgonNX v%d.%d-2", MAJOR_VERSION, MINOR_VERSION);
+        gfx_printf(&g_gfx_con, "ArgonNX v%d.%d-6", MAJOR_VERSION, MINOR_VERSION);
         gfx_con_setpos(&g_gfx_con, 1050, 10);
         char *str;
 	void *buf;
@@ -91,6 +91,7 @@ static void gui_menu_draw_background(gui_menu_t* menu)
 	mayorversion[1] = 0;
         gfx_printf(&g_gfx_con, "StarDust v%s.%s", mayorversion,minorversion);
     }
+	gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
 }
 
 static void gui_menu_render_menu(gui_menu_t* menu) 
