@@ -4,6 +4,7 @@
 #include "utils/touch.h"
 #include "utils/btn.h"
 #include "utils/fs_utils.h"
+#include "utils/util.h"
 #include "gfx/di.h"
 #include "gfx/gfx.h"
 #include "mem/heap.h"
@@ -13,7 +14,8 @@
 
 #define MINOR_VERSION 3
 #define MAJOR_VERSION 0
-#define REVI_VERSION 6
+#define REVI_VERSION 8
+
 
 
 /* Render the menu */
@@ -80,7 +82,7 @@ if (g_sd_mounted)
 		//battery
 		u32 battPercent = 0;
 		max17050_get_property(MAX17050_RepSOC, (int *)&battPercent);
-		gfx_con_setpos(&g_gfx_con, 455, 10);
+		gfx_con_setpos(&g_gfx_con, 1050, 700);
         gfx_printf(&g_gfx_con, "Battery: -%d%-", (battPercent >> 8) & 0xFF, (battPercent & 0xFF));
     }
 
@@ -138,15 +140,22 @@ int gui_menu_open2(gui_menu_t *menu)
      * flush buffers
      */
     gui_menu_render_menu(menu);
-
+//u32 tog = 0;
+		msleep(3000);
+		display_backlight_brightness(1, 1000);
 	while (gui_menu_update(menu))
 	{
-		if (!g_sd_mounted)
-		{
+	display_backlight_brightness(1, 1000);
+	gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
+/*		if (tog == 0){
 		display_backlight_brightness(1, 1000);
-		}
+		tog = 1;
+		}else{
+		display_backlight_brightness(100, 1000);
+		tog = 0;
+		}*/
+		;
 	}
-
 	return 0;
 }
 

@@ -17,7 +17,8 @@
  */
 
 #include "utils/fs_utils.h"
-
+#include "utils/util.h"
+#include "gfx/di.h"
 #include "mem/heap.h"
 #include "gfx/gfx.h"
 
@@ -28,8 +29,10 @@ bool sd_mount()
 
 	if (!sdmmc_storage_init_sd(&g_sd_storage, &g_sd_sdmmc, SDMMC_1, SDMMC_BUS_WIDTH_4, 11))
 	{
+		display_backlight_brightness(100, 1000);
         gfx_printf(&g_gfx_con, "-\n", 0xFFFFDD00, 0xFFCCCCCC);
         gfx_printf(&g_gfx_con, "%kFailed to init SD card.\nMake sure that it is inserted.\nOr that SD reader is properly seated!%k\n", 0xFFFFDD00, 0xFFCCCCCC);
+		msleep(3000);
 	}
 	else
 	{

@@ -49,6 +49,7 @@ static int tool_menu_rem(void* param);
 static int tool_theme_one(void* param);
 static int tool_theme_two(void* param);
 static int tool_theme_tres(void* param);
+static int tool_theme_four(void* param);
 
 
 /* Generate entries dynamically */
@@ -145,9 +146,10 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icon
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/SD.bmp"),1200, 140, 70, 70, tool_extr_rSD, NULL));
 
 //Create Icons, themes
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/1/icon.bmp"),1000, 650, 70, 70, tool_theme_one, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/2/icon.bmp"),1100, 650, 70, 70, tool_theme_two, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/3/icon.bmp"),1200, 650, 70, 70, tool_theme_tres, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/1/icon.bmp"),400, 10, 70, 70, tool_theme_one, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/2/icon.bmp"),500, 10, 70, 70, tool_theme_two, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/3/icon.bmp"),600, 10, 70, 70, tool_theme_tres, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/4/icon.bmp"),700, 10, 70, 70, tool_theme_four, NULL));
 
 /* Generate reboot rcm and shutdown entry **/
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/screenshot.bmp"),400, 650, 70, 70, (int (*)(void *))screenshot, NULL));
@@ -180,7 +182,7 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Pon la SD y presiona
 
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/rcm.bmp"),800, 650, 70, 70, tool_reboot_rcm, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),550, 650, 70, 70, tool_power_off, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/extrDS.bmp"),1100, 520, 200, 200, NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/extrDS.bmp"),1100, 500, 200, 200, NULL, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/extpower.bmp"),500, 250, 200, 200, tool_menu_rSD, NULL));
     gui_menu_open2(menu);
     return 0;
@@ -213,15 +215,20 @@ static int tool_menu_rem(void* param)
 {
  gfx_printf(&g_gfx_con, "loading\n");
 gui_menu_pool_cleanup();
+	f_unlink("/atmosphere/titles/0100000000001000/fsmitm.flag");
+	f_unlink("/ReiNX/titles/0100000000001000/fsmitm.flag");
+	f_unlink("/SXOS/titles/0100000000001000/fsmitm.flag");
+	f_unlink("/atmosphere/titles/0100000000001013/romfs/lyt/fsmitm.flag");
+	f_unlink("/ReiNX/titles/0100000000001013/romfs/lyt/fsmitm.flag");
+	f_unlink("/SXOS/titles/0100000000001013/romfs/lyt/fsmitm.flag");
+/*
 	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/common.szs");
 	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Entrance.szs");
 	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/ResidentMenu.szs");
 	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Set.szs");
 	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Flaunch.szs");
 	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Notification.szs");
-	f_unlink("/atmosphere/titles/0100000000001000/fsmitm.flag");
 	f_unlink("/atmosphere/titles/0100000000001013/romfs/lyt/MyPage.szs");
-	f_unlink("/atmosphere/titles/0100000000001013/romfs/lyt/fsmitm.flag");
 
 	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/common.szs");
 	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Entrance.szs");
@@ -229,9 +236,7 @@ gui_menu_pool_cleanup();
 	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Set.szs");
 	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Flaunch.szs");
 	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Notification.szs");
-	f_unlink("/ReiNX/titles/0100000000001000/fsmitm.flag");
 	f_unlink("/ReiNX/titles/0100000000001013/romfs/lyt/MyPage.szs");
-	f_unlink("/ReiNX/titles/0100000000001013/romfs/lyt/fsmitm.flag");
 
 	f_unlink("/SXOS/titles/0100000000001000/romfs/lyt/common.szs");
 	f_unlink("/SXOS/titles/0100000000001000/romfs/lyt/Entrance.szs");
@@ -239,38 +244,48 @@ gui_menu_pool_cleanup();
 	f_unlink("/SXOS/titles/0100000000001000/romfs/lyt/Set.szs");
 	f_unlink("/SXOS/titles/0100000000001000/romfs/lyt/Flaunch.szs");
 	f_unlink("/SXOS/titles/0100000000001000/romfs/lyt/Notification.szs");
-	f_unlink("/SXOS/titles/0100000000001000/fsmitm.flag");
 	f_unlink("/SXOS/titles/0100000000001013/romfs/lyt/MyPage.szs");
-	f_unlink("/SXOS/titles/0100000000001013/romfs/lyt/fsmitm.flag");
+*/	
+	//this is a panic option so i will disable the servises also
+	f_unlink("/atmosphere/titles/420000000000000E/flags/boot2.flag");
+	f_unlink("/ReiNX/titles/420000000000000E/boot2.flag");
+	f_unlink("/atmosphere/titles/0100000000000352/flags/boot2.flag");
+	f_unlink("/ReiNX/titles/0100000000000352/boot2.flag");
+	f_unlink("/atmosphere/titles/4200000000000010/flags/boot2.flag");
+	f_unlink("/ReiNX/titles/4200000000000010/boot2.flag");
+	f_unlink("/atmosphere/titles/420000000000000B/flags/boot2.flag");
+	f_unlink("/ReiNX/titles/420000000000000B/boot2.flag");
 launch_payload("payload.bin");
 return 0;
 }
 
 static int tool_theme_one(void* param)
 {
- gfx_printf(&g_gfx_con, "loading\n");
-/*f_unlink("StarDust/background.bmp");
-f_unlink("StarDust/logos/Atmosphere.bmp");
-f_unlink("StarDust/logos/Reinx.bmp");
-f_unlink("StarDust/logos/sxos.bmp");
-f_unlink("StarDust/logos/zBackup.bmp");*/
+copyfile("StarDust/Atheme/1/Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
+copyfile("StarDust/Atheme/1/Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
+copyfile("StarDust/Atheme/1/Icons/power.bmp","StarDust/Icons/power.bmp");
+copyfile("StarDust/Atheme/1/Icons/rcm.bmp","StarDust/Icons/rcm.bmp");
+copyfile("StarDust/Atheme/1/Icons/screenshot.bmp","StarDust/Icons/screenshot.bmp");
+copyfile("StarDust/Atheme/1/Icons/themes.bmp","StarDust/Icons/themes.bmp");
+
 copyfile("StarDust/Atheme/1/background.bmp","StarDust/background.bmp");
 copyfile("StarDust/Atheme/1/logos/Atmosphere.bmp","StarDust/logos/Atmosphere.bmp");
 copyfile("StarDust/Atheme/1/logos/Reinx.bmp","StarDust/logos/Reinx.bmp");
 copyfile("StarDust/Atheme/1/logos/sxos.bmp","StarDust/logos/sxos.bmp");
 copyfile("StarDust/Atheme/1/logos/zBackup.bmp","StarDust/logos/zBackup.bmp");
-launch_payload("/payload.bin");
+launch_payload("payload.bin");
 return 0;
 }
 
 static int tool_theme_two(void* param)
 {
- gfx_printf(&g_gfx_con, "loading\n");
-/*f_unlink("StarDust/background.bmp");
-f_unlink("StarDust/logos/Atmosphere.bmp");
-f_unlink("StarDust/logos/Reinx.bmp");
-f_unlink("StarDust/logos/sxos.bmp");
-f_unlink("StarDust/logos/zBackup.bmp");*/
+copyfile("StarDust/Atheme/2/Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
+copyfile("StarDust/Atheme/2/Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
+copyfile("StarDust/Atheme/2/Icons/power.bmp","StarDust/Icons/power.bmp");
+copyfile("StarDust/Atheme/2/Icons/rcm.bmp","StarDust/Icons/rcm.bmp");
+copyfile("StarDust/Atheme/2/Icons/screenshot.bmp","StarDust/Icons/screenshot.bmp");
+copyfile("StarDust/Atheme/2/Icons/themes.bmp","StarDust/Icons/themes.bmp");
+
 copyfile("StarDust/Atheme/2/background.bmp","StarDust/background.bmp");
 copyfile("StarDust/Atheme/2/logos/Atmosphere.bmp","StarDust/logos/Atmosphere.bmp");
 copyfile("StarDust/Atheme/2/logos/Reinx.bmp","StarDust/logos/Reinx.bmp");
@@ -282,17 +297,36 @@ return 0;
 
 static int tool_theme_tres(void* param)
 {
- gfx_printf(&g_gfx_con, "loading\n");
-/*f_unlink("StarDust/background.bmp");
-f_unlink("StarDust/logos/Atmosphere.bmp");
-f_unlink("StarDust/logos/Reinx.bmp");
-f_unlink("StarDust/logos/sxos.bmp");
-f_unlink("StarDust/logos/zBackup.bmp");*/
+copyfile("StarDust/Atheme/3/Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
+copyfile("StarDust/Atheme/3/Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
+copyfile("StarDust/Atheme/3/Icons/power.bmp","StarDust/Icons/power.bmp");
+copyfile("StarDust/Atheme/3/Icons/rcm.bmp","StarDust/Icons/rcm.bmp");
+copyfile("StarDust/Atheme/3/Icons/screenshot.bmp","StarDust/Icons/screenshot.bmp");
+copyfile("StarDust/Atheme/3/Icons/themes.bmp","StarDust/Icons/themes.bmp");
+
 copyfile("StarDust/Atheme/3/background.bmp","StarDust/background.bmp");
 copyfile("StarDust/Atheme/3/logos/Atmosphere.bmp","StarDust/logos/Atmosphere.bmp");
 copyfile("StarDust/Atheme/3/logos/Reinx.bmp","StarDust/logos/Reinx.bmp");
 copyfile("StarDust/Atheme/3/logos/sxos.bmp","StarDust/logos/sxos.bmp");
 copyfile("StarDust/Atheme/3/logos/zBackup.bmp","StarDust/logos/zBackup.bmp");
+launch_payload("payload.bin");
+return 0;
+}
+
+static int tool_theme_four(void* param)
+{
+copyfile("StarDust/Atheme/4/Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
+copyfile("StarDust/Atheme/4/Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
+copyfile("StarDust/Atheme/4/Icons/power.bmp","StarDust/Icons/power.bmp");
+copyfile("StarDust/Atheme/4/Icons/rcm.bmp","StarDust/Icons/rcm.bmp");
+copyfile("StarDust/Atheme/4/Icons/screenshot.bmp","StarDust/Icons/screenshot.bmp");
+copyfile("StarDust/Atheme/4/Icons/themes.bmp","StarDust/Icons/themes.bmp");
+
+copyfile("StarDust/Atheme/4/background.bmp","StarDust/background.bmp");
+copyfile("StarDust/Atheme/4/logos/Atmosphere.bmp","StarDust/logos/Atmosphere.bmp");
+copyfile("StarDust/Atheme/4/logos/Reinx.bmp","StarDust/logos/Reinx.bmp");
+copyfile("StarDust/Atheme/4/logos/sxos.bmp","StarDust/logos/sxos.bmp");
+copyfile("StarDust/Atheme/4/logos/zBackup.bmp","StarDust/logos/zBackup.bmp");
 launch_payload("payload.bin");
 return 0;
 }

@@ -120,17 +120,17 @@ char *dirlist(const char *directory, const char *pattern, bool includeHiddenFile
 	char *sxos = "sxos";
 	char *reinx = "reinx";
 	char *atmos = "atmos";
-	char *hekate = "hekate";
+/*	char *hekate = "hekate";
 	char *lockpick = "lockpick";
 	char *memloader = "memloader";
-
+*/
 	char *payload1 = "";
 	char *payload2 = "";
 	char *payload3 = "";
-	char *payload4 = "";
+/*	char *payload4 = "";
 	char *payload5 = "";
 	char *payload6 = "";
-
+*/
 	char buff[20];
 
 /*
@@ -176,7 +176,7 @@ char *dirlist(const char *directory, const char *pattern, bool includeHiddenFile
 		strcat(allpayloads,"\nPAYLOAD3: ");
 		strcat(allpayloads,payload3);
 	    }
-	    if(strstr(&copy_entries[i * 256],hekate) != NULL)
+/*	    if(strstr(&copy_entries[i * 256],hekate) != NULL)
 	    {
 		memcpy(&dir_entries[3 * 256], &copy_entries[i * 256], strlen(&copy_entries[i * 256]) + 1);
 		payload4=&dir_entries[3 * 256];
@@ -198,7 +198,7 @@ char *dirlist(const char *directory, const char *pattern, bool includeHiddenFile
 		strcat(allpayloads,payload6);
 	    }
 
-
+*/
 	}
 
 
