@@ -15,7 +15,7 @@
  */
 
 #include <string.h>
-
+#include <stdio.h>
 #include "gfx/di.h"
 #include "gfx/gfx.h"
 
@@ -46,7 +46,81 @@ static inline void setup_gfx()
     gfx_con_init(&g_gfx_con, &g_gfx_ctxt);
     gfx_con_setcol(&g_gfx_con, 0xFFCCCCCC, 1, BLACK);
 }
+bool fileExists(char *path)
+{
+FIL fp;
+    if (f_open(&fp, path, FA_READ))
+	{
+		f_close(&fp);
+		return true;
+	}
+	return false;
+}
 
+void clean_up()
+{
+
+	f_unlink("/ftpd/connect.mp3");
+	f_unlink("/ftpd/disconnect.mp3");
+	f_unlink("/ftpd/pauseoff.mp3");
+	f_unlink("/ftpd/pauseon.mp3");
+	f_unlink("/ftpd");
+	
+	//remove themes
+	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Set.szs");
+	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/common.szs");
+	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Set.szs");
+	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/common.szs");
+	f_unlink("/sxos/titles/0100000000001000/romfs/lyt/Set.szs");
+	f_unlink("/sxos/titles/0100000000001000/romfs/lyt/common.szs");
+	
+	f_unlink("/atmosphere/titles/0100000000001013/fsmitm.flag");
+	f_unlink("/ReiNX/titles/0100000000001013/fsmitm.flag");
+	f_unlink("/sxos/titles/0100000000001013/fsmitm.flag");
+
+
+    f_unlink("/ReiNX/patches/es_patches/D2D2430244D162C9FAABE8C89A58C6E3962160F1.ips");
+    f_unlink("/ReiNX/patches/es_patches/F65FBA401BAC3CDDEA4917DE22E8B426B3A6C3AD.ips");
+    f_unlink("/ReiNX/patches/es_patches");
+    f_unlink("/ReiNX/sysmodules.dis/fs_mitm.kip");
+    f_unlink("/ReiNX/sysmodules.dis/ldn_mitm.kip");
+    f_unlink("/ReiNX/sysmodules.dis/pm.kip");
+    f_unlink("/ReiNX/sysmodules/fs_mitm.kip");
+    f_unlink("/ReiNX/sysmodules/ldn_mitm.kip");
+    f_unlink("/ReiNX/exefs_patches/Youtube/534E296FFB5F854D94A719F7727FDE2700000000000000000000000000000000.ips");
+    f_unlink("/ReiNX/exefs_patches/Youtube");
+    f_unlink("/ReiNX/exefs_patches");
+    f_unlink("/ReiNX/titles/010000000000000D/exefs.nsp");
+    f_unlink("/ReiNX/titles/010000000000000D");
+    f_unlink("/ReiNX/titles/0100000000000032/flags/boot2.flag");
+    f_unlink("/ReiNX/titles/0100000000000032/flags");
+    f_unlink("/ReiNX/titles/0100000000000032/exefs.nsp");
+    f_unlink("/ReiNX/titles/0100000000000032");
+    f_unlink("/ReiNX/titles/0100000000000036/exefs.nsp");
+	
+	f_unlink("/switch/KosmosToolbox/config.json");
+	f_unlink("/switch/KosmosToolbox/KosmosToolbox.nro");
+	f_unlink("/switch/KosmosToolbox");
+	
+	f_unlink("/switch/KosmosUpdater/internal.db");
+	f_unlink("/switch/KosmosUpdater/KosmosUpdater.nro");
+	f_unlink("/switch/KosmosUpdater/settings.cfg");
+	f_unlink("/switch/KosmosUpdater");
+	
+	f_unlink("/atmosphere/kips/fs_mitm.kip");
+	f_unlink("/atmosphere/kips/ldn_mitm.kip");
+	f_unlink("/atmosphere/kips/loader.kip");
+	f_unlink("/atmosphere/kips/pm.kip");
+	f_unlink("/atmosphere/kips/sm.kip");
+	f_unlink("/atmosphere/kips/");
+	f_unlink("/atmosphere/kips/");
+	f_unlink("/atmosphere/kips/");
+	f_unlink("/atmosphere/kips/");
+	f_unlink("/atmosphere/kips/");
+	f_unlink("/atmosphere/kips/");
+
+	f_unlink("/fixer.del");
+}
 void ipl_main()
 {
     /* Configure Switch Hardware (thanks to hekate project) */
@@ -79,15 +153,12 @@ void ipl_main()
 		//remove autoboot
         f_unlink("StarDust/payload.bin");
         f_unlink("StarDust/autobootecho.txt");
+		if(!fileExists("fixer.del"))
+		{
+		gfx_printf(&g_gfx_con, "Deleting...\n");
+		clean_up();
+		}
 		
-		//remove themes
-		f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Set.szs");
-		f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/common.szs");
-		f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Set.szs");
-		f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/common.szs");
-		f_unlink("/sxos/titles/0100000000001000/romfs/lyt/Set.szs");
-		f_unlink("/sxos/titles/0100000000001000/romfs/lyt/common.szs");
-
         gfx_printf(&g_gfx_con, "Autochainload canceled. Loading menu...\n");
         gfx_swap_buffer(&g_gfx_ctxt);
 
@@ -103,3 +174,4 @@ void ipl_main()
     gfx_swap_buffer(&g_gfx_ctxt);
     wait_for_button_and_reboot();
 }
+
