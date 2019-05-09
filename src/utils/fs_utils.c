@@ -32,7 +32,7 @@ bool sd_mount()
 		display_backlight_brightness(100, 1000);
         gfx_printf(&g_gfx_con, "-\n", 0xFFFFDD00, 0xFFCCCCCC);
         gfx_printf(&g_gfx_con, "%kFailed to init SD card.\nMake sure that it is inserted.\nOr that SD reader is properly seated!%k\n", 0xFFFFDD00, 0xFFCCCCCC);
-		msleep(3000);
+//		msleep(3000);
 	}
 	else
 	{

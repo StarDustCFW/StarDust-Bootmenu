@@ -14,8 +14,9 @@
 
 #define MINOR_VERSION 3
 #define MAJOR_VERSION 0
-#define REVI_VERSION 8
-
+#define REVI_VERSION 9
+	char minorversion[3];
+	char mayorversion[2];
 
 
 /* Render the menu */
@@ -63,13 +64,12 @@ static void gui_menu_draw_background(gui_menu_t* menu)
         gfx_printf(&g_gfx_con, "ArgonNX v%d.%d-%d", MAJOR_VERSION, MINOR_VERSION,REVI_VERSION);
 		
        //StarDust version
-if (g_sd_mounted)
-{
-	gfx_con_setpos(&g_gfx_con, 1050, 10);
+
+if (g_sd_mounted){
+
     char *str;
 	void *buf;
-	char minorversion[3];
-	char mayorversion[2];
+
 
 	buf = sd_file_read("StarDust/StarDustV.txt");
 	str = buf;
@@ -77,8 +77,10 @@ if (g_sd_mounted)
 	minorversion[1] = str[3];
 	mayorversion[0] = str[0];
 	mayorversion[1] = 0;
+}	
+	gfx_con_setpos(&g_gfx_con, 1050, 10);
 	gfx_printf(&g_gfx_con, "StarDust v%s.%s", mayorversion,minorversion);
-}		
+		
 		//battery
 		u32 battPercent = 0;
 		max17050_get_property(MAX17050_RepSOC, (int *)&battPercent);
@@ -117,14 +119,15 @@ static int gui_menu_update(gui_menu_t *menu)
 }
 
 int gui_menu_open(gui_menu_t *menu)
-{   
+{
+
     gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
     /* 
      * Render and flush at first render because blocking input won't allow us 
      * flush buffers
      */
     gui_menu_render_menu(menu);
-
+sd_unmount();
 	while (gui_menu_update(menu))
     ;
 

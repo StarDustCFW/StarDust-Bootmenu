@@ -59,7 +59,9 @@ void reloc_patcher(u32 payload_size)
 
 int launch_payload(char *path)
 {
-
+	sd_mount();
+		if (!g_sd_mounted)
+		{return 0;}
     char *atm = "atmos";
     char *rnx = "reinx";
     char *sxos = "sxos";
@@ -88,7 +90,6 @@ int launch_payload(char *path)
     if(boot==2)
     {
 	copyfile("sept/reinx.bin","sept/payload.bin");
-	f_unlink("ReiNX/sysmodules/fs_mitm.kip");
     }
 	
 

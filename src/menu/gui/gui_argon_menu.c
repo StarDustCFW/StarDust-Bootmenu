@@ -171,6 +171,9 @@ static int tool_reboot_rcm(void* param)
 
 static int tool_extr_rSD(void* param)
 {
+sd_mount();
+		if (!g_sd_mounted)
+		{return 0;}
 //SD remove Menu
     gui_menu_pool_cleanup();
 
@@ -200,7 +203,11 @@ return 0;
 }
 
 static int tool_menu_tog(void* param)
-{if (tog == 0){
+{
+sd_mount();
+		if (!g_sd_mounted)
+		{return 0;}
+if (tog == 0){
 tog = 1;
 }else{
 tog = 0;
@@ -208,11 +215,15 @@ tog = 0;
  gfx_printf(&g_gfx_con, "loading\n");
 gui_menu_pool_cleanup();
 gui_init_argon_menu();
+
 return 0;
 }
 
 static int tool_menu_rem(void* param)
 {
+sd_mount();
+		if (!g_sd_mounted)
+		{return 0;}
  gfx_printf(&g_gfx_con, "loading\n");
 gui_menu_pool_cleanup();
 	f_unlink("/atmosphere/titles/0100000000001000/fsmitm.flag");
@@ -261,6 +272,9 @@ return 0;
 
 static int tool_theme_one(void* param)
 {
+sd_mount();
+		if (!g_sd_mounted)
+		{return 0;}
 copyfile("StarDust/Atheme/1/Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
 copyfile("StarDust/Atheme/1/Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
 copyfile("StarDust/Atheme/1/Icons/power.bmp","StarDust/Icons/power.bmp");
@@ -279,6 +293,9 @@ return 0;
 
 static int tool_theme_two(void* param)
 {
+sd_mount();
+		if (!g_sd_mounted)
+		{return 0;}
 copyfile("StarDust/Atheme/2/Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
 copyfile("StarDust/Atheme/2/Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
 copyfile("StarDust/Atheme/2/Icons/power.bmp","StarDust/Icons/power.bmp");
@@ -297,6 +314,9 @@ return 0;
 
 static int tool_theme_tres(void* param)
 {
+sd_mount();
+		if (!g_sd_mounted)
+		{return 0;}
 copyfile("StarDust/Atheme/3/Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
 copyfile("StarDust/Atheme/3/Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
 copyfile("StarDust/Atheme/3/Icons/power.bmp","StarDust/Icons/power.bmp");
@@ -315,6 +335,9 @@ return 0;
 
 static int tool_theme_four(void* param)
 {
+sd_mount();
+		if (!g_sd_mounted)
+		{return 0;}
 copyfile("StarDust/Atheme/4/Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
 copyfile("StarDust/Atheme/4/Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
 copyfile("StarDust/Atheme/4/Icons/power.bmp","StarDust/Icons/power.bmp");

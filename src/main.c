@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include "gfx/di.h"
@@ -29,7 +30,7 @@
 #include "utils/fs_utils.h"
 #include "utils/touch.h"
 #include "utils/btn.h"
-
+#include "utils/dirlist.h"
 #include "menu/gui/gui_argon_menu.h"
 
 #include "minerva/minerva.h"
@@ -46,19 +47,26 @@ static inline void setup_gfx()
     gfx_con_init(&g_gfx_con, &g_gfx_ctxt);
     gfx_con_setcol(&g_gfx_con, 0xFFCCCCCC, 1, BLACK);
 }
-bool fileExists(char *path)
-{
-FIL fp;
-    if (f_open(&fp, path, FA_READ))
-	{
-		f_close(&fp);
-		return true;
-	}
-	return false;
-}
 
 void clean_up()
 {
+f_unlink("bootloader/.picasa.ini");
+f_unlink("bootloader/hekate_ipl.ini");
+f_unlink("bootloader/hekate_ipl.ini.bck");
+f_unlink("bootloader/update.bin");
+f_unlink("bootloader/payloads/Atmosphere.bin");
+f_unlink("bootloader/payloads/payload.bin");
+f_unlink("bootloader/payloads/ReiNX.bin");
+f_unlink("bootloader/payloads/sxos.bin");
+f_unlink("bootloader/sys/libsys_lp0.bso");
+f_unlink("bootloader/payloads/Lockpick_RCM.bin");
+f_unlink("bootloader/payloads/fusee-primary.bin");
+f_unlink("bootloader/bootlogo.bmp");
+f_unlink("bootloader/libtools");
+f_unlink("bootloader/payloads");
+f_unlink("bootloader/sys");
+f_unlink("bootloader/ini");
+f_unlink("bootloader");
 
 	f_unlink("/ftpd/connect.mp3");
 	f_unlink("/ftpd/disconnect.mp3");
@@ -77,7 +85,6 @@ void clean_up()
 	f_unlink("/atmosphere/titles/0100000000001013/fsmitm.flag");
 	f_unlink("/ReiNX/titles/0100000000001013/fsmitm.flag");
 	f_unlink("/sxos/titles/0100000000001013/fsmitm.flag");
-
 
     f_unlink("/ReiNX/patches/es_patches/D2D2430244D162C9FAABE8C89A58C6E3962160F1.ips");
     f_unlink("/ReiNX/patches/es_patches/F65FBA401BAC3CDDEA4917DE22E8B426B3A6C3AD.ips");
@@ -121,6 +128,8 @@ void clean_up()
 
 	f_unlink("/fixer.del");
 }
+
+
 void ipl_main()
 {
     /* Configure Switch Hardware (thanks to hekate project) */
@@ -153,15 +162,15 @@ void ipl_main()
 		//remove autoboot
         f_unlink("StarDust/payload.bin");
         f_unlink("StarDust/autobootecho.txt");
-		if(!fileExists("fixer.del"))
-		{
-		gfx_printf(&g_gfx_con, "Deleting...\n");
+		
+		if(sd_file_exists("fixer.del"))
+		{		
+		gfx_printf(&g_gfx_con, "Deleting...\n");		
 		clean_up();
 		}
 		
         gfx_printf(&g_gfx_con, "Autochainload canceled. Loading menu...\n");
         gfx_swap_buffer(&g_gfx_ctxt);
-
         if (load_menu)
             gui_init_argon_menu();
 
