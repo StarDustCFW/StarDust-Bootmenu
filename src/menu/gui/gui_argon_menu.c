@@ -50,6 +50,8 @@ static int tool_theme_one(void* param);
 static int tool_theme_two(void* param);
 static int tool_theme_tres(void* param);
 static int tool_theme_four(void* param);
+static int tool_theme_five(void* param);
+static int tool_theme_six(void* param);
 
 
 /* Generate entries dynamically */
@@ -143,13 +145,25 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icon
 
 //Create Icons, SD exract and theme Remove
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/themes.bmp"),1200, 40, 70, 70, tool_menu_rem, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Fix boot->", 1050, 80, 150, 100, NULL, NULL));
+
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/SD.bmp"),1200, 140, 70, 70, tool_extr_rSD, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Remove SD->", 1050, 180, 150, 100, NULL, NULL));
 
 //Create Icons, themes
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/1/icon.bmp"),400, 10, 70, 70, tool_theme_one, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/2/icon.bmp"),500, 10, 70, 70, tool_theme_two, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/3/icon.bmp"),600, 10, 70, 70, tool_theme_tres, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/4/icon.bmp"),700, 10, 70, 70, tool_theme_four, NULL));
+if(sd_file_exists("/StarDust/Atheme/1/icon.bmp"))
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/1/icon.bmp"),300, 10, 70, 70, tool_theme_one, NULL));
+if(sd_file_exists("/StarDust/Atheme/2/icon.bmp"))
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/2/icon.bmp"),400, 10, 70, 70, tool_theme_two, NULL));
+if(sd_file_exists("/StarDust/Atheme/3/icon.bmp"))
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/3/icon.bmp"),500, 10, 70, 70, tool_theme_tres, NULL));
+if(sd_file_exists("/StarDust/Atheme/4/icon.bmp"))
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/4/icon.bmp"),600, 10, 70, 70, tool_theme_four, NULL));
+if(sd_file_exists("/StarDust/Atheme/5/icon.bmp"))
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/5/icon.bmp"),700, 10, 70, 70, tool_theme_five, NULL));
+if(sd_file_exists("/StarDust/Atheme/6/icon.bmp"))
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/6/icon.bmp"),800, 10, 70, 70, tool_theme_six, NULL));
+
 
 /* Generate reboot rcm and shutdown entry **/
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/screenshot.bmp"),400, 650, 70, 70, (int (*)(void *))screenshot, NULL));
@@ -181,7 +195,10 @@ sd_mount();
 	gui_menu_t* menu = gui_menu_create("ArgonNX");
 
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Ya puedes extraer la SD, Al terminar ", 500, 100, 150, 100, NULL, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Pon la SD y presiona este icono", 520, 150, 150, 100, NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Pon la SD y presiona este icono", 520, 120, 150, 100, NULL, NULL));
+
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("You can now extract the SD, When finished", 500, 160, 150, 100, NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Put the SD and press this icon", 520, 180, 150, 100, NULL, NULL));
 
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/rcm.bmp"),800, 650, 70, 70, tool_reboot_rcm, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),550, 650, 70, 70, tool_power_off, NULL));
@@ -232,31 +249,7 @@ gui_menu_pool_cleanup();
 	f_unlink("/atmosphere/titles/0100000000001013/romfs/lyt/fsmitm.flag");
 	f_unlink("/ReiNX/titles/0100000000001013/romfs/lyt/fsmitm.flag");
 	f_unlink("/SXOS/titles/0100000000001013/romfs/lyt/fsmitm.flag");
-/*
-	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/common.szs");
-	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Entrance.szs");
-	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/ResidentMenu.szs");
-	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Set.szs");
-	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Flaunch.szs");
-	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Notification.szs");
-	f_unlink("/atmosphere/titles/0100000000001013/romfs/lyt/MyPage.szs");
-
-	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/common.szs");
-	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Entrance.szs");
-	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/ResidentMenu.szs");
-	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Set.szs");
-	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Flaunch.szs");
-	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Notification.szs");
-	f_unlink("/ReiNX/titles/0100000000001013/romfs/lyt/MyPage.szs");
-
-	f_unlink("/SXOS/titles/0100000000001000/romfs/lyt/common.szs");
-	f_unlink("/SXOS/titles/0100000000001000/romfs/lyt/Entrance.szs");
-	f_unlink("/SXOS/titles/0100000000001000/romfs/lyt/ResidentMenu.szs");
-	f_unlink("/SXOS/titles/0100000000001000/romfs/lyt/Set.szs");
-	f_unlink("/SXOS/titles/0100000000001000/romfs/lyt/Flaunch.szs");
-	f_unlink("/SXOS/titles/0100000000001000/romfs/lyt/Notification.szs");
-	f_unlink("/SXOS/titles/0100000000001013/romfs/lyt/MyPage.szs");
-*/	
+	
 	//this is a panic option so i will disable the servises also
 	f_unlink("/atmosphere/titles/420000000000000E/flags/boot2.flag");
 	f_unlink("/ReiNX/titles/420000000000000E/boot2.flag");
@@ -350,6 +343,48 @@ copyfile("StarDust/Atheme/4/logos/Atmosphere.bmp","StarDust/logos/Atmosphere.bmp
 copyfile("StarDust/Atheme/4/logos/Reinx.bmp","StarDust/logos/Reinx.bmp");
 copyfile("StarDust/Atheme/4/logos/sxos.bmp","StarDust/logos/sxos.bmp");
 copyfile("StarDust/Atheme/4/logos/zBackup.bmp","StarDust/logos/zBackup.bmp");
+launch_payload("payload.bin");
+return 0;
+}
+
+static int tool_theme_five(void* param)
+{
+sd_mount();
+		if (!g_sd_mounted)
+		{return 0;}
+copyfile("StarDust/Atheme/5/Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
+copyfile("StarDust/Atheme/5/Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
+copyfile("StarDust/Atheme/5/Icons/power.bmp","StarDust/Icons/power.bmp");
+copyfile("StarDust/Atheme/5/Icons/rcm.bmp","StarDust/Icons/rcm.bmp");
+copyfile("StarDust/Atheme/5/Icons/screenshot.bmp","StarDust/Icons/screenshot.bmp");
+copyfile("StarDust/Atheme/5/Icons/themes.bmp","StarDust/Icons/themes.bmp");
+
+copyfile("StarDust/Atheme/5/background.bmp","StarDust/background.bmp");
+copyfile("StarDust/Atheme/5/logos/Atmosphere.bmp","StarDust/logos/Atmosphere.bmp");
+copyfile("StarDust/Atheme/5/logos/Reinx.bmp","StarDust/logos/Reinx.bmp");
+copyfile("StarDust/Atheme/5/logos/sxos.bmp","StarDust/logos/sxos.bmp");
+copyfile("StarDust/Atheme/5/logos/zBackup.bmp","StarDust/logos/zBackup.bmp");
+launch_payload("payload.bin");
+return 0;
+}
+
+static int tool_theme_six(void* param)
+{
+sd_mount();
+		if (!g_sd_mounted)
+		{return 0;}
+copyfile("StarDust/Atheme/6/Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
+copyfile("StarDust/Atheme/6/Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
+copyfile("StarDust/Atheme/6/Icons/power.bmp","StarDust/Icons/power.bmp");
+copyfile("StarDust/Atheme/6/Icons/rcm.bmp","StarDust/Icons/rcm.bmp");
+copyfile("StarDust/Atheme/6/Icons/screenshot.bmp","StarDust/Icons/screenshot.bmp");
+copyfile("StarDust/Atheme/6/Icons/themes.bmp","StarDust/Icons/themes.bmp");
+
+copyfile("StarDust/Atheme/6/background.bmp","StarDust/background.bmp");
+copyfile("StarDust/Atheme/6/logos/Atmosphere.bmp","StarDust/logos/Atmosphere.bmp");
+copyfile("StarDust/Atheme/6/logos/Reinx.bmp","StarDust/logos/Reinx.bmp");
+copyfile("StarDust/Atheme/6/logos/sxos.bmp","StarDust/logos/sxos.bmp");
+copyfile("StarDust/Atheme/6/logos/zBackup.bmp","StarDust/logos/zBackup.bmp");
 launch_payload("payload.bin");
 return 0;
 }

@@ -14,7 +14,7 @@
 
 #define MINOR_VERSION 3
 #define MAJOR_VERSION 0
-#define REVI_VERSION 9
+#define REVI_VERSION 11
 	char minorversion[3];
 	char mayorversion[2];
 
@@ -144,7 +144,7 @@ int gui_menu_open2(gui_menu_t *menu)
      */
     gui_menu_render_menu(menu);
 //u32 tog = 0;
-		msleep(3000);
+		msleep(5000);
 		display_backlight_brightness(1, 1000);
 	while (gui_menu_update(menu))
 	{

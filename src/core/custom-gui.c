@@ -59,6 +59,9 @@ bool render_custom_title(custom_gui_t* cg)
 
 int screenshot(void* params)
 {
+sd_mount();
+		if (!g_sd_mounted)
+		{return 0;}
     //width, height, and bitcount are the key factors:
     s32 width = 720;
     s32 height = 1280;
