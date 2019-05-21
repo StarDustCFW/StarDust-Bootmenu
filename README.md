@@ -1,10 +1,10 @@
 ![License badge](https://img.shields.io/badge/license-GPLv3-blue.svg)
 [![Homebrew Store](https://img.shields.io/badge/Homebrew%20Switch-store-%23ff4554.svg)](https://www.switchbru.com/appstore/#/app/argon-nx)
-# change dir paht for StarDustCFWpack
+
 # fork of ArgonNX
 # change dir paht for StarDustCFWpack and payload show on stairs
-#more...
-
+# more...
+# is not recomended use this out of StarDustCFWpack
 ## What Argon is?
 
 Argon is a noble gas.
