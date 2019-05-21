@@ -15,9 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "core/launcher.h"
-
+#include "gfx/di.h"
+#include "gfx/gfx.h"
 #include <string.h>
-
+#include "soc/hw_init.h"
 #include "libs/fatfs/ff.h"
 #include "utils/types.h"
 #include "utils/util.h"
@@ -62,6 +63,7 @@ int launch_payload(char *path)
 	sd_mount();
 		if (!g_sd_mounted)
 		{return 0;}
+
     char *atm = "atmos";
     char *rnx = "reinx";
     char *sxos = "sxos";
@@ -83,12 +85,14 @@ int launch_payload(char *path)
 */
     if(boot==1)
     {
+	display_backlight_brightness(1, 1000);
 	copyfile("atmosphere/fusee-secondary.bin","sept/payload.bin");
 
     }
 
     if(boot==2)
     {
+	display_backlight_brightness(1, 1000);
 	copyfile("sept/reinx.bin","sept/payload.bin");
     }
 	

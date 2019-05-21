@@ -14,7 +14,7 @@
 
 #define MINOR_VERSION 3
 #define MAJOR_VERSION 0
-#define REVI_VERSION 11
+#define REVI_VERSION 13
 	char minorversion[3];
 	char mayorversion[2];
 
@@ -128,6 +128,8 @@ int gui_menu_open(gui_menu_t *menu)
      */
     gui_menu_render_menu(menu);
 sd_unmount();
+display_backlight_brightness(100, 1000);
+
 	while (gui_menu_update(menu))
     ;
 
@@ -143,20 +145,12 @@ int gui_menu_open2(gui_menu_t *menu)
      * flush buffers
      */
     gui_menu_render_menu(menu);
-//u32 tog = 0;
 		msleep(5000);
 		display_backlight_brightness(1, 1000);
 	while (gui_menu_update(menu))
 	{
 	display_backlight_brightness(1, 1000);
 	gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
-/*		if (tog == 0){
-		display_backlight_brightness(1, 1000);
-		tog = 1;
-		}else{
-		display_backlight_brightness(100, 1000);
-		tog = 0;
-		}*/
 		;
 	}
 	return 0;
@@ -192,3 +186,4 @@ static int handle_touch_input(gui_menu_t *menu)
 
     return 1;
 }
+

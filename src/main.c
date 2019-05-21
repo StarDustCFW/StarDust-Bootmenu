@@ -19,10 +19,9 @@
 #include <stdio.h>
 #include "gfx/di.h"
 #include "gfx/gfx.h"
-
+#include "soc/hw_init.h"
 #include "mem/heap.h"
 
-#include "soc/hw_init.h"
 
 #include "core/launcher.h"
 
@@ -97,8 +96,7 @@ deleteall("/ReiNX/titles/010000000000000D", "*");
 deleteall("/ReiNX/titles/0100000000000032/exefs", "*");
 deleteall("/ReiNX/titles/0100000000000032", "*");
 deleteall("/ReiNX/titles/0100000000000032/flags", "*");
-deleteall("/ReiNX/titles/0100000000000036/exefs", "*");
-deleteall("/ReiNX/titles/0100000000000036", "*");
+
 
 
 deleteall("/switch/KosmosToolbox", "*");
@@ -140,7 +138,7 @@ void ipl_main()
     display_init();
     setup_gfx();
     display_backlight_pwm_init();
-    display_backlight_brightness(100, 1000);
+    display_backlight_brightness(20, 1000);
 
 
     /* Train DRAM */
