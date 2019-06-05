@@ -6,7 +6,7 @@
 Is not recomended use this out of StarDustCFWpack
 
 ## What StarDust Boot is?
-[picture](sd-card-example/old-stuf/screenshot.png)
+![picture](https://raw.githubusercontent.com/Kronos2308/argon-nx/master/sd-card-example/old-stuf/screenshot.png)
 
 
 ## Features
@@ -42,8 +42,6 @@ The color used for transparency is **#1D1919**.
 ## GUI
 
 This image was captured with the **screenshot** feature.
-
-<img src="img/example.png" alt="example" width="700">
 
 Find these logos [here](img/example-logos) and the background and title [here](sd-card-example/).
 
@@ -81,7 +79,7 @@ This payload will launch any CFW or payload.
 1. Kind of config file
 2. Change to prettier font
 
-<img src="img/splash.jpg" alt="banner">
+
 
 ## Credits
 
