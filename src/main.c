@@ -56,18 +56,9 @@ char* payloads = listfil(directory, filet, true);
     {
 char* payloadpath = (char*)malloc(256);
 			if(strlen(&payloads[i * 256]) <= 100){			
-//			gfx_printf(&g_gfx_con, "\n");	
-//			gfx_printf(&g_gfx_con,"%d",strlen(&payloads[i * 256]));
-//			gfx_printf(&g_gfx_con, "\n");
-//			gfx_printf(&g_gfx_con, &payloads[i * 256]);
-//			gfx_printf(&g_gfx_con, "\n");
 			strcpy(payloadpath, directory);
 			strcat(payloadpath, "/");
 			strcat(payloadpath, &payloads[i * 256]);
-//			gfx_printf(&g_gfx_con, "\n");	
-//			gfx_printf(&g_gfx_con, payloadpath);		
-//			gfx_swap_buffer(&g_gfx_ctxt);
-//			msleep(3000);
 			f_unlink(payloadpath);
 			}
 	i++;

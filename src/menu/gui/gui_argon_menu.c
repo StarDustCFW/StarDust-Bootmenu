@@ -47,13 +47,11 @@ static int tool_reboot_rcm(void* param);
 static int tool_power_off(void* param);
 static int tool_menu_tog(void* param);
 static int tool_menu_rem(void* param);
-static int tool_theme_one(void* param);
-static int tool_theme_two(void* param);
-static int tool_theme_tres(void* param);
-static int tool_theme_four(void* param);
-static int tool_theme_five(void* param);
-static int tool_theme_six(void* param);
-static int tool_theme_siben(void* param);
+int tool_theme(char* param);
+
+static int backup_full(void* param);
+static int backup_lite(void* param);
+static int backup_boot(void* param);
 
 
 /* Generate entries dynamically */
@@ -134,7 +132,7 @@ void gui_init_argon_menu(void)
     /* Init pool for menu */
     gui_menu_pool_init();
 gui_menu_t* menu = gui_menu_create("ArgonNX");
- 
+sd_mount();
 if (tog == 0){
 //generate main menu
 generate_payloads_entries(dirlist(PAYLOADS_DIR, "*.bin", false), menu);
@@ -143,28 +141,41 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icon
 //generate menu2
 generate_payloads_back(dirlist(PAYBACK_DIR, "*.bin", false), menu);
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowl.bmp"),100, 650, 70, 70, tool_menu_tog, NULL));
+
+
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Backup Nand", 1090, 370, 150, 100, NULL, NULL));
+
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/button.bmp"),1070, 400, 200, 75, backup_full, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Raw full", 1095, 425, 150, 100, NULL, NULL));
+
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/button.bmp"),1070, 500, 200, 75, backup_lite, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Lite System", 1093, 525, 150, 100, NULL, NULL));
+
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/button.bmp"),1070, 600, 200, 75, backup_boot, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("boot0/1 Only", 1094, 625, 150, 100, NULL, NULL));
+
+
 }
 
 //Create Icons, SD exract and theme Remove
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/themes.bmp"),1200, 40, 70, 70, tool_menu_rem, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Fix boot->", 1050, 80, 150, 100, NULL, NULL));
 
 
 //Create Icons, themes
 if(sd_file_exists("/StarDust/Atheme/1/icon.bmp"))
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/1/icon.bmp"),300, 10, 70, 70, tool_theme_one, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/1/icon.bmp"),300, 10, 70, 70, (int (*)(void *))tool_theme, (void*)"StarDust/Atheme/1"));
 if(sd_file_exists("/StarDust/Atheme/2/icon.bmp"))
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/2/icon.bmp"),400, 10, 70, 70, tool_theme_two, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/2/icon.bmp"),400, 10, 70, 70, (int (*)(void *))tool_theme, (void*)"StarDust/Atheme/2"));
 if(sd_file_exists("/StarDust/Atheme/3/icon.bmp"))
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/3/icon.bmp"),500, 10, 70, 70, tool_theme_tres, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/3/icon.bmp"),500, 10, 70, 70, (int (*)(void *))tool_theme, (void*)"StarDust/Atheme/3"));
 if(sd_file_exists("/StarDust/Atheme/4/icon.bmp"))
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/4/icon.bmp"),600, 10, 70, 70, tool_theme_four, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/4/icon.bmp"),600, 10, 70, 70, (int (*)(void *))tool_theme, (void*)"StarDust/Atheme/4"));
 if(sd_file_exists("/StarDust/Atheme/5/icon.bmp"))
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/5/icon.bmp"),700, 10, 70, 70, tool_theme_five, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/5/icon.bmp"),700, 10, 70, 70, (int (*)(void *))tool_theme, (void*)"StarDust/Atheme/5"));
 if(sd_file_exists("/StarDust/Atheme/6/icon.bmp"))
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/6/icon.bmp"),800, 10, 70, 70, tool_theme_six, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/6/icon.bmp"),800, 10, 70, 70, (int (*)(void *))tool_theme, (void*)"StarDust/Atheme/6"));
 if(sd_file_exists("/StarDust/Atheme/7/icon.bmp"))
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/7/icon.bmp"),900, 10, 70, 70, tool_theme_siben, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/7/icon.bmp"),900, 10, 70, 70, (int (*)(void *))tool_theme, (void*)"StarDust/Atheme/7"));
 
 
 /* Generate reboot rcm and shutdown entry **/
@@ -173,6 +184,8 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icon
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/rcm.bmp"),800, 650, 70, 70, tool_reboot_rcm, NULL));
 
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/SD.bmp"),1200, 140, 70, 70, tool_extr_rSD, NULL));
+
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Fix boot->", 1050, 80, 150, 100, NULL, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Remove SD->", 1050, 180, 150, 100, NULL, NULL));
 
     /* Start menu */
@@ -193,6 +206,11 @@ static int tool_extr_rSD(void* param)
 sd_mount();
 		if (!g_sd_mounted)
 		{return 0;}
+    u32 *fb = display_init_framebuffer();
+    gfx_init_ctxt(&g_gfx_ctxt, fb, 1280, 720, 720);
+    gfx_clear_buffer(&g_gfx_ctxt);
+    gfx_con_init(&g_gfx_con, &g_gfx_ctxt);
+    gfx_con_setcol(&g_gfx_con, 0xFFCCCCCC, 1, BLACK);
 //SD remove Menu
     gui_menu_pool_cleanup();
 
@@ -229,13 +247,14 @@ static int tool_menu_tog(void* param)
 sd_mount();
 		if (!g_sd_mounted)
 		{return 0;}
+display_backlight_brightness(50, 1000);
 if (tog == 0){
 tog = 1;
 }else{
 tog = 0;
 }
  gfx_printf(&g_gfx_con, "loading\n");
-gui_menu_pool_cleanup();
+//gui_menu_pool_cleanup();
 gui_init_argon_menu();
 
 return 0;
@@ -247,7 +266,7 @@ sd_mount();
 		if (!g_sd_mounted)
 		{return 0;}
  gfx_printf(&g_gfx_con, "loading\n");
-gui_menu_pool_cleanup();
+//gui_menu_pool_cleanup();
 	f_unlink("/atmosphere/titles/0100000000001000/fsmitm.flag");
 	f_unlink("/ReiNX/titles/0100000000001000/fsmitm.flag");
 	f_unlink("/SXOS/titles/0100000000001000/fsmitm.flag");
@@ -264,6 +283,8 @@ gui_menu_pool_cleanup();
 	f_unlink("/ReiNX/titles/4200000000000010/boot2.flag");
 	f_unlink("/atmosphere/titles/420000000000000B/flags/boot2.flag");
 	f_unlink("/ReiNX/titles/420000000000000B/boot2.flag");
+	f_unlink("/atmosphere/titles/0100000000000FAF/flags/boot2.flag");
+	f_unlink("/ReiNX/titles/0100000000000FAF/boot2.flag");
 
     u8* buffer = (u8*)malloc(4);
     sd_save_to_file(buffer, 4, "fixer.del");
@@ -271,158 +292,62 @@ launch_payload("payload.bin");
 return 0;
 }
 
-static int tool_theme_one(void* param)
+int tool_theme(char* param)
 {
 sd_mount();
 		if (!g_sd_mounted)
 		{return 0;}
 display_backlight_brightness(1, 1000);
-copyfile("StarDust/Atheme/1/Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
-copyfile("StarDust/Atheme/1/Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
-copyfile("StarDust/Atheme/1/Icons/power.bmp","StarDust/Icons/power.bmp");
-copyfile("StarDust/Atheme/1/Icons/rcm.bmp","StarDust/Icons/rcm.bmp");
-copyfile("StarDust/Atheme/1/Icons/screenshot.bmp","StarDust/Icons/screenshot.bmp");
-copyfile("StarDust/Atheme/1/Icons/themes.bmp","StarDust/Icons/themes.bmp");
+copyfileparam(param ,"Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
+copyfileparam(param ,"Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
+copyfileparam(param ,"Icons/power.bmp","StarDust/Icons/power.bmp");
+copyfileparam(param ,"Icons/rcm.bmp","StarDust/Icons/rcm.bmp");
+copyfileparam(param ,"Icons/screenshot.bmp","StarDust/Icons/screenshot.bmp");
+copyfileparam(param ,"Icons/themes.bmp","StarDust/Icons/themes.bmp");
+copyfileparam(param ,"Icons/SD.bmp","StarDust/Icons/SD.bmp");
 
-copyfile("StarDust/Atheme/1/background.bmp","StarDust/background.bmp");
-copyfile("StarDust/Atheme/1/logos/Atmosphere.bmp","StarDust/logos/Atmosphere.bmp");
-copyfile("StarDust/Atheme/1/logos/Reinx.bmp","StarDust/logos/Reinx.bmp");
-copyfile("StarDust/Atheme/1/logos/sxos.bmp","StarDust/logos/sxos.bmp");
-copyfile("StarDust/Atheme/1/logos/zBackup.bmp","StarDust/logos/zBackup.bmp");
-launch_payload("payload.bin");
+copyfileparam(param,"background.bmp","StarDust/background.bmp");
+copyfileparam(param,"logos/Atmosphere.bmp","StarDust/logos/Atmosphere.bmp");
+copyfileparam(param,"logos/Reinx.bmp","StarDust/logos/Reinx.bmp");
+copyfileparam(param,"/logos/sxos.bmp","StarDust/logos/sxos.bmp");
+copyfileparam(param,"logos/zBackup.bmp","StarDust/logos/zBackup.bmp");
+gui_init_argon_menu();
 return 0;
 }
 
-static int tool_theme_two(void* param)
+static int backup_full(void* param)
 {
 sd_mount();
 		if (!g_sd_mounted)
 		{return 0;}
 display_backlight_brightness(1, 1000);
-copyfile("StarDust/Atheme/2/Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
-copyfile("StarDust/Atheme/2/Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
-copyfile("StarDust/Atheme/2/Icons/power.bmp","StarDust/Icons/power.bmp");
-copyfile("StarDust/Atheme/2/Icons/rcm.bmp","StarDust/Icons/rcm.bmp");
-copyfile("StarDust/Atheme/2/Icons/screenshot.bmp","StarDust/Icons/screenshot.bmp");
-copyfile("StarDust/Atheme/2/Icons/themes.bmp","StarDust/Icons/themes.bmp");
-
-copyfile("StarDust/Atheme/2/background.bmp","StarDust/background.bmp");
-copyfile("StarDust/Atheme/2/logos/Atmosphere.bmp","StarDust/logos/Atmosphere.bmp");
-copyfile("StarDust/Atheme/2/logos/Reinx.bmp","StarDust/logos/Reinx.bmp");
-copyfile("StarDust/Atheme/2/logos/sxos.bmp","StarDust/logos/sxos.bmp");
-copyfile("StarDust/Atheme/2/logos/zBackup.bmp","StarDust/logos/zBackup.bmp");
-launch_payload("payload.bin");
+u8* buffer = (u8*)malloc(4);
+sd_save_to_file(buffer, 4, "StarDust/raw.bk");
+launch_payload("StarDust/payloads/zbackup.bin");
 return 0;
 }
 
-static int tool_theme_tres(void* param)
+static int backup_lite(void* param)
 {
 sd_mount();
 		if (!g_sd_mounted)
 		{return 0;}
 display_backlight_brightness(1, 1000);
-copyfile("StarDust/Atheme/3/Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
-copyfile("StarDust/Atheme/3/Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
-copyfile("StarDust/Atheme/3/Icons/power.bmp","StarDust/Icons/power.bmp");
-copyfile("StarDust/Atheme/3/Icons/rcm.bmp","StarDust/Icons/rcm.bmp");
-copyfile("StarDust/Atheme/3/Icons/screenshot.bmp","StarDust/Icons/screenshot.bmp");
-copyfile("StarDust/Atheme/3/Icons/themes.bmp","StarDust/Icons/themes.bmp");
-
-copyfile("StarDust/Atheme/3/background.bmp","StarDust/background.bmp");
-copyfile("StarDust/Atheme/3/logos/Atmosphere.bmp","StarDust/logos/Atmosphere.bmp");
-copyfile("StarDust/Atheme/3/logos/Reinx.bmp","StarDust/logos/Reinx.bmp");
-copyfile("StarDust/Atheme/3/logos/sxos.bmp","StarDust/logos/sxos.bmp");
-copyfile("StarDust/Atheme/3/logos/zBackup.bmp","StarDust/logos/zBackup.bmp");
-launch_payload("payload.bin");
+u8* buffer = (u8*)malloc(4);
+sd_save_to_file(buffer, 4, "StarDust/syslite.bk");
+launch_payload("StarDust/payloads/zbackup.bin");
 return 0;
 }
 
-static int tool_theme_four(void* param)
+static int backup_boot(void* param)
 {
 sd_mount();
 		if (!g_sd_mounted)
 		{return 0;}
 display_backlight_brightness(1, 1000);
-copyfile("StarDust/Atheme/4/Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
-copyfile("StarDust/Atheme/4/Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
-copyfile("StarDust/Atheme/4/Icons/power.bmp","StarDust/Icons/power.bmp");
-copyfile("StarDust/Atheme/4/Icons/rcm.bmp","StarDust/Icons/rcm.bmp");
-copyfile("StarDust/Atheme/4/Icons/screenshot.bmp","StarDust/Icons/screenshot.bmp");
-copyfile("StarDust/Atheme/4/Icons/themes.bmp","StarDust/Icons/themes.bmp");
-
-copyfile("StarDust/Atheme/4/background.bmp","StarDust/background.bmp");
-copyfile("StarDust/Atheme/4/logos/Atmosphere.bmp","StarDust/logos/Atmosphere.bmp");
-copyfile("StarDust/Atheme/4/logos/Reinx.bmp","StarDust/logos/Reinx.bmp");
-copyfile("StarDust/Atheme/4/logos/sxos.bmp","StarDust/logos/sxos.bmp");
-copyfile("StarDust/Atheme/4/logos/zBackup.bmp","StarDust/logos/zBackup.bmp");
-launch_payload("payload.bin");
-return 0;
-}
-
-static int tool_theme_five(void* param)
-{
-sd_mount();
-		if (!g_sd_mounted)
-		{return 0;}
-display_backlight_brightness(1, 1000);
-copyfile("StarDust/Atheme/5/Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
-copyfile("StarDust/Atheme/5/Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
-copyfile("StarDust/Atheme/5/Icons/power.bmp","StarDust/Icons/power.bmp");
-copyfile("StarDust/Atheme/5/Icons/rcm.bmp","StarDust/Icons/rcm.bmp");
-copyfile("StarDust/Atheme/5/Icons/screenshot.bmp","StarDust/Icons/screenshot.bmp");
-copyfile("StarDust/Atheme/5/Icons/themes.bmp","StarDust/Icons/themes.bmp");
-
-copyfile("StarDust/Atheme/5/background.bmp","StarDust/background.bmp");
-copyfile("StarDust/Atheme/5/logos/Atmosphere.bmp","StarDust/logos/Atmosphere.bmp");
-copyfile("StarDust/Atheme/5/logos/Reinx.bmp","StarDust/logos/Reinx.bmp");
-copyfile("StarDust/Atheme/5/logos/sxos.bmp","StarDust/logos/sxos.bmp");
-copyfile("StarDust/Atheme/5/logos/zBackup.bmp","StarDust/logos/zBackup.bmp");
-launch_payload("payload.bin");
-return 0;
-}
-
-static int tool_theme_six(void* param)
-{
-sd_mount();
-		if (!g_sd_mounted)
-		{return 0;}
-display_backlight_brightness(1, 1000);
-copyfile("StarDust/Atheme/6/Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
-copyfile("StarDust/Atheme/6/Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
-copyfile("StarDust/Atheme/6/Icons/power.bmp","StarDust/Icons/power.bmp");
-copyfile("StarDust/Atheme/6/Icons/rcm.bmp","StarDust/Icons/rcm.bmp");
-copyfile("StarDust/Atheme/6/Icons/screenshot.bmp","StarDust/Icons/screenshot.bmp");
-copyfile("StarDust/Atheme/6/Icons/themes.bmp","StarDust/Icons/themes.bmp");
-
-copyfile("StarDust/Atheme/6/background.bmp","StarDust/background.bmp");
-copyfile("StarDust/Atheme/6/logos/Atmosphere.bmp","StarDust/logos/Atmosphere.bmp");
-copyfile("StarDust/Atheme/6/logos/Reinx.bmp","StarDust/logos/Reinx.bmp");
-copyfile("StarDust/Atheme/6/logos/sxos.bmp","StarDust/logos/sxos.bmp");
-copyfile("StarDust/Atheme/6/logos/zBackup.bmp","StarDust/logos/zBackup.bmp");
-launch_payload("payload.bin");
-return 0;
-}
-
-
-static int tool_theme_siben(void* param)
-{
-sd_mount();
-		if (!g_sd_mounted)
-		{return 0;}
-display_backlight_brightness(1, 1000);
-copyfile("StarDust/Atheme/7/Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
-copyfile("StarDust/Atheme/7/Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
-copyfile("StarDust/Atheme/7/Icons/power.bmp","StarDust/Icons/power.bmp");
-copyfile("StarDust/Atheme/7/Icons/rcm.bmp","StarDust/Icons/rcm.bmp");
-copyfile("StarDust/Atheme/7/Icons/screenshot.bmp","StarDust/Icons/screenshot.bmp");
-copyfile("StarDust/Atheme/7/Icons/themes.bmp","StarDust/Icons/themes.bmp");
-
-copyfile("StarDust/Atheme/7/background.bmp","StarDust/background.bmp");
-copyfile("StarDust/Atheme/7/logos/Atmosphere.bmp","StarDust/logos/Atmosphere.bmp");
-copyfile("StarDust/Atheme/7/logos/Reinx.bmp","StarDust/logos/Reinx.bmp");
-copyfile("StarDust/Atheme/7/logos/sxos.bmp","StarDust/logos/sxos.bmp");
-copyfile("StarDust/Atheme/7/logos/zBackup.bmp","StarDust/logos/zBackup.bmp");
-launch_payload("payload.bin");
+u8* buffer = (u8*)malloc(4);
+sd_save_to_file(buffer, 4, "StarDust/boot.bk");
+launch_payload("StarDust/payloads/zbackup.bin");
 return 0;
 }
 

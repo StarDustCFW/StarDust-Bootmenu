@@ -21,7 +21,7 @@
 #include "gfx/di.h"
 #include "mem/heap.h"
 #include "gfx/gfx.h"
-
+#include <string.h>
 bool sd_mount()
 {
 	if (g_sd_mounted)
@@ -133,4 +133,28 @@ void copyfile(const char* source, const char* target)
 	f_close(&fp);
 
 	sd_save_to_file(sd_file_read(source),size,target);
+}
+
+void copyfileparam(char* param, char* source, char* target)
+{
+	char* path = (char*)malloc(256);
+			strcpy(path, param);
+			strcat(path, "/");
+			strcat(path, source);
+/*		
+		g_gfx_con.scale = 2;
+        gfx_con_setpos(&g_gfx_con, 15, 50);
+		gfx_printf(&g_gfx_con, "--------------\n",path);
+		gfx_printf(&g_gfx_con, "copy %s %s\n",path ,target);
+	    gfx_swap_buffer(&g_gfx_ctxt);
+*/		
+        FIL fp;
+        if (f_open(&fp, path, FA_READ) != FR_OK)
+                return NULL;
+
+        u32 size = f_size(&fp);
+	f_close(&fp);
+	
+
+	sd_save_to_file(sd_file_read(path),size,target);
 }

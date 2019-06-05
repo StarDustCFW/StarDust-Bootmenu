@@ -14,9 +14,8 @@
 
 #define MINOR_VERSION 3
 #define MAJOR_VERSION 0
-#define REVI_VERSION 13
-	char minorversion[3];
-	char mayorversion[2];
+#define REVI_VERSION 15
+	char Sversion[4];
 
 
 /* Render the menu */
@@ -64,22 +63,22 @@ static void gui_menu_draw_background(gui_menu_t* menu)
         gfx_printf(&g_gfx_con, "ArgonNX v%d.%d-%d", MAJOR_VERSION, MINOR_VERSION,REVI_VERSION);
 		
        //StarDust version
-
+char *str;
 if (g_sd_mounted){
 
-    char *str;
+   
 	void *buf;
 
 
 	buf = sd_file_read("StarDust/StarDustV.txt");
 	str = buf;
-	minorversion[0] = str[2];
-	minorversion[1] = str[3];
-	mayorversion[0] = str[0];
-	mayorversion[1] = 0;
+	Sversion[0] = str[0];
+	Sversion[1] = str[1];
+	Sversion[2] = str[2];
+	Sversion[3] = str[3];
 }	
 	gfx_con_setpos(&g_gfx_con, 1050, 10);
-	gfx_printf(&g_gfx_con, "StarDust v%s.%s", mayorversion,minorversion);
+	gfx_printf(&g_gfx_con, "StarDust v%s", Sversion);
 		
 		//battery
 		u32 battPercent = 0;

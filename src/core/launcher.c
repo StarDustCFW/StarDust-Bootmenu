@@ -70,8 +70,6 @@ int launch_payload(char *path)
 
     u32 boot = 0;
 
-
-
     if(strstr(path,atm) != NULL)
     	boot=1;
     if(strstr(path,rnx) != NULL)
@@ -79,15 +77,14 @@ int launch_payload(char *path)
     if(strstr(path,sxos) != NULL)
     	boot=3;
 /*
-    u8* buffer = (u8*)malloc(4);
-    memcpy(buffer, &boot, 4);
-    sd_save_to_file(buffer, 4, "StarDust/boot.txt");
+	u8* buffer = (u8*)malloc(1);
+    memcpy(buffer, &boot, 1);
+    sd_save_to_file(buffer, 1, "StarDust/boot.txt");
 */
     if(boot==1)
     {
 	display_backlight_brightness(1, 1000);
 	copyfile("atmosphere/fusee-secondary.bin","sept/payload.bin");
-
     }
 
     if(boot==2)
@@ -96,7 +93,6 @@ int launch_payload(char *path)
 	copyfile("sept/reinx.bin","sept/payload.bin");
     }
 	
-
     FIL fp;
     if (f_open(&fp, path, FA_READ))
     {
