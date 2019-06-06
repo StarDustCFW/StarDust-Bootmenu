@@ -217,12 +217,6 @@ sd_mount();
 	gui_menu_pool_init();
 	gui_menu_t* menu = gui_menu_create("ArgonNX");
 
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Ya puedes extraer la SD, Al terminar ", 500, 100, 150, 100, NULL, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Pon la SD y presiona este icono", 520, 120, 150, 100, NULL, NULL));
-
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("You can now extract the SD, When finished", 500, 160, 150, 100, NULL, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Put the SD and press this icon", 520, 180, 150, 100, NULL, NULL));
-
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/rcm.bmp"),800, 650, 70, 70, tool_reboot_rcm, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),600, 650, 70, 70, tool_power_off, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/extrDS.bmp"),1100, 500, 200, 200, NULL, NULL));
@@ -297,7 +291,7 @@ int tool_theme(char* param)
 sd_mount();
 		if (!g_sd_mounted)
 		{return 0;}
-display_backlight_brightness(1, 1000);
+display_backlight_brightness(0, 1000);
 copyfileparam(param ,"Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
 copyfileparam(param ,"Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
 copyfileparam(param ,"Icons/power.bmp","StarDust/Icons/power.bmp");

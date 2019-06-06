@@ -83,13 +83,13 @@ int launch_payload(char *path)
 */
     if(boot==1)
     {
-	display_backlight_brightness(1, 1000);
+	display_backlight_brightness(0, 1000);
 	copyfile("atmosphere/fusee-secondary.bin","sept/payload.bin");
     }
 
     if(boot==2)
     {
-	display_backlight_brightness(1, 1000);
+	display_backlight_brightness(0, 1000);
 	copyfile("sept/reinx.bin","sept/payload.bin");
     }
 	
@@ -112,6 +112,7 @@ int launch_payload(char *path)
     if (f_read(&fp, buf, size, NULL))
     {
         f_close(&fp);
+		display_backlight_brightness(100, 1000);
         gfx_printf(&g_gfx_con, "Error loading %s\n", path);
         return 1;
     }
@@ -140,6 +141,6 @@ int launch_payload(char *path)
     
     // Launch our payload.
     (*ext_payload_ptr)();
-
+display_backlight_brightness(100, 1000);
 	return 1;
 }

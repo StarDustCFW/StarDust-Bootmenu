@@ -108,7 +108,6 @@ deleteall("/atmosphere/kips", "*");
 	f_unlink("/ReiNX/titles/0100000000001013/fsmitm.flag");
 	f_unlink("/sxos/titles/0100000000001013/fsmitm.flag");
 	
-	
 //deleteall("/////", "*");	
 	//close
 	f_unlink("/fixer.del");
