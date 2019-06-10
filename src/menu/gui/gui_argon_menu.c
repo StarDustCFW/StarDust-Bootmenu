@@ -264,9 +264,7 @@ sd_mount();
 	f_unlink("/atmosphere/titles/0100000000001000/fsmitm.flag");
 	f_unlink("/ReiNX/titles/0100000000001000/fsmitm.flag");
 	f_unlink("/SXOS/titles/0100000000001000/fsmitm.flag");
-	f_unlink("/atmosphere/titles/0100000000001013/romfs/lyt/fsmitm.flag");
-	f_unlink("/ReiNX/titles/0100000000001013/romfs/lyt/fsmitm.flag");
-	f_unlink("/SXOS/titles/0100000000001013/romfs/lyt/fsmitm.flag");
+	f_unlink("/sxos/titles/0100000000001000/fsmitm.flag");
 	
 	//this is a panic option so i will disable the servises also
 	f_unlink("/atmosphere/titles/420000000000000E/flags/boot2.flag");
