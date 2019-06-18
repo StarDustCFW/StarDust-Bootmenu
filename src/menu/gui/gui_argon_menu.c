@@ -51,7 +51,7 @@ int tool_theme(char* param);
 
 static int backup_full(void* param);
 static int backup_lite(void* param);
-static int backup_boot(void* param);
+static int backup_emummc(void* param);
 
 
 /* Generate entries dynamically */
@@ -151,8 +151,8 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Raw full", 1095, 425
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/button.bmp"),1070, 500, 200, 75, backup_lite, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Lite System", 1093, 525, 150, 100, NULL, NULL));
 
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/button.bmp"),1070, 600, 200, 75, backup_boot, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("boot0/1 Only", 1094, 625, 150, 100, NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/button.bmp"),1070, 600, 200, 75, backup_emummc, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Make EmuMMC", 1094, 625, 150, 100, NULL, NULL));
 
 
 }
@@ -331,14 +331,14 @@ launch_payload("StarDust/payloads/zbackup.bin");
 return 0;
 }
 
-static int backup_boot(void* param)
+static int backup_emummc(void* param)
 {
 sd_mount();
 		if (!g_sd_mounted)
 		{return 0;}
 display_backlight_brightness(1, 1000);
 u8* buffer = (u8*)malloc(4);
-sd_save_to_file(buffer, 4, "StarDust/boot.bk");
+sd_save_to_file(buffer, 4, "StarDust/emummc.bk");
 launch_payload("StarDust/payloads/zbackup.bin");
 return 0;
 }

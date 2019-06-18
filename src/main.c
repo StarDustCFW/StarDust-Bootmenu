@@ -69,6 +69,7 @@ f_unlink(directory);
 //first Delete After Update
 void clean_up()
 {
+//delete bootloader for tinfoil 
 deleteall("/bootloader/ini", "*");
 deleteall("/bootloader/payloads", "*");
 deleteall("/bootloader/libtools", "*");
@@ -88,6 +89,8 @@ deleteall("/ReiNX/titles/0100000000000032/exefs", "*");
 deleteall("/ReiNX/titles/0100000000000032", "*");
 deleteall("/ReiNX/titles/0100000000000032/flags", "*");
 
+deleteall("/sxos/titles/0100000000000034", "*");
+deleteall("/SXOS/titles/0100000000000034", "*");
 
 
 deleteall("/switch/KosmosToolbox", "*");
