@@ -54,5 +54,5 @@ __attribute__((noreturn)) void wait_for_button_and_reboot(void);
  * Replace a pattern of string for another string
  */
 char *str_replace(char *orig, char *rep, char *with);
-
+void BootStrapNX();
 #endif

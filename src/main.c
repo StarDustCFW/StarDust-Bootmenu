@@ -161,13 +161,19 @@ void ipl_main()
         gfx_swap_buffer(&g_gfx_ctxt);
 //		msleep(25000);
         if (load_menu)
-            gui_init_argon_menu();
+        gui_init_argon_menu();
 
     } else {
         gfx_printf(&g_gfx_con, "No sd card found...\n");
     }
+        gfx_swap_buffer(&g_gfx_ctxt);
+	
+BootStrapNX();
 
-    /* If payload launch fails wait for user input to reboot the switch */
+	
+	
+	
+/*If payload launch fails wait for user input to reboot the switch */
     gfx_printf(&g_gfx_con, "Press power button to reboot into RCM...\n\n");
     gfx_swap_buffer(&g_gfx_ctxt);
     wait_for_button_and_reboot();

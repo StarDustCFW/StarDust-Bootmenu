@@ -28,7 +28,10 @@
 #include "gfx/gfx.h"
 #include "mem/heap.h"
 #include <string.h>
-
+#include "core/launcher.h"
+#include "core/payloads.h"
+#include "core/custom-gui.h"
+#include "power/max17050.h"
 u32 get_tmr_s()
 {
 	return RTC(APBDEV_RTC_SECONDS);
@@ -192,4 +195,73 @@ char *str_replace(char *orig, char *rep, char *with) {
     }
     strcpy(tmp, orig);
     return result;
+}
+
+
+void BootStrapNX()
+{
+sd_unmount();
+u32 battPercent = 0;
+u32 letX = 20;
+u32 letY = 380;
+display_backlight_brightness(0, 1000);
+	while (true) {
+		max17050_get_property(MAX17050_RepSOC, (int *)&battPercent);
+		gfx_swap_buffer(&g_gfx_ctxt);
+		g_gfx_con.mute = 0;
+		g_gfx_con.scale = 3;
+		gfx_con_setpos(&g_gfx_con, 10, 10);
+		gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
+		gfx_printf(&g_gfx_con, "BootStrapNX\n");
+		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
+		gfx_con_setpos(&g_gfx_con, 950, 10);
+		gfx_printf(&g_gfx_con, "Battery: -%d%-", (battPercent >> 8) & 0xFF, (battPercent & 0xFF));
+		gfx_con_setpos(&g_gfx_con, letX, letY+250);
+		gfx_printf(&g_gfx_con, "Press %kPOWER%k To Boot %kpayload.bin%k\n",0xFF331ad8,0xFFF9F9F9,0xFF008F39,0xFFF9F9F9);
+		gfx_con_setpos(&g_gfx_con, letX, letY+280);
+		gfx_printf(&g_gfx_con, "Hold %kVol+ POWER%k To Reboot RCM\n",0xFF331ad8,0xFFF9F9F9);
+		gfx_con_setpos(&g_gfx_con, letX, letY+310);
+		gfx_printf(&g_gfx_con, "Hold %kPOWER%k To Full Power Off\n",0xFF331ad8,0xFFF9F9F9);
+		g_gfx_con.mute = 1;
+		btn_wait();
+        if (btn_read() & BTN_POWER)
+		{
+			if (btn_read() & BTN_VOL_UP){reboot_rcm();}
+			if (sd_mount())
+			{
+				g_gfx_con.mute = 0;
+				launch_payload("payload.bin");
+				sd_unmount();
+				display_backlight_brightness(100, 1000);
+				gfx_con_setpos(&g_gfx_con, 250, 230);
+				gfx_printf(&g_gfx_con, "%kpayload.bin%k missing%k\n",0xFF008F39,0xFFea2f1e,0xFFF9F9F9);
+				gfx_swap_buffer(&g_gfx_ctxt);
+				btn_wait_timeout(7000, BTN_POWER);
+				
+			}else{
+				g_gfx_con.mute = 0;
+				display_backlight_brightness(100, 1000);
+				gfx_con_setpos(&g_gfx_con, 250, 230);
+				gfx_printf(&g_gfx_con, "%kSD card Mount failed...%k\n",0xFFea2f1e,0xFFF9F9F9);
+				sd_mount();
+				gfx_swap_buffer(&g_gfx_ctxt);
+				btn_wait_timeout(7000, BTN_POWER);
+			}
+			//if hold power buton then power off
+			if (btn_read() & BTN_POWER){
+			display_backlight_brightness(0, 1000);
+			msleep(1000);
+			if (btn_read() & BTN_POWER)
+			power_off();}
+		
+        }
+		
+		if (btn_read() & BTN_VOL_DOWN)
+		{	
+				display_backlight_brightness(100, 1000);
+				gfx_swap_buffer(&g_gfx_ctxt);
+				btn_wait_timeout(7000, BTN_VOL_DOWN);
+        }
+	display_backlight_brightness(0, 1000);
+	}
 }

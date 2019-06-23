@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+#include <string.h>
 #include "menu/gui/gui_argon_menu.h"
 #include "menu/gui/gui_menu.h"
 #include "menu/gui/gui_menu_pool.h"
@@ -40,7 +40,7 @@
 #define MARGIN_TOP 100
 #define MARGIN_LEFT 46
 u32 tog = 0;
-static int tool_menu_rSD(void* param);
+//static int tool_menu_rSD(void* param);
 static int tool_extr_rSD(void* param);
 
 static int tool_reboot_rcm(void* param);
@@ -48,12 +48,12 @@ static int tool_power_off(void* param);
 static int tool_menu_tog(void* param);
 static int tool_menu_rem(void* param);
 int tool_theme(char* param);
-
+static int tool_emu(u32 param);
 static int backup_full(void* param);
 static int backup_lite(void* param);
 static int backup_emummc(void* param);
-
-
+u32 onemi = 0;
+u32 retir = 0;
 /* Generate entries dynamically */
 static void generate_payloads_entries(char* payloads, gui_menu_t* menu)
 {
@@ -137,6 +137,75 @@ if (tog == 0){
 //generate main menu
 generate_payloads_entries(dirlist(PAYLOADS_DIR, "*.bin", false), menu);
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowr.bmp"),250, 650, 70, 70, tool_menu_tog, NULL));
+
+//Create emummc icon
+u32 buttonH = 75;
+u32 buttonW = 200;
+u32 buttonX = 45;
+u32 buttonY = 435;
+
+if (sd_file_exists("emummc/emummc.ini"))
+{
+display_backlight_brightness(100, 1000);
+
+void *buf = sd_file_read("emummc/emummc.ini");
+char *str = buf;
+
+if(retir == 0)
+{
+	if(strlen(str) != strlen(str_replace(str, " ", "")))
+	{str = str_replace(str, " ", "");
+	u32 size = strlen(str)-1;
+	sd_save_to_file(str,size,"emummc/emummc.ini");
+	}
+retir = 1;
+}
+
+
+	if(strlen(str) != strlen(str_replace(str, "enabled=1", "")))
+
+	{
+        gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/bon.bmp"),buttonX, buttonY, buttonW , buttonH,(int (*)(void *))tool_emu, (void*)0)); //- 80, - 500
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Enabled", buttonX + 25, buttonY + 30, 150, 100, NULL, NULL)); //- 3, + 260
+	}else{
+        gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/boff.bmp"),buttonX, buttonY, buttonW , buttonH,(int (*)(void *))tool_emu, (void*)1)); //- 80, - 500
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Disabled", buttonX +25, buttonY + 30, 150, 100, NULL, NULL)); //- 3, + 260
+	}
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC", buttonX + 25, buttonY + 10, 150, 100, NULL, NULL)); //- 3, + 260
+} 
+/*	if(strcmp(str, "enabled = 1") == "enabled = 1")
+	{
+        gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/bon.bmp"),buttonX, buttonY, buttonW , buttonH,(int (*)(void *))tool_emu, (void*)0)); //- 80, - 500
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Enabled", buttonX + 25, buttonY + 30, 150, 100, NULL, NULL)); //- 3, + 260
+	}else{
+        gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/boff.bmp"),buttonX, buttonY, buttonW , buttonH,(int (*)(void *))tool_emu, (void*)1)); //- 80, - 500
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Disabled", buttonX +25, buttonY + 30, 150, 100, NULL, NULL)); //- 3, + 260
+	}
+*/			
+/*	char* payload_wo_bin = str_replace(str, "enabled = 0", "enabled = 1");
+
+    FIL rp;
+    f_open(&rp, "emummc/emummc.ini", FA_READ);
+	u32 size = f_size(&rp);
+	f_close(&rp);
+	sd_save_to_file(payload_wo_bin,size,"emummc/emummc.ini");
+        gfx_swap_buffer(&g_gfx_ctxt);
+	msleep(10000);
+
+
+
+if (sd_file_exists("emummc/emummc.ini.bak"))
+{
+}
+if (sd_file_exists("emummc/emummc.ini") || sd_file_exists("emummc/emummc.ini.bak"))
+{
+
+
+}
+*/
+
+
+
 }else{
 //generate menu2
 generate_payloads_back(dirlist(PAYBACK_DIR, "*.bin", false), menu);
@@ -178,16 +247,20 @@ if(sd_file_exists("/StarDust/Atheme/7/icon.bmp"))
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/7/icon.bmp"),900, 10, 70, 70, (int (*)(void *))tool_theme, (void*)"StarDust/Atheme/7"));
 
 
+
+
+
 /* Generate reboot rcm and shutdown entry **/
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/screenshot.bmp"),400, 650, 70, 70, (int (*)(void *))screenshot, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),600, 650, 70, 70, tool_power_off, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/rcm.bmp"),800, 650, 70, 70, tool_reboot_rcm, NULL));
 
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/SD.bmp"),1200, 140, 70, 70, tool_extr_rSD, NULL));
-
+if(onemi == 0){
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Fix boot->", 1050, 80, 150, 100, NULL, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Remove SD->", 1050, 180, 150, 100, NULL, NULL));
-
+onemi++;
+}
     /* Start menu */
     gui_menu_open(menu);
 
@@ -203,6 +276,22 @@ static int tool_reboot_rcm(void* param)
 
 static int tool_extr_rSD(void* param)
 {
+	gfx_swap_buffer(&g_gfx_ctxt);
+	display_backlight_brightness(100, 1000);
+	g_gfx_con.scale = 3;
+    gfx_con_setpos(&g_gfx_con, 160, 100);
+    gfx_printf(&g_gfx_con, "Ya puedes extraer la SD, Al terminar\n");
+    gfx_con_setpos(&g_gfx_con, 230, 130);
+    gfx_printf(&g_gfx_con, "Pon la SD y presiona POWER\n\n");
+    gfx_con_setpos(&g_gfx_con, 110, 600);
+    gfx_printf(&g_gfx_con, "You can now extract the SD, When you finish\n");
+    gfx_con_setpos(&g_gfx_con, 230, 630);
+    gfx_printf(&g_gfx_con, "Put the SD and press POWER\n");
+    gfx_swap_buffer(&g_gfx_ctxt);
+	btn_wait_timeout(10000, BTN_POWER);
+	display_backlight_brightness(0, 1000);
+BootStrapNX();
+/*
 sd_mount();
 		if (!g_sd_mounted)
 		{return 0;}
@@ -221,18 +310,55 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icon
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),600, 650, 70, 70, tool_power_off, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/extrDS.bmp"),1100, 500, 200, 200, NULL, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/extpower.bmp"),500, 250, 200, 200, tool_menu_rSD, NULL));
-    gui_menu_open2(menu);
+    gui_menu_open2(menu);*/
     return 0;
 }
 
-static int tool_menu_rSD(void* param)
-{
-	sd_mount();
-		if (g_sd_mounted)
-		{
-		launch_payload("payload.bin");
-		}
 
+static int tool_emu(u32 param)
+{
+sd_mount();
+		if (!g_sd_mounted)
+		{return 0;}
+if(param == 1)
+{
+char *str1 = sd_file_read("emummc/emummc.ini");
+char* payload_wo_bin = str_replace(str1, "enabled=0", "enabled=1");
+FIL op;
+f_open(&op, "emummc/emummc.ini", FA_READ);
+u32 size = f_size(&op);
+f_close(&op);
+sd_save_to_file(payload_wo_bin,size,"emummc/emummc.ini");
+}
+
+if(param == 0)
+{
+char *str1 = sd_file_read("emummc/emummc.ini");
+char* payload_wo_bin = str_replace(str1, "enabled=1", "enabled=0");
+FIL rp;
+f_open(&rp, "emummc/emummc.ini", FA_READ);
+u32 size = f_size(&rp);
+f_close(&rp);
+sd_save_to_file(payload_wo_bin,size,"emummc/emummc.ini");
+}
+
+/*	
+if (sd_file_exists ("emummc/emummc.ini"))
+{f_unlink("emummc/emummc.ini.bak");}
+
+if (sd_file_exists ("emummc/emummc.ini"))
+{
+f_rename("emummc/emummc.ini","emummc/emummc.ini.bak");
+}else{
+f_rename("emummc/emummc.ini.bak","emummc/emummc.ini");
+
+    FIL fp;
+    f_open(&fp, "emummc/emummc.ini", FA_WRITE);
+    f_puts(payload_wo_bin, &fp);
+    f_close(&fp);
+*/
+
+	gui_init_argon_menu();
 return 0;
 }
 
@@ -314,7 +440,7 @@ sd_mount();
 		{return 0;}
 display_backlight_brightness(1, 1000);
 u8* buffer = (u8*)malloc(4);
-sd_save_to_file(buffer, 4, "StarDust/raw.bk");
+sd_save_to_file(buffer, 4, "raw.bk");
 launch_payload("StarDust/payloads/zbackup.bin");
 return 0;
 }
@@ -326,7 +452,7 @@ sd_mount();
 		{return 0;}
 display_backlight_brightness(1, 1000);
 u8* buffer = (u8*)malloc(4);
-sd_save_to_file(buffer, 4, "StarDust/syslite.bk");
+sd_save_to_file(buffer, 4, "syslite.bk");
 launch_payload("StarDust/payloads/zbackup.bin");
 return 0;
 }
@@ -338,7 +464,7 @@ sd_mount();
 		{return 0;}
 display_backlight_brightness(1, 1000);
 u8* buffer = (u8*)malloc(4);
-sd_save_to_file(buffer, 4, "StarDust/emummc.bk");
+sd_save_to_file(buffer, 4, "emummc.bk");
 launch_payload("StarDust/payloads/zbackup.bin");
 return 0;
 }
@@ -349,3 +475,15 @@ static int tool_power_off(void* param)
     power_off();
     return 0;
 }
+/*
+static int tool_menu_rSD(void* param)
+{
+	sd_mount();
+		if (g_sd_mounted)
+		{
+		launch_payload("payload.bin");
+		}
+
+return 0;
+}
+*/
