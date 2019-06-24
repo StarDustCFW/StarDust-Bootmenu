@@ -146,24 +146,22 @@ u32 buttonY = 435;
 
 if (sd_file_exists("emummc/emummc.ini"))
 {
-display_backlight_brightness(100, 1000);
 
-void *buf = sd_file_read("emummc/emummc.ini");
-char *str = buf;
-
+char *str = sd_file_read("emummc/emummc.ini");
 if(retir == 0)
 {
 	if(strlen(str) != strlen(str_replace(str, " ", "")))
-	{str = str_replace(str, " ", "");
+	{
+	str = str_replace(str, " ", "");
 	u32 size = strlen(str)-1;
 	sd_save_to_file(str,size,"emummc/emummc.ini");
 	}
 retir = 1;
+	if(strlen(str) != strlen(str_replace(str, "mummc_enabled=1", "")))
+	{retir = 2;}
 }
-
-
-	if(strlen(str) != strlen(str_replace(str, "enabled=1", "")))
-
+//	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(str, 10, 100, 150, 200, NULL, NULL)); //- 3, + 260//debug
+	if(retir == 2)
 	{
         gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/bon.bmp"),buttonX, buttonY, buttonW , buttonH,(int (*)(void *))tool_emu, (void*)0)); //- 80, - 500
 		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Enabled", buttonX + 25, buttonY + 30, 150, 100, NULL, NULL)); //- 3, + 260
@@ -172,40 +170,22 @@ retir = 1;
 		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Disabled", buttonX +25, buttonY + 30, 150, 100, NULL, NULL)); //- 3, + 260
 	}
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC", buttonX + 25, buttonY + 10, 150, 100, NULL, NULL)); //- 3, + 260
+free(str);
 } 
-/*	if(strcmp(str, "enabled = 1") == "enabled = 1")
-	{
-        gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/bon.bmp"),buttonX, buttonY, buttonW , buttonH,(int (*)(void *))tool_emu, (void*)0)); //- 80, - 500
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Enabled", buttonX + 25, buttonY + 30, 150, 100, NULL, NULL)); //- 3, + 260
-	}else{
-        gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/boff.bmp"),buttonX, buttonY, buttonW , buttonH,(int (*)(void *))tool_emu, (void*)1)); //- 80, - 500
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Disabled", buttonX +25, buttonY + 30, 150, 100, NULL, NULL)); //- 3, + 260
-	}
-*/			
-/*	char* payload_wo_bin = str_replace(str, "enabled = 0", "enabled = 1");
+/*
+	display_backlight_brightness(100, 1000);
 
-    FIL rp;
-    f_open(&rp, "emummc/emummc.ini", FA_READ);
-	u32 size = f_size(&rp);
-	f_close(&rp);
-	sd_save_to_file(payload_wo_bin,size,"emummc/emummc.ini");
-        gfx_swap_buffer(&g_gfx_ctxt);
-	msleep(10000);
+	btn_wait_timeout(10000, BTN_POWER);
+
+	gfx_swap_buffer(&g_gfx_ctxt);
+	display_backlight_brightness(100, 1000);
+    gfx_con_setpos(&g_gfx_con, 160, 100);
+    gfx_printf(&g_gfx_con, "disabled\n%s\n",str);
+    gfx_swap_buffer(&g_gfx_ctxt);
+	btn_wait_timeout(10000, BTN_POWER);
 
 
-
-if (sd_file_exists("emummc/emummc.ini.bak"))
-{
-}
-if (sd_file_exists("emummc/emummc.ini") || sd_file_exists("emummc/emummc.ini.bak"))
-{
-
-
-}
 */
-
-
-
 }else{
 //generate menu2
 generate_payloads_back(dirlist(PAYBACK_DIR, "*.bin", false), menu);
@@ -292,9 +272,7 @@ static int tool_extr_rSD(void* param)
 	display_backlight_brightness(0, 1000);
 BootStrapNX();
 /*
-sd_mount();
-		if (!g_sd_mounted)
-		{return 0;}
+if (!sd_mount()){BootStrapNX();}//check sd
     u32 *fb = display_init_framebuffer();
     gfx_init_ctxt(&g_gfx_ctxt, fb, 1280, 720, 720);
     gfx_clear_buffer(&g_gfx_ctxt);
@@ -317,9 +295,9 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icon
 
 static int tool_emu(u32 param)
 {
-sd_mount();
-		if (!g_sd_mounted)
-		{return 0;}
+
+if (!sd_mount()){BootStrapNX();}//check sd
+		
 if(param == 1)
 {
 char *str1 = sd_file_read("emummc/emummc.ini");
@@ -329,17 +307,19 @@ f_open(&op, "emummc/emummc.ini", FA_READ);
 u32 size = f_size(&op);
 f_close(&op);
 sd_save_to_file(payload_wo_bin,size,"emummc/emummc.ini");
+retir = 2;
 }
 
 if(param == 0)
 {
 char *str1 = sd_file_read("emummc/emummc.ini");
 char* payload_wo_bin = str_replace(str1, "enabled=1", "enabled=0");
-FIL rp;
-f_open(&rp, "emummc/emummc.ini", FA_READ);
-u32 size = f_size(&rp);
-f_close(&rp);
+FIL op;
+f_open(&op, "emummc/emummc.ini", FA_READ);
+u32 size = f_size(&op);
+f_close(&op);
 sd_save_to_file(payload_wo_bin,size,"emummc/emummc.ini");
+retir = 1;
 }
 
 /*	
@@ -357,16 +337,14 @@ f_rename("emummc/emummc.ini.bak","emummc/emummc.ini");
     f_puts(payload_wo_bin, &fp);
     f_close(&fp);
 */
-
+gfx_swap_buffer(&g_gfx_ctxt);
 	gui_init_argon_menu();
 return 0;
 }
 
 static int tool_menu_tog(void* param)
 {
-sd_mount();
-		if (!g_sd_mounted)
-		{return 0;}
+if (!sd_mount()){BootStrapNX();}//check sd
 display_backlight_brightness(50, 1000);
 if (tog == 0){
 tog = 1;
@@ -382,9 +360,7 @@ return 0;
 
 static int tool_menu_rem(void* param)
 {
-sd_mount();
-		if (!g_sd_mounted)
-		{return 0;}
+if (!sd_mount()){BootStrapNX();}//check sd
  gfx_printf(&g_gfx_con, "loading\n");
 //gui_menu_pool_cleanup();
 	f_unlink("/atmosphere/titles/0100000000001000/fsmitm.flag");
@@ -412,9 +388,7 @@ return 0;
 
 int tool_theme(char* param)
 {
-sd_mount();
-		if (!g_sd_mounted)
-		{return 0;}
+if (!sd_mount()){BootStrapNX();}//check sd
 display_backlight_brightness(0, 1000);
 copyfileparam(param ,"Icons/arrowl.bmp","StarDust/Icons/arrowl.bmp");
 copyfileparam(param ,"Icons/arrowr.bmp","StarDust/Icons/arrowr.bmp");
@@ -435,9 +409,7 @@ return 0;
 
 static int backup_full(void* param)
 {
-sd_mount();
-		if (!g_sd_mounted)
-		{return 0;}
+if (!sd_mount()){BootStrapNX();}//check sd
 display_backlight_brightness(1, 1000);
 u8* buffer = (u8*)malloc(4);
 sd_save_to_file(buffer, 4, "raw.bk");
@@ -447,9 +419,7 @@ return 0;
 
 static int backup_lite(void* param)
 {
-sd_mount();
-		if (!g_sd_mounted)
-		{return 0;}
+if (!sd_mount()){BootStrapNX();}//check sd
 display_backlight_brightness(1, 1000);
 u8* buffer = (u8*)malloc(4);
 sd_save_to_file(buffer, 4, "syslite.bk");
@@ -459,9 +429,7 @@ return 0;
 
 static int backup_emummc(void* param)
 {
-sd_mount();
-		if (!g_sd_mounted)
-		{return 0;}
+if (!sd_mount()){BootStrapNX();}//check sd
 display_backlight_brightness(1, 1000);
 u8* buffer = (u8*)malloc(4);
 sd_save_to_file(buffer, 4, "emummc.bk");

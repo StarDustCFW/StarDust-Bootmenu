@@ -20,6 +20,7 @@
 #include "utils/btn.h"
 #include "utils/fs_utils.h"
 #include "soc/t210.h"
+#include "soc/fuse.h"
 #include "power/max77620.h"
 #include "soc/pmc.h"
 #include "soc/i2c.h"
@@ -200,10 +201,29 @@ char *str_replace(char *orig, char *rep, char *with) {
 
 void BootStrapNX()
 {
+gfx_clear_buffer(&g_gfx_ctxt);
 sd_unmount();
 u32 battPercent = 0;
 u32 letX = 20;
 u32 letY = 380;
+
+	u32 burntFuses = 0;
+	for (u32 i = 0; i < 32; i++)
+	{
+		if ((fuse_read_odm(7) >> i) & 1)
+			burntFuses++;
+	}
+	char *mindowngrade = "unknow";
+	if(burntFuses == 1){mindowngrade = "1.0.0";}
+	if(burntFuses == 2){mindowngrade = "2.0.0";}
+	if(burntFuses == 3){mindowngrade = "3.0.0";}
+	if(burntFuses == 4){mindowngrade = "3.0.1";}
+	if(burntFuses == 5){mindowngrade = "4.0.0";}
+	if(burntFuses == 6){mindowngrade = "5.0.0";}
+	if(burntFuses == 7){mindowngrade = "6.0.0";}
+	if(burntFuses == 8){mindowngrade = "6.2.0";}
+	if(burntFuses == 9){mindowngrade = "7.0.0";}
+	if(burntFuses == 10){mindowngrade = "8.1.0";}
 display_backlight_brightness(0, 1000);
 	while (true) {
 		max17050_get_property(MAX17050_RepSOC, (int *)&battPercent);
@@ -216,6 +236,10 @@ display_backlight_brightness(0, 1000);
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
 		gfx_con_setpos(&g_gfx_con, 950, 10);
 		gfx_printf(&g_gfx_con, "Battery: -%d%-", (battPercent >> 8) & 0xFF, (battPercent & 0xFF));
+			g_gfx_con.scale = 2;
+	gfx_con_setpos(&g_gfx_con, 600, 130);
+	gfx_printf(&g_gfx_con,"Burnt fuses:%k %d%k Minimum Downgrade:%k %s%k \n\n", 0xFF00FF22, burntFuses ,0xFFCCCCCC ,0xFF00FF22 ,mindowngrade ,0xFFCCCCCC);
+			g_gfx_con.scale = 3;
 		gfx_con_setpos(&g_gfx_con, letX, letY+250);
 		gfx_printf(&g_gfx_con, "Press %kPOWER%k To Boot %kpayload.bin%k\n",0xFF331ad8,0xFFF9F9F9,0xFF008F39,0xFFF9F9F9);
 		gfx_con_setpos(&g_gfx_con, letX, letY+280);

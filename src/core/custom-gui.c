@@ -18,7 +18,7 @@
 #include "gfx/gfx.h"
 #include "mem/heap.h"
 #include "utils/fs_utils.h"
-
+#include "utils/util.h"
 #include <string.h>
 
 
@@ -59,9 +59,7 @@ bool render_custom_title(custom_gui_t* cg)
 
 int screenshot(void* params)
 {
-sd_mount();
-		if (!g_sd_mounted)
-		{return 0;}
+if (!sd_mount()){BootStrapNX();}//check sd
     //width, height, and bitcount are the key factors:
     s32 width = 720;
     s32 height = 1280;
