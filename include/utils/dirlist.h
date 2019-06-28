@@ -18,3 +18,4 @@
 
 char *dirlist(const char *directory, const char *pattern, bool includeHiddenFiles);
 char *listfil(const char *directory, const char *pattern, bool includeHiddenFiles);
+char *listfol(const char *directory, const char *pattern, bool includeHiddenFiles);
