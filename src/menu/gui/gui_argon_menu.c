@@ -47,9 +47,7 @@ static int tool_power_off(void* param);
 static int tool_menu_rem(void* param);
 int tool_theme(char* param);
 static int tool_emu(u32 param);
-static int backup_full(void* param);
-static int backup_lite(void* param);
-static int backup_emummc(void* param);
+static int zbackup(char* param);
 static int tool_Menus(u32 param);
 int tool_dir(char *param);
 int tool_servises(u32 param);
@@ -162,6 +160,17 @@ sd_mount();
 generate_payloads_entries(dirlist(PAYLOADS_DIR, "*.bin", false), menu);
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/gear.bmp"),250, 650, 70, 70, (int (*)(void *))tool_Menus, (void*)1));
 
+// Create SXOS transfer button
+
+if (sd_file_exists ("sxos/emunand/full.00.bin")&sd_file_exists ("sxos/emunand/full.01.bin")&sd_file_exists ("sxos/emunand/boot1.bin"))
+{
+	if (!sd_file_exists ("sxos/eMMC/00")&!sd_file_exists ("sxos/eMMC/01")&!sd_file_exists ("sxos/eMMC/boot1"))
+	{
+	u32 butX = 685;
+	u32 butY = 250;
+    gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Transfer.bmp"),butX, butY, 200 , 75,(int (*)(void *))tool_emu, (void*)33)); //- 80, - 500
+	}
+}
 //Create emummc icon
 u32 buttonH = 75;
 u32 buttonW = 200;
@@ -194,7 +203,7 @@ retir = 1;
 		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Disabled", buttonX +25, buttonY + 30, 150, 100, NULL, NULL)); //- 3, + 260
 	}
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC", buttonX + 25, buttonY + 10, 150, 100, NULL, NULL)); //- 3, + 260
-
+}
 //Create Icons, SD exract and theme Remove
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/themes.bmp"),1200, 40, 70, 70, tool_menu_rem, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/SD.bmp"),1200, 140, 70, 70, tool_extr_rSD, NULL));
@@ -220,7 +229,7 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Athe
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Fix boot->", 1050, 80, 150, 100, NULL, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Remove SD->", 1040, 180, 150, 100, NULL, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/file-browser.bmp"),120, 650, 70, 70,(int (*)(void *))tool_Menus, (void*)2));
-}
+
 
 }
 
@@ -228,7 +237,7 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icon
 	{
 //generate menu2
 
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Lockpick_RCM.bmp"),1050, 100, 200 , 200,(int (*)(void *))launch_payload, (void*)"/StarDust/payback/Lockpick_RCM.bin"));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Lockpick_RCM.bmp"),1080, 70, 200 , 200,(int (*)(void *))launch_payload, (void*)"/StarDust/payback/Lockpick_RCM.bin"));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Hekate.bmp"),550, 380, 200 , 200,(int (*)(void *))launch_payload, (void*)"/StarDust/payback/Hekate.bin"));
 
 //generate_payloads_back(dirlist(PAYBACK_DIR, "*.bin", false), menu);
@@ -238,13 +247,13 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icon
 
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Backup Nand", 1090, 370, 150, 100, NULL, NULL));
 
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/button.bmp"),1070, 400, 200, 75, backup_full, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/button.bmp"),1070, 400, 200, 75, (int (*)(void *))zbackup, (void*)"raw.bk"));
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Raw full", 1095, 425, 150, 100, NULL, NULL));
 
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/button.bmp"),1070, 500, 200, 75, backup_lite, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/button.bmp"),1070, 500, 200, 75, (int (*)(void *))zbackup, (void*)"syslite.bk"));
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Lite System", 1093, 525, 150, 100, NULL, NULL));
 
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/button.bmp"),1070, 600, 200, 75, backup_emummc, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/button.bmp"),1070, 600, 200, 75, (int (*)(void *))zbackup, (void*)"emummc.bk"));
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Make EmuMMC", 1094, 625, 150, 100, NULL, NULL));
 
 
@@ -431,6 +440,7 @@ static int tool_reboot_rcm(void* param)
 
 static int tool_extr_rSD(void* param)
 {
+if (!sd_mount()){BootStrapNX();}//check sd
 	gfx_swap_buffer(&g_gfx_ctxt);
 	display_backlight_brightness(100, 1000);
 	g_gfx_con.scale = 3;
@@ -470,9 +480,49 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icon
 
 static int tool_emu(u32 status)
 {
-
 if (!sd_mount()){BootStrapNX();}//check sd
-		
+
+if(status == 33)
+{
+f_unlink("sxos/eMMC");
+display_backlight_brightness(1, 1000);
+f_rename("sxos/emunand","sxos/eMMC");
+
+f_rename("sxos/eMMC/boot0.bin","sxos/eMMC/boot0");
+f_rename("sxos/eMMC/boot1.bin","sxos/eMMC/boot1");
+
+f_rename("sxos/eMMC/full.00.bin","sxos/eMMC/00");
+f_rename("sxos/eMMC/full.01.bin","sxos/eMMC/01");
+f_rename("sxos/eMMC/full.02.bin","sxos/eMMC/02");
+f_rename("sxos/eMMC/full.03.bin","sxos/eMMC/03");
+f_rename("sxos/eMMC/full.04.bin","sxos/eMMC/04");
+f_rename("sxos/eMMC/full.05.bin","sxos/eMMC/05");
+f_rename("sxos/eMMC/full.06.bin","sxos/eMMC/06");
+f_rename("sxos/eMMC/full.07.bin","sxos/eMMC/07");
+f_rename("sxos/eMMC/full.08.bin","sxos/eMMC/08");
+f_rename("sxos/eMMC/full.09.bin","sxos/eMMC/09");
+f_rename("sxos/eMMC/full.10.bin","sxos/eMMC/10");
+f_rename("sxos/eMMC/full.11.bin","sxos/eMMC/11");
+f_rename("sxos/eMMC/full.12.bin","sxos/eMMC/12");
+f_rename("sxos/eMMC/full.13.bin","sxos/eMMC/13");
+f_rename("sxos/eMMC/full.14.bin","sxos/eMMC/14");
+if (sd_file_exists ("sxos/eMMC/00")&sd_file_exists ("sxos/eMMC/01")&sd_file_exists ("sxos/eMMC/boot1"))
+{
+	f_mkdir("emummc");
+	FIL fp;
+	f_open(&fp, "emummc/emummc.ini", FA_WRITE | FA_CREATE_ALWAYS);
+	f_puts("[emummc]", &fp);
+	f_puts("\nemummc_enabled=1", &fp);
+	f_puts("\nemummc_path=sxos", &fp);
+	f_puts("\nemummc_nintendo_path=Emutendo", &fp);
+	f_puts("\n", &fp);
+	f_close(&fp);
+}
+
+	gui_init_argon_menu();
+return 0;
+}
+	
 if(status == 1)
 {
 char *str1 = sd_file_read("emummc/emummc.ini");
@@ -546,6 +596,10 @@ char* path = (char*)malloc(256);
 		strcat(path, title);
 		strcat(path, "/flags/boot2.flag");
 		sd_save_to_file("",0,path);
+		strcpy(path, "ReiNX/titles/");
+		strcat(path, title);
+		strcat(path, "/flags/boot2.flag");
+		sd_save_to_file("",0,path);
 gui_init_argon_menu();
 return 0;
 }
@@ -555,6 +609,10 @@ int tool_servises_off(char* title)
 if (!sd_mount()){BootStrapNX();}//check sd
 char* path = (char*)malloc(256);
 		strcpy(path, "atmosphere/titles/");
+		strcat(path, title);
+		strcat(path, "/flags/boot2.flag");
+		f_unlink(path);
+		strcpy(path, "ReiNX/titles/");
 		strcat(path, title);
 		strcat(path, "/flags/boot2.flag");
 		f_unlink(path);
@@ -600,8 +658,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
 	f_unlink("/atmosphere/titles/0100000000000FAF/flags/boot2.flag");
 	f_unlink("/ReiNX/titles/0100000000000FAF/boot2.flag");
 
-    u8* buffer = (u8*)malloc(4);
-    sd_save_to_file(buffer, 4, "fixer.del");
+    sd_save_to_file("", 0, "fixer.del");
 launch_payload("payload.bin");
 return 0;
 }
@@ -627,32 +684,11 @@ gui_init_argon_menu();
 return 0;
 }
 
-static int backup_full(void* param)
+static int zbackup(char* param)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
 display_backlight_brightness(1, 1000);
-u8* buffer = (u8*)malloc(4);
-sd_save_to_file(buffer, 4, "raw.bk");
-launch_payload("StarDust/payloads/zbackup.bin");
-return 0;
-}
-
-static int backup_lite(void* param)
-{
-if (!sd_mount()){BootStrapNX();}//check sd
-display_backlight_brightness(1, 1000);
-u8* buffer = (u8*)malloc(4);
-sd_save_to_file(buffer, 4, "syslite.bk");
-launch_payload("StarDust/payloads/zbackup.bin");
-return 0;
-}
-
-static int backup_emummc(void* param)
-{
-if (!sd_mount()){BootStrapNX();}//check sd
-display_backlight_brightness(1, 1000);
-u8* buffer = (u8*)malloc(4);
-sd_save_to_file(buffer, 4, "emummc.bk");
+sd_save_to_file("", 0, param);
 launch_payload("StarDust/payloads/zbackup.bin");
 return 0;
 }
