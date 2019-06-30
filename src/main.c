@@ -49,7 +49,6 @@ static inline void setup_gfx()
 
 void deleteall(char* directory, char* filet)
 {
-f_unlink(directory);
 char* payloads = listfil(directory, filet, true);
     u32 i = 0;
     while(payloads[i * 256])
@@ -69,13 +68,14 @@ f_unlink(directory);
 //first Delete After Update
 void clean_up()
 {
-//delete bootloader for tinfoil 
+//delete bootloader for tinfoil
+/*
 deleteall("/bootloader/ini", "*");
 deleteall("/bootloader/payloads", "*");
 deleteall("/bootloader/libtools", "*");
 deleteall("/bootloader/sys", "*");
 deleteall("/bootloader", "*");
-
+*/
 deleteall("/ftpd", "*");
 
 deleteall("/ReiNX/patches/es_patches", "*");
@@ -83,8 +83,8 @@ deleteall("/ReiNX/sysmodules.dis", "*");
     f_unlink("/ReiNX/sysmodules/fs_mitm.kip");
     f_unlink("/ReiNX/sysmodules/ldn_mitm.kip");
 deleteall("/ReiNX/exefs_patches/Youtube", "*");
-deleteall("/ReiNX/titles/010000000000000D/exefs", "*");
-deleteall("/ReiNX/titles/010000000000000D", "*");
+//deleteall("/ReiNX/titles/010000000000000D/exefs", "*");
+//deleteall("/ReiNX/titles/010000000000000D", "*");
 deleteall("/ReiNX/titles/0100000000000032/exefs", "*");
 deleteall("/ReiNX/titles/0100000000000032", "*");
 deleteall("/ReiNX/titles/0100000000000032/flags", "*");
@@ -97,7 +97,7 @@ deleteall("/switch/KosmosToolbox", "*");
 deleteall("/switch/KosmosUpdater", "*");
 
 
-deleteall("/atmosphere/kips", "*");
+//deleteall("/atmosphere/kips", "*");
 
 
 	//remove themes
@@ -114,7 +114,6 @@ deleteall("/atmosphere/kips", "*");
 //deleteall("/////", "*");	
 	//close
 	f_unlink("/fixer.del");
-
 }
 
 

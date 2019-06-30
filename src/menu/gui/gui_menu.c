@@ -14,7 +14,7 @@
 
 #define MINOR_VERSION 3
 #define MAJOR_VERSION 0
-#define REVI_VERSION 19
+#define REVI_VERSION 20
 	char Sversion[4];
 
 

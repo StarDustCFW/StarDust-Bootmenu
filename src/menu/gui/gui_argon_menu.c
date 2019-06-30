@@ -186,6 +186,13 @@ if (sd_file_exists("emummc/emummc.ini"))
 char *str = sd_file_read("emummc/emummc.ini");
 if(retir == 0)
 {
+    if(strstr(str,"emummc_") != NULL)
+	{
+	str = str_replace(str, "emummc_", "");
+	u32 size = strlen(str)-1;
+	sd_save_to_file(str,size,"emummc/emummc.ini");
+
+	}
     if(strstr(str," ") != NULL)
 	{
 	str = str_replace(str, " ", "");

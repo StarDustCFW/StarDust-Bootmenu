@@ -116,26 +116,61 @@ char *dirlist(const char *directory, const char *pattern, bool includeHiddenFile
 	}
 
 	// compare copy_entries but sort dir_entries
+char *sxos = "sxos";
+	char *reinx = "reinx";
+	char *atmos = "atmos";
 
+	char *payload1 = "";
+	char *payload2 = "";
+	char *payload3 = "";
+
+
+	char buff[20];
+
+/*
 	for (i = 0; i < k - 1 ; i++)
 	{
 		for (j = i + 1; j < k; j++)
 		{
-		if(strstr(&copy_entries[i * 256],"sxos") != NULL)
-			{memcpy(&dir_entries[2 * 256], &copy_entries[2 * 256], strlen(&copy_entries[2 * 256]) + 1);}
 			if (strcmp(&copy_entries[i * 256], &copy_entries[j * 256]) > 0) 
 			{
-
 				memcpy(temp, &dir_entries[i * 256], strlen(&dir_entries[i * 256]) + 1);
 				memcpy(&dir_entries[i * 256], &dir_entries[j * 256], strlen(&dir_entries[j * 256]) + 1);
 				memcpy(&dir_entries[j * 256], temp, strlen(temp) + 1);
 			}
 		}
 	}
+*/
+	char allpayloads[1300];
 
+	strcpy(allpayloads,"Payload Entries: ");
+	strcat(allpayloads,itoa(k,buff));
 
+	for (i = 0; i < k ; i++)
+	{
 
-	//sd_save_to_file(allpayloads, strlen(allpayloads), "logRRargon.txt");
+	    if(strstr(&copy_entries[i * 256],atmos) != NULL)
+	    {
+		memcpy(&dir_entries[0 * 256], &copy_entries[i * 256], strlen(&copy_entries[i * 256]) + 1);
+		payload1=&dir_entries[0 * 256];
+		strcat(allpayloads,"\nPAYLOAD1: ");
+		strcat(allpayloads,payload1);
+	    }
+	    if(strstr(&copy_entries[i * 256],reinx) != NULL)
+	    {
+		memcpy(&dir_entries[1 * 256], &copy_entries[i * 256], strlen(&copy_entries[i * 256]) + 1);
+		payload2=&dir_entries[1 * 256];
+		strcat(allpayloads,"\nPAYLOAD2: ");
+		strcat(allpayloads,payload2);
+	    }
+	    if(strstr(&copy_entries[i * 256],sxos) != NULL)
+	    {
+		memcpy(&dir_entries[2 * 256], &copy_entries[i * 256], strlen(&copy_entries[i * 256]) + 1);
+		payload3=&dir_entries[2 * 256];
+		strcat(allpayloads,"\nPAYLOAD3: ");
+		strcat(allpayloads,payload3);
+	    }
+	}
 	free(temp);
 	free(copy_entries);
 
