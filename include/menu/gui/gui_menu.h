@@ -21,7 +21,7 @@
 #include "menu/gui/gui_menu_entry.h"
 #include "core/custom-gui.h"
 
-#define MAX_ENTRIES 0x40
+#define MAX_ENTRIES 0x80
 
 typedef struct
 {

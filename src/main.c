@@ -144,24 +144,21 @@ void ipl_main()
     /* Mount Sd card and launch payload */
     if (sd_mount())
     {
-        bool cancel_auto_chainloading = btn_read() & BTN_VOL_DOWN;
+        
+/*		bool cancel_auto_chainloading = btn_read() & BTN_VOL_DOWN;
         bool load_menu = cancel_auto_chainloading || launch_payload("StarDust/payload.bin");
-		//remove autoboot
+*/		//remove autoboot
         f_unlink("StarDust/payload.bin");
         f_unlink("StarDust/autobootecho.txt");
 		
 		if(sd_file_exists("fixer.del"))
-		{		
-		gfx_printf(&g_gfx_con, "Deleting...\n");		
-		clean_up();
-		}
-		
-        gfx_printf(&g_gfx_con, "Autochainload canceled. Loading menu...\n");
-        gfx_swap_buffer(&g_gfx_ctxt);
+		clean_up();		
+//        gfx_printf(&g_gfx_con, "Autochainload canceled. Loading menu...\n");
+//        gfx_swap_buffer(&g_gfx_ctxt);
 //		msleep(25000);
-        if (load_menu)
-        gui_init_argon_menu();
-
+//        if (load_menu)
+        gui_init_argon_boot();
+//		gui_init_argon_menu();
     } else {
         gfx_printf(&g_gfx_con, "No sd card found...\n");
     }

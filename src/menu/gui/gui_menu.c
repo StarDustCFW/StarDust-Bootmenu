@@ -143,26 +143,10 @@ int gui_menu_open2(gui_menu_t *menu)
      * Render and flush at first render because blocking input won't allow us 
      * flush buffers
      */
-    gui_menu_draw_background(menu);
-    gui_menu_draw_entries(menu);
-	g_gfx_con.scale = 3;
-    gfx_con_setpos(&g_gfx_con, 160, 100);
-    gfx_printf(&g_gfx_con, "Ya puedes extraer la SD, Al terminar\n");
-    gfx_con_setpos(&g_gfx_con, 230, 130);
-    gfx_printf(&g_gfx_con, "Pon la SD y presiona este icono\n\n");
-    gfx_con_setpos(&g_gfx_con, 110, 200);
-    gfx_printf(&g_gfx_con, "You can now extract the SD, When you finish\n");
-    gfx_con_setpos(&g_gfx_con, 230, 230);
-    gfx_printf(&g_gfx_con, "Put the SD and press this icon\n");
+    if(!render_custom_background(menu->custom_gui))
+    gfx_clear_color(&g_gfx_ctxt, 0xFF191414);
+//    gui_menu_draw_entries(menu);
     gfx_swap_buffer(&g_gfx_ctxt);
-	msleep(5000);
-		display_backlight_brightness(1, 1000);
-	while (gui_menu_update(menu))
-	{
-	display_backlight_brightness(1, 1000);
-	gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
-		;
-	}
 	return 0;
 }
 

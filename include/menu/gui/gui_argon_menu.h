@@ -19,5 +19,6 @@
 
 /* Init needed menus for ArgonNX */
 void gui_init_argon_menu(void);
+void gui_init_argon_boot(void);
 
 #endif
