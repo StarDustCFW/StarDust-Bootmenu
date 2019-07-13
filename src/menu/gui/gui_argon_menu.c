@@ -53,7 +53,7 @@ int tool_dir(char *param);
 int tool_servises(u32 param);
 int tool_servises_on(char* title);
 int tool_servises_off(char* title);
-
+int tool_Themes_on(char* cfw);
 int tool_filete(char* fil);
 int tool_file_act(u32 fil);
 //menus
@@ -131,13 +131,20 @@ static void generate_payloads_entries(char* payloads, gui_menu_t* menu)
         u32 y = 140 / ROWS * row + MARGIN_TOP + MARGIN_TOP;
 
         const char* payload_wo_bin = str_replace(&payloads[i * 256], ".bin", "");
-        gui_menu_append_entry(menu, 
-            gui_create_menu_entry(payload_wo_bin,
-                                    sd_file_read(payload_logo), 
-                                    x, y,
-                                    200, 200,
-                                    (int (*)(void *))launch_payload, (void*)payload_path));
-        i++;
+	if((retir == 2) & (strstr(payload_wo_bin,"reinx") != NULL))
+	{
+
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Reinx-off.bmp"),x, y, 200 , 200, NULL, NULL));
+	}else{
+		
+			gui_menu_append_entry(menu, 
+				gui_create_menu_entry(payload_wo_bin,
+										sd_file_read(payload_logo), 
+										x, y,
+										200, 200,
+										(int (*)(void *))launch_payload, (void*)payload_path));
+		}
+	i++;
     }
 }
 // Second Menu 
@@ -183,9 +190,6 @@ sd_mount();
 	//main menu
 	if(main_menu == 0)
 	{
-//generate main menu
-generate_payloads_entries(dirlist(PAYLOADS_DIR, "*.bin", false), menu);
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/gear.bmp"),250, 650, 70, 70, (int (*)(void *))tool_Menus, (void*)1));
 
 // Create SXOS transfer button
 
@@ -231,6 +235,7 @@ retir = 1;
 	if(retir == 2)
 	{
         gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/bon.bmp"),buttonX, buttonY, buttonW , buttonH,(int (*)(void *))tool_emu, (void*)0)); //- 80, - 500
+//		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/negative.bmp"),360, 265, 200 , 200, NULL, NULL));
 //		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Enabled", buttonX + 25, buttonY + 30, 150, 100, NULL, NULL)); //- 3, + 260
 	}else{
         gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/boff.bmp"),buttonX, buttonY, buttonW , buttonH,(int (*)(void *))tool_emu, (void*)1)); //- 80, - 500
@@ -241,6 +246,11 @@ retir = 1;
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Stock.bmp"),900, 180, 200 , 200,(int (*)(void *))launch_payload, (void*)"/StarDust/payback/Stock.bin"));
 //Create Icons, SD exract and theme Remove
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/file-browser.bmp"),120, 650, 70, 70,(int (*)(void *))tool_Menus, (void*)2));
+
+
+//generate main menu
+generate_payloads_entries(dirlist(PAYLOADS_DIR, "*.bin", false), menu);
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/gear.bmp"),250, 650, 70, 70, (int (*)(void *))tool_Menus, (void*)1));
 
 }
 
@@ -278,7 +288,46 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icon
 
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Fix boot->", 1050, 80, 150, 100, NULL, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Remove SD->", 1038, 180, 150, 100, NULL, NULL));
+
+	if (sd_file_exists ("sxos/eMMC/00")&sd_file_exists ("sxos/eMMC/01")&sd_file_exists ("sxos/eMMC/boot1"))
+	{
+	u32 butX = 685;
+	u32 butY = 250;
+    gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/swap.bmp"),butX, butY+200, 200 , 75,(int (*)(void *))tool_emu, (void*)66)); //- 80, - 500
+	}
+
+	if (!sd_file_exists ("atmosphere/titles/0100000000001000/fsmitm.flag")||!sd_file_exists ("ReiNX/titles/0100000000001000/fsmitm.flag")||!sd_file_exists ("sxos/titles/0100000000001000/fsmitm.flag"))
+	{
+		u32 temX = 1050;
+		u32 temY = 300;
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Themes", temX, temY+80, 150, 100, NULL, NULL));
+			if (!sd_file_exists ("atmosphere/titles/0100000000001000/fsmitm.flag"))
+			{
+			temY = temY + 100;
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),temX, temY, 200, 75,(int (*)(void *))tool_Themes_on, (void*)"atmosphere"));
+			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("AMS",temX+30, temY+30, 150, 100, NULL, NULL));
+			}
+			
+			if (!sd_file_exists ("ReiNX/titles/0100000000001000/fsmitm.flag"))
+			{
+			temY = temY + 100;
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),temX, temY, 200, 75,(int (*)(void *))tool_Themes_on, (void*)"ReiNX"));
+			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("ReiNX",temX+30, temY+30, 150, 100, NULL, NULL));
+			}
+			
+			if (!sd_file_exists ("sxos/titles/0100000000001000/fsmitm.flag"))
+			{
+			temY = temY + 100;
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),temX, temY, 200, 75,(int (*)(void *))tool_Themes_on, (void*)"sxos"));
+			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("sxos",temX+30, temY+30, 150, 100, NULL, NULL));
+			}
+
+	}
+
+
 /*
+
+		
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Backup Nand", 1090, 370, 150, 100, NULL, NULL));
 
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/button.bmp"),1070, 400, 200, 75, (int (*)(void *))zbackup, (void*)"raw.bk"));
@@ -543,70 +592,110 @@ static int tool_emu(u32 status)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
 
-if(status == 33)
-{
-f_unlink("sxos/eMMC");
-display_backlight_brightness(1, 1000);
-f_rename("sxos/emunand","sxos/eMMC");
+	if(status == 33)
+	{
+	f_unlink("sxos/eMMC");
+	display_backlight_brightness(1, 1000);
+	f_rename("sxos/emunand","sxos/eMMC");
 
-f_rename("sxos/eMMC/boot0.bin","sxos/eMMC/boot0");
-f_rename("sxos/eMMC/boot1.bin","sxos/eMMC/boot1");
+	f_rename("sxos/eMMC/boot0.bin","sxos/eMMC/boot0");
+	f_rename("sxos/eMMC/boot1.bin","sxos/eMMC/boot1");
 
-f_rename("sxos/eMMC/full.00.bin","sxos/eMMC/00");
-f_rename("sxos/eMMC/full.01.bin","sxos/eMMC/01");
-f_rename("sxos/eMMC/full.02.bin","sxos/eMMC/02");
-f_rename("sxos/eMMC/full.03.bin","sxos/eMMC/03");
-f_rename("sxos/eMMC/full.04.bin","sxos/eMMC/04");
-f_rename("sxos/eMMC/full.05.bin","sxos/eMMC/05");
-f_rename("sxos/eMMC/full.06.bin","sxos/eMMC/06");
-f_rename("sxos/eMMC/full.07.bin","sxos/eMMC/07");
-f_rename("sxos/eMMC/full.08.bin","sxos/eMMC/08");
-f_rename("sxos/eMMC/full.09.bin","sxos/eMMC/09");
-f_rename("sxos/eMMC/full.10.bin","sxos/eMMC/10");
-f_rename("sxos/eMMC/full.11.bin","sxos/eMMC/11");
-f_rename("sxos/eMMC/full.12.bin","sxos/eMMC/12");
-f_rename("sxos/eMMC/full.13.bin","sxos/eMMC/13");
-f_rename("sxos/eMMC/full.14.bin","sxos/eMMC/14");
-if (sd_file_exists ("sxos/eMMC/00")&sd_file_exists ("sxos/eMMC/01")&sd_file_exists ("sxos/eMMC/boot1"))
-{
-	f_mkdir("emummc");
-	FIL fp;
-	f_open(&fp, "emummc/emummc.ini", FA_WRITE | FA_CREATE_ALWAYS);
-	f_puts("[emummc]", &fp);
-	f_puts("\nenabled=1", &fp);
-	f_puts("\npath=sxos", &fp);
-	f_puts("\nnintendo_path=Emutendo", &fp);
-	f_puts("\n", &fp);
-	f_close(&fp);
-}
+	f_rename("sxos/eMMC/full.00.bin","sxos/eMMC/00");
+	f_rename("sxos/eMMC/full.01.bin","sxos/eMMC/01");
+	f_rename("sxos/eMMC/full.02.bin","sxos/eMMC/02");
+	f_rename("sxos/eMMC/full.03.bin","sxos/eMMC/03");
+	f_rename("sxos/eMMC/full.04.bin","sxos/eMMC/04");
+	f_rename("sxos/eMMC/full.05.bin","sxos/eMMC/05");
+	f_rename("sxos/eMMC/full.06.bin","sxos/eMMC/06");
+	f_rename("sxos/eMMC/full.07.bin","sxos/eMMC/07");
+	f_rename("sxos/eMMC/full.08.bin","sxos/eMMC/08");
+	f_rename("sxos/eMMC/full.09.bin","sxos/eMMC/09");
+	f_rename("sxos/eMMC/full.10.bin","sxos/eMMC/10");
+	f_rename("sxos/eMMC/full.11.bin","sxos/eMMC/11");
+	f_rename("sxos/eMMC/full.12.bin","sxos/eMMC/12");
+	f_rename("sxos/eMMC/full.13.bin","sxos/eMMC/13");
+	f_rename("sxos/eMMC/full.14.bin","sxos/eMMC/14");
+		if (sd_file_exists ("sxos/eMMC/00")&sd_file_exists ("sxos/eMMC/01")&sd_file_exists ("sxos/eMMC/boot1"))
+		{
+			f_unlink("emummc/emummc.bak");
+			f_rename("emummc/emummc.ini","emummc/emummc.bak");
+			f_mkdir("emummc");
+			FIL fp;
+			f_open(&fp, "emummc/emummc.ini", FA_WRITE | FA_CREATE_ALWAYS);
+			f_puts("[emummc]", &fp);
+			f_puts("\nenabled=1", &fp);
+			f_puts("\npath=sxos", &fp);
+			f_puts("\nnintendo_path=Emutendo", &fp);
+			f_puts("\n", &fp);
+			f_close(&fp);
+		}
 
-	gui_init_argon_menu();
-return 0;
-}
+		gui_init_argon_menu();
+	return 0;
+	}
+
 	
-if(status == 1)
-{
-char *str1 = sd_file_read("emummc/emummc.ini");
-char* payload_wo_bin = str_replace(str1, "enabled=0", "enabled=1");
-FIL op;
-f_open(&op, "emummc/emummc.ini", FA_READ);
-u32 size = f_size(&op);
-f_close(&op);
-sd_save_to_file(payload_wo_bin,size,"emummc/emummc.ini");
-retir = 2;
-}
+	if(status == 66)
+	{
+	f_unlink("sxos/emunand");
+	display_backlight_brightness(1, 1000);
 
-if(status == 0)
-{
-char *str1 = sd_file_read("emummc/emummc.ini");
-char* payload_wo_bin = str_replace(str1, "enabled=1", "enabled=0");
-FIL op;
-f_open(&op, "emummc/emummc.ini", FA_READ);
-u32 size = f_size(&op);
-f_close(&op);
-sd_save_to_file(payload_wo_bin,size,"emummc/emummc.ini");
-retir = 1;
-}
+	f_rename("sxos/eMMC/boot0","sxos/eMMC/boot0.bin");
+	f_rename("sxos/eMMC/boot1","sxos/eMMC/boot1.bin");
+
+	f_rename("sxos/eMMC/00","sxos/eMMC/full.00.bin");
+	f_rename("sxos/eMMC/01","sxos/eMMC/full.01.bin");
+	f_rename("sxos/eMMC/02","sxos/eMMC/full.02.bin");
+	f_rename("sxos/eMMC/03","sxos/eMMC/full.03.bin");
+	f_rename("sxos/eMMC/04","sxos/eMMC/full.04.bin");
+	f_rename("sxos/eMMC/05","sxos/eMMC/full.05.bin");
+	f_rename("sxos/eMMC/06","sxos/eMMC/full.06.bin");
+	f_rename("sxos/eMMC/07","sxos/eMMC/full.07.bin");
+	f_rename("sxos/eMMC/08","sxos/eMMC/full.08.bin");
+	f_rename("sxos/eMMC/09","sxos/eMMC/full.09.bin");
+	f_rename("sxos/eMMC/10","sxos/eMMC/full.10.bin");
+	f_rename("sxos/eMMC/11","sxos/eMMC/full.11.bin");
+	f_rename("sxos/eMMC/12","sxos/eMMC/full.12.bin");
+	f_rename("sxos/eMMC/13","sxos/eMMC/full.13.bin");
+	f_rename("sxos/eMMC/14","sxos/eMMC/full.14.bin");
+	f_rename("sxos/eMMC","sxos/emunand");
+	
+		if (sd_file_exists ("sxos/emunand/full.00.bin")&sd_file_exists ("sxos/emunand/full.01.bin")&sd_file_exists ("sxos/emunand/boot1.bin"))
+		{
+			f_unlink("emummc/emummc.ini");
+			f_rename("emummc/emummc.bak","emummc/emummc.ini");
+			retir = 0;
+		}
+
+		gui_init_argon_menu();
+	return 0;
+	}
+
+	
+	if(status == 1)
+	{
+	char *str1 = sd_file_read("emummc/emummc.ini");
+	char* payload_wo_bin = str_replace(str1, "enabled=0", "enabled=1");
+	FIL op;
+	f_open(&op, "emummc/emummc.ini", FA_READ);
+	u32 size = f_size(&op);
+	f_close(&op);
+	sd_save_to_file(payload_wo_bin,size,"emummc/emummc.ini");
+	retir = 2;
+	}
+
+	if(status == 0)
+	{
+	char *str1 = sd_file_read("emummc/emummc.ini");
+	char* payload_wo_bin = str_replace(str1, "enabled=1", "enabled=0");
+	FIL op;
+	f_open(&op, "emummc/emummc.ini", FA_READ);
+	u32 size = f_size(&op);
+	f_close(&op);
+	sd_save_to_file(payload_wo_bin,size,"emummc/emummc.ini");
+	retir = 1;
+	}
 
 /*	
 if (sd_file_exists ("emummc/emummc.ini"))
@@ -675,6 +764,18 @@ gui_init_argon_menu();
 return 0;
 }
 
+int tool_Themes_on(char* cfw)
+{
+if (!sd_mount()){BootStrapNX();}//check sd
+char* path = (char*)malloc(256);
+		strcpy(path, cfw);
+		strcat(path, "/titles/0100000000001000/fsmitm.flag");
+		sd_save_to_file("",0,path);
+gui_init_argon_menu();
+return 0;
+}
+
+//file mgr
 int tool_dir(char *param)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
@@ -781,6 +882,7 @@ copyfileparam(param ,"Icons/SD.bmp","StarDust/Icons/SD.bmp");
 copyfileparam(param,"background.bmp","StarDust/background.bmp");
 copyfileparam(param,"logos/Atmosphere.bmp","StarDust/logos/Atmosphere.bmp");
 copyfileparam(param,"logos/Reinx.bmp","StarDust/logos/Reinx.bmp");
+copyfileparam(param,"logos/Reinx-off.bmp","StarDust/logos/Reinx-off.bmp");
 copyfileparam(param,"/logos/sxos.bmp","StarDust/logos/sxos.bmp");
 copyfileparam(param,"logos/zBackup.bmp","StarDust/logos/zBackup.bmp");
 gui_init_argon_menu();
