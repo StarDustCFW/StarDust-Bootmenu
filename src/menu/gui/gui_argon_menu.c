@@ -56,6 +56,8 @@ int tool_servises_off(char* title);
 int tool_Themes_on(char* cfw);
 int tool_filete(char* fil);
 int tool_file_act(u32 fil);
+int memloader(u32 fil);
+
 //menus
 u64 main_menu = 0;
 u32 submenu = 0;
@@ -94,6 +96,10 @@ void gui_init_argon_boot(void)
 	if(sd_file_exists("StarDust/payload.bin"))	
 	launch_payload("StarDust/payload.bin");
 	}
+	if (!sd_mount()){BootStrapNX();}//check sd
+	f_unlink("StarDust/payload.bin");
+    f_unlink("StarDust/autobootecho.txt");
+	f_unlink("auto.bak");
 gui_menu_pool_cleanup();
 if (!sd_mount()){BootStrapNX();}//check sd
 gui_init_argon_menu();
@@ -283,19 +289,11 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icon
 	if(main_menu == 1)
 	{
 //generate menu2
-//gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Hekate.bmp"),550, 380, 200 , 200,(int (*)(void *))launch_payload, (void*)"/StarDust/payback/Hekate.bin"));
-//generate_payloads_back(dirlist(PAYBACK_DIR, "*.bin", false), menu);
 
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Fix boot->", 1050, 80, 150, 100, NULL, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Remove SD->", 1038, 180, 150, 100, NULL, NULL));
 
-	if (sd_file_exists ("sxos/eMMC/00")&sd_file_exists ("sxos/eMMC/01")&sd_file_exists ("sxos/eMMC/boot1"))
-	{
-	u32 butX = 685;
-	u32 butY = 250;
-    gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/swap.bmp"),butX, butY+200, 200 , 75,(int (*)(void *))tool_emu, (void*)66)); //- 80, - 500
-	}
-
+	//theme Activator
 	if (!sd_file_exists ("atmosphere/titles/0100000000001000/fsmitm.flag")||!sd_file_exists ("ReiNX/titles/0100000000001000/fsmitm.flag")||!sd_file_exists ("sxos/titles/0100000000001000/fsmitm.flag"))
 	{
 		u32 temX = 1050;
@@ -325,25 +323,20 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Remove SD->", 1038, 
 	}
 
 
-/*
-
-		
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Backup Nand", 1090, 370, 150, 100, NULL, NULL));
-
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/button.bmp"),1070, 400, 200, 75, (int (*)(void *))zbackup, (void*)"raw.bk"));
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Raw full", 1095, 425, 150, 100, NULL, NULL));
-
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/button.bmp"),1070, 500, 200, 75, (int (*)(void *))zbackup, (void*)"syslite.bk"));
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Lite System", 1093, 525, 150, 100, NULL, NULL));
-
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/button.bmp"),1070, 600, 200, 75, (int (*)(void *))zbackup, (void*)"emummc.bk"));
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Make EmuMMC", 1094, 625, 150, 100, NULL, NULL));
-*/
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowl.bmp"),100, 650, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Lockpick_RCM.bmp"),780, 170, 200 , 200,(int (*)(void *))launch_payload, (void*)"/StarDust/payback/Lockpick_RCM.bin"));
+	if (sd_file_exists ("sxos/eMMC/00")&sd_file_exists ("sxos/eMMC/01")&sd_file_exists ("sxos/eMMC/boot1"))
+	{
+    gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/swap.bmp"),455, 250+200, 200 , 75,(int (*)(void *))tool_emu, (void*)66));
+	}
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowl.bmp"),100, 650, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Lockpick_RCM.bmp"),780, 170, 200 , 200,(int (*)(void *))launch_payload, (void*)"/StarDust/payback/Lockpick_RCM.bin"));
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader.bmp"),780, 370, 200 , 200,(int (*)(void *))tool_Menus, (void*)3));
+	if (!sd_file_exists("emummc/emummc.ini"))
+	{
+    gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/link_hide.bmp"),455, 300, 200 , 75,(int (*)(void *))tool_emu, (void*)99)); 
+	}
 
 //services
-u32 linealX = 190;
+u32 linealX = 130;
 u32 linealY = 70;
 u32 separ = 80;
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Services",linealX+30, linealY+60, 150, 100, NULL, NULL));
@@ -431,9 +424,10 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("sysclock",linealX+30
 	if(main_menu == 2)
 	{
 //		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("BETA WIP....", 500, 20, 150, 100, NULL, NULL));
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowl.bmp"),100, 650, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
 
 	
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowl.bmp"),100, 650, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
+
 char* files = listfil(directory, "*", true);
 char* folder = listfol(directory, "*", true);
 		
@@ -519,6 +513,17 @@ char* folder = listfol(directory, "*", true);
 		}
 
  }
+ 
+	if(main_menu == 3)
+	{
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowl.bmp"),100, 650, 70, 70,(int (*)(void *))tool_Menus, (void*)1));
+	
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_boot0.bmp"),80, 170, 200 , 200,(int (*)(void *))memloader, (void*)0));
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_boot1.bmp"),380, 170, 200 , 200,(int (*)(void *))memloader, (void*)1));
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_emmc.bmp"),680, 170, 200 , 200,(int (*)(void *))memloader, (void*)2));
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_sd.bmp"),980, 170, 200 , 200,(int (*)(void *))memloader, (void*)3));
+
+	}
 
 /* Generate reboot rcm and shutdown entry **/
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/screenshot.bmp"),400, 650, 70, 70, (int (*)(void *))screenshot, NULL));
@@ -591,7 +596,8 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icon
 static int tool_emu(u32 status)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
-
+	
+	//give sxos emu to ams
 	if(status == 33)
 	{
 	f_unlink("sxos/eMMC");
@@ -635,7 +641,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
 	return 0;
 	}
 
-	
+	//return emunand to sxos
 	if(status == 66)
 	{
 	f_unlink("sxos/emunand");
@@ -673,6 +679,27 @@ if (!sd_mount()){BootStrapNX();}//check sd
 	}
 
 	
+	//link sxos hide partition to ams
+	if(status == 99)
+	{
+	display_backlight_brightness(1, 1000);
+			f_mkdir("emummc");
+			FIL fp;
+			f_open(&fp, "emummc/emummc.ini", FA_WRITE | FA_CREATE_ALWAYS);
+			f_puts("[emummc]\n", &fp);
+			f_puts("enabled=1\n", &fp);
+			f_puts("sector=0x2\n", &fp);
+			f_puts("nintendo_path=Emutendo\n", &fp);
+			f_close(&fp);
+		gui_init_argon_menu();
+	return 0;
+	}
+
+	
+
+
+
+
 	if(status == 1)
 	{
 	char *str1 = sd_file_read("emummc/emummc.ini");
@@ -889,6 +916,105 @@ gui_init_argon_menu();
 return 0;
 }
 
+//Memloader
+int memloader(u32 fil)
+{
+if (!sd_mount()){BootStrapNX();}//check sd
+	//boot0
+	if(fil == 0)
+	{
+			FIL fp;
+			f_open(&fp, "auto.bak", FA_WRITE | FA_CREATE_ALWAYS);
+			f_puts("[load:PH_0]\n", &fp);
+			f_puts("if=StarDust/uboot/u-boot.elf\n", &fp);
+			f_puts("skip=0x00010000\n", &fp);
+			f_puts("count=0x0006e13f\n", &fp);
+			f_puts("dst=0x80110000\n", &fp);
+			f_puts("\n", &fp);
+			f_puts("[load:script]\n", &fp);
+			f_puts("if=StarDust/uboot/ums_emmc_boot0.scr.img\n", &fp);
+			f_puts("dst=0x80100000\n", &fp);
+			f_puts("\n", &fp);
+			f_puts("[boot:ENTRY]\n", &fp);
+			f_puts("pc=0x80110000\n", &fp);
+			f_puts("maxMemoryFreq=200\n", &fp);
+			f_puts("pwroffHoldTime=4\n", &fp);
+			f_puts("\n", &fp);
+			f_close(&fp);
+			launch_payload("StarDust/payback/memloader.bin");
+	}
+
+	//boot1
+	if(fil == 1)
+	{
+			FIL fp;
+			f_open(&fp, "auto.bak", FA_WRITE | FA_CREATE_ALWAYS);
+			f_puts("[load:PH_0]\n", &fp);
+			f_puts("if=StarDust/uboot/u-boot.elf\n", &fp);
+			f_puts("skip=0x00010000\n", &fp);
+			f_puts("count=0x0006e13f\n", &fp);
+			f_puts("dst=0x80110000\n", &fp);
+			f_puts("\n", &fp);
+			f_puts("[load:script]\n", &fp);
+			f_puts("if=StarDust/uboot/ums_emmc_boot1.scr.img\n", &fp);
+			f_puts("dst=0x80100000\n", &fp);
+			f_puts("\n", &fp);
+			f_puts("[boot:ENTRY]\n", &fp);
+			f_puts("pc=0x80110000\n", &fp);
+			f_puts("maxMemoryFreq=-1600\n", &fp);
+			f_puts("pwroffHoldTime=4\n", &fp);
+			f_puts("\n", &fp);
+			f_close(&fp);
+			launch_payload("StarDust/payback/memloader.bin");
+	}
+
+	//emmc
+	if(fil == 2)
+	{
+			FIL fp;
+			f_open(&fp, "auto.bak", FA_WRITE | FA_CREATE_ALWAYS);
+			f_puts("[load:PH_0]\n", &fp);
+			f_puts("if=StarDust/uboot/u-boot.elf\n", &fp);
+			f_puts("skip=0x00010000\n", &fp);
+			f_puts("count=0x0006e13f\n", &fp);
+			f_puts("dst=0x80110000\n", &fp);
+			f_puts("\n", &fp);
+			f_puts("[load:script]\n", &fp);
+			f_puts("if=StarDust/uboot/ums_emmc.scr.img\n", &fp);
+			f_puts("dst=0x80100000\n", &fp);
+			f_puts("\n", &fp);
+			f_puts("[boot:ENTRY]\n", &fp);
+			f_puts("pc=0x80110000\n", &fp);
+			f_puts("pwroffHoldTime=4\n", &fp);
+			f_puts("\n", &fp);
+			f_close(&fp);
+			launch_payload("StarDust/payback/memloader.bin");
+	}
+	
+	if(fil == 3)
+	{
+	//sd
+			FIL fp;
+			f_open(&fp, "auto.bak", FA_WRITE | FA_CREATE_ALWAYS);
+			f_puts("[load:PH_0]\n", &fp);
+			f_puts("if=StarDust/uboot/u-boot.elf\n", &fp);
+			f_puts("skip=0x00010000\n", &fp);
+			f_puts("count=0x0007c1bf\n", &fp);
+			f_puts("dst=0x80110000\n", &fp);
+			f_puts("\n", &fp);
+			f_puts("[load:script]\n", &fp);
+			f_puts("if=StarDust/uboot/ums_sd.scr.img\n", &fp);
+			f_puts("dst=0x80100000\n", &fp);
+			f_puts("\n", &fp);
+			f_puts("[boot:ENTRY]\n", &fp);
+			f_puts("pc=0x80110000\n", &fp);
+			f_puts("pwroffHoldTime=4\n", &fp);
+			f_puts("\n", &fp);
+			f_close(&fp);
+			launch_payload("StarDust/payback/memloader.bin");
+	}
+return 0;
+}
 /*
 static int zbackup(char* param)
 {
