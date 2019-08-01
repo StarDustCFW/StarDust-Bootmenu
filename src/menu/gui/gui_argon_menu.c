@@ -340,85 +340,96 @@ u32 linealX = 130;
 u32 linealY = 70;
 u32 separ = 80;
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Services",linealX+30, linealY+60, 150, 100, NULL, NULL));
-//ftp
-if (sd_file_exists("atmosphere/titles/420000000000000E/exefs.nsp"))
-{
-linealY = linealY + separ;
-	if (sd_file_exists("atmosphere/titles/420000000000000E/flags/boot2.flag"))
+	//ftp
+	if (sd_file_exists("atmosphere/titles/420000000000000E/exefs.nsp"))
 	{
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_off, (void*)"420000000000000E"));
-	}else{
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_on, (void*)"420000000000000E"));
+	linealY = linealY + separ;
+		if (sd_file_exists("atmosphere/titles/420000000000000E/flags/boot2.flag"))
+		{
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_off, (void*)"420000000000000E"));
+		}else{
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_on, (void*)"420000000000000E"));
+		}
+	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("FTP",linealX+30, linealY+30, 150, 100, NULL, NULL));
 	}
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("FTP",linealX+30, linealY+30, 150, 100, NULL, NULL));
-}
 
-//Emuiibo
-if (sd_file_exists("atmosphere/titles/0100000000000352/exefs.nsp"))
-{
-linealY = linealY + separ;
-	if (sd_file_exists("atmosphere/titles/0100000000000352/flags/boot2.flag"))
+	//Emuiibo
+	if (sd_file_exists("atmosphere/titles/0100000000000352/exefs.nsp"))
 	{
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_off, (void*)"0100000000000352"));
-	}else{
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_on, (void*)"0100000000000352"));
+	linealY = linealY + separ;
+		if (sd_file_exists("atmosphere/titles/0100000000000352/flags/boot2.flag"))
+		{
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_off, (void*)"0100000000000352"));
+		}else{
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_on, (void*)"0100000000000352"));
+		}
+	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Emuiio",linealX+30, linealY+30, 150, 100, NULL, NULL));
 	}
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Emuiio",linealX+30, linealY+30, 150, 100, NULL, NULL));
-}
 
-//Lan Play
-if (sd_file_exists("atmosphere/titles/4200000000000010/exefs.nsp"))
-{
-linealY = linealY + separ;
-	if (sd_file_exists("atmosphere/titles/4200000000000010/flags/boot2.flag"))
+	//Lan Play
+	if (sd_file_exists("atmosphere/titles/4200000000000010/exefs.nsp"))
 	{
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_off, (void*)"4200000000000010"));
-	}else{
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_on, (void*)"4200000000000010"));
+	linealY = linealY + separ;
+		if (sd_file_exists("atmosphere/titles/4200000000000010/flags/boot2.flag"))
+		{
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_off, (void*)"4200000000000010"));
+		}else{
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_on, (void*)"4200000000000010"));
+		}
+	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Lan Play",linealX+30, linealY+30, 150, 100, NULL, NULL));
 	}
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Lan Play",linealX+30, linealY+30, 150, 100, NULL, NULL));
-}
 
-//HDI
-if (sd_file_exists("atmosphere/titles/0100000000000FAF/exefs.nsp"))
-{
-linealY = linealY + separ;
-	if (sd_file_exists("atmosphere/titles/0100000000000FAF/flags/boot2.flag"))
+	//HDI
+	if (sd_file_exists("atmosphere/titles/0100000000000FAF/exefs.nsp"))
 	{
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_off, (void*)"0100000000000FAF"));
-	}else{
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_on, (void*)"0100000000000FAF"));
+	linealY = linealY + separ;
+		if (sd_file_exists("atmosphere/titles/0100000000000FAF/flags/boot2.flag"))
+		{
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_off, (void*)"0100000000000FAF"));
+		}else{
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_on, (void*)"0100000000000FAF"));
+		}
+	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("HDI",linealX+30, linealY+30, 150, 100, NULL, NULL));
 	}
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("HDI",linealX+30, linealY+30, 150, 100, NULL, NULL));
-}
 
-//sysplay
-if (sd_file_exists("atmosphere/titles/420000000000000B/exefs.nsp"))
-{
-linealY = linealY + separ;
-	if (sd_file_exists("atmosphere/titles/420000000000000B/flags/boot2.flag"))
+	//sysplay
+	if (sd_file_exists("atmosphere/titles/420000000000000B/exefs.nsp"))
 	{
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_off, (void*)"420000000000000B"));
-	}else{
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_on, (void*)"420000000000000B"));
+	linealY = linealY + separ;
+		if (sd_file_exists("atmosphere/titles/420000000000000B/flags/boot2.flag"))
+		{
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_off, (void*)"420000000000000B"));
+		}else{
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_on, (void*)"420000000000000B"));
+		}
+	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("sysplay",linealX+30, linealY+30, 150, 100, NULL, NULL));
 	}
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("sysplay",linealX+30, linealY+30, 150, 100, NULL, NULL));
-}
 
-//sysclock
-if (sd_file_exists("atmosphere/titles/00FF0000636C6BFF/exefs.nsp"))
-{
-linealY = linealY + separ;
-	if (sd_file_exists("atmosphere/titles/00FF0000636C6BFF/flags/boot2.flag"))
+	//sysclock
+	if (sd_file_exists("atmosphere/titles/00FF0000636C6BFF/exefs.nsp"))
 	{
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_off, (void*)"00FF0000636C6BFF"));
-	}else{
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_on, (void*)"00FF0000636C6BFF"));
+	linealY = linealY + separ;
+		if (sd_file_exists("atmosphere/titles/00FF0000636C6BFF/flags/boot2.flag"))
+		{
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_off, (void*)"00FF0000636C6BFF"));
+		}else{
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_on, (void*)"00FF0000636C6BFF"));
+		}
+	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("sysclock",linealX+30, linealY+30, 150, 100, NULL, NULL));
 	}
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("sysclock",linealX+30, linealY+30, 150, 100, NULL, NULL));
-}
 
-
+	//ReverseNX
+	if (sd_file_exists("atmosphere/titles/0100000000534C56/exefs.nsp"))
+	{
+	linealY = linealY + separ;
+		if (sd_file_exists("atmosphere/titles/0100000000534C56/flags/boot2.flag"))
+		{
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_off, (void*)"0100000000534C56"));
+		}else{
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_on, (void*)"0100000000534C56"));
+		}
+	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("ReverseNX",linealX+30, linealY+30, 150, 100, NULL, NULL));
+	}
 
 }
 	if(main_menu == 2)
