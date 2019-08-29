@@ -256,6 +256,9 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icon
 
 //generate main menu
 generate_payloads_entries(dirlist(PAYLOADS_DIR, "*.bin", false), menu);
+if (sd_file_exists ("/switchroot_android/coreboot.rom"))
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Android.bmp"),920, 620, 100, 100, (int (*)(void *))launch_payload, (void*)"/switchroot_android/coreboot.rom"));
+
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/gear.bmp"),250, 650, 70, 70, (int (*)(void *))tool_Menus, (void*)1));
 
 }
@@ -780,7 +783,7 @@ char* path = (char*)malloc(256);
 		sd_save_to_file("",0,path);
 		strcpy(path, "ReiNX/titles/");
 		strcat(path, title);
-		strcat(path, "/flags/boot2.flag");
+		strcat(path, "/boot2.flag");
 		sd_save_to_file("",0,path);
 gui_init_argon_menu();
 return 0;
@@ -796,7 +799,7 @@ char* path = (char*)malloc(256);
 		f_unlink(path);
 		strcpy(path, "ReiNX/titles/");
 		strcat(path, title);
-		strcat(path, "/flags/boot2.flag");
+		strcat(path, "/boot2.flag");
 		f_unlink(path);
 gui_init_argon_menu();
 return 0;
