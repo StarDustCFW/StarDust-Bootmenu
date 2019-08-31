@@ -11,10 +11,12 @@
 #include "power/max17050.h"
 #include "core/custom-gui.h"
 #include <string.h>
+#include "soc/t210.h"
+#include "soc/fuse.h"
 
 #define MINOR_VERSION 3
 #define MAJOR_VERSION 0
-#define REVI_VERSION 22
+#define REVI_VERSION 23
 	char Sversion[4];
 
 
@@ -60,33 +62,62 @@ static void gui_menu_draw_background(gui_menu_t* menu)
     {
         g_gfx_con.scale = 2;
         gfx_con_setpos(&g_gfx_con, 15, 10);
-        gfx_printf(&g_gfx_con, "ArgonNX v%d.%d-%d", MAJOR_VERSION, MINOR_VERSION,REVI_VERSION);
+        gfx_printf(&g_gfx_con, "ArgonNX v%d.%d %k%d%k", MAJOR_VERSION, MINOR_VERSION,0xFF00FF22, REVI_VERSION ,0xFFCCCCCC);
 		
        //StarDust version
-char *str;
-if (g_sd_mounted){
-
-   
-	void *buf;
-
-
-	buf = sd_file_read("StarDust/StarDustV.txt");
-	str = buf;
-	Sversion[0] = str[0];
-	Sversion[1] = str[1];
-	Sversion[2] = str[2];
-	Sversion[3] = str[3];
-}	
+		char *str;
+		if (g_sd_mounted){
+			void *buf;
+			buf = sd_file_read("StarDust/StarDustV.txt");
+			str = buf;
+			Sversion[0] = str[0];
+			Sversion[1] = str[1];
+			Sversion[2] = str[2];
+			Sversion[3] = str[3];
+		}	
 	gfx_con_setpos(&g_gfx_con, 1050, 10);
 	gfx_printf(&g_gfx_con, "StarDust v%s", Sversion);
 		
+    }
 		//battery
 		u32 battPercent = 0;
-		max17050_get_property(MAX17050_RepSOC, (int *)&battPercent);
+		max17050_get_property(MAX17050_RepSOC, (int *)&battPercent);		
 		gfx_con_setpos(&g_gfx_con, 1050, 700);
-        gfx_printf(&g_gfx_con, "Battery: -%d%-", (battPercent >> 8) & 0xFF, (battPercent & 0xFF));
-    }
+		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0xFFCCCCCC, 0xFF191414);
+        gfx_printf(&g_gfx_con, "Battery: %k%d%.%k", 0xFF00FF22,(battPercent >> 8) & 0xFF,0xFFCCCCCC ,(battPercent & 0xFF));
 
+		
+		//Fuses
+			u32 burntFuses = 0;
+		for (u32 i = 0; i < 32; i++)
+		{
+			if ((fuse_read_odm(7) >> i) & 1)
+				burntFuses++;
+		}
+		char *mindowngrade = "unknow";
+		if(burntFuses == 1){mindowngrade = "1.0.0";}
+		if(burntFuses == 2){mindowngrade = "2.0.0";}
+		if(burntFuses == 3){mindowngrade = "3.0.0";}
+		if(burntFuses == 4){mindowngrade = "3.0.1";}
+		if(burntFuses == 5){mindowngrade = "4.0.0";}
+		if(burntFuses == 6){mindowngrade = "5.0.0";}
+		if(burntFuses == 7){mindowngrade = "6.0.0";}
+		if(burntFuses == 8){mindowngrade = "6.2.0";}
+		if(burntFuses == 9){mindowngrade = "7.0.0";}
+		if(burntFuses == 10){mindowngrade = "8.1.0";}
+
+		g_gfx_con.scale = 2;
+		gfx_con_setpos(&g_gfx_con, 1050, 660);
+		
+		gfx_printf(&g_gfx_con,"F%k%d %kLimit%k %s%k\n\n", 0xFFea2f1e, burntFuses ,0xFFCCCCCC ,0xFF00FF22 ,mindowngrade ,0xFFCCCCCC);
+		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
+/* 
+Rojo  0xFFea2f1e
+azul  0xFF331ad8
+      0xFFF9F9F9
+Blank 0xFFCCCCCC
+verde 0xFF00FF22
+*/	
 }
 
 static void gui_menu_render_menu(gui_menu_t* menu) 
