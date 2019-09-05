@@ -77,6 +77,7 @@ u32 retir = 0;
 char *directory = "";
 char *filete = "";
 char *filpay = "3333333333";
+char Sversion[1];
 
 void gui_init_argon_boot(void)
 {
@@ -87,18 +88,48 @@ void gui_init_argon_boot(void)
 	display_backlight_brightness(100, 1000);
 	//show display without icons
     gui_menu_open2(menu);
-	if(sd_file_exists("StarDust/payload.bin"))	
-	msleep(1000);
+	if (!sd_mount()){BootStrapNX();}//check sd
+
 	//waith user input
     bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
     if (!cancel_auto_chainloading)
 	{
+
+		//autoboot
+		char *str;
+		if (g_sd_mounted){
+			void *buf;
+			buf = sd_file_read("StarDust/autobootecho.txt");
+			str = buf;
+			Sversion[0] = str[0];
+		}
+		if(strstr(Sversion,"A") != NULL)
+		launch_payload("StarDust/payloads/Atmosphere.bin");
+
+		if(strstr(Sversion,"R") != NULL)
+		launch_payload("StarDust/payloads/ReiNX.bin");
+
+		if(strstr(Sversion,"S") != NULL)
+		launch_payload("StarDust/payloads/SXOS.bin");
+	}
+
+
+
+/*
+gfx_swap_buffer(&g_gfx_ctxt);
+btn_wait();
+    if (!btn_read() & !BTN_VOL_UP)
+	{
 	if(sd_file_exists("StarDust/payload.bin"))	
 	launch_payload("StarDust/payload.bin");
 	}
-	if (!sd_mount()){BootStrapNX();}//check sd
+ */ 
+
+
 	f_unlink("StarDust/payload.bin");
-    f_unlink("StarDust/autobootecho.txt");
+	if (btn_read() & BTN_VOL_DOWN)
+	f_unlink("StarDust/autobootecho.txt");
+	
 	f_unlink("auto.bak");
 gui_menu_pool_cleanup();
 if (!sd_mount()){BootStrapNX();}//check sd
@@ -199,9 +230,9 @@ sd_mount();
 
 // Create SXOS transfer button
 
-if (sd_file_exists ("sxos/emunand/full.00.bin")&sd_file_exists ("sxos/emunand/full.01.bin")&sd_file_exists ("sxos/emunand/boot1.bin"))
+if (sd_file_exists ("sxos/emunand/full.00.bin")&sd_file_exists ("sxos/emunand/boot0.bin")&sd_file_exists ("sxos/emunand/boot1.bin"))
 {
-	if (!sd_file_exists ("sxos/eMMC/00")&!sd_file_exists ("sxos/eMMC/01")&!sd_file_exists ("sxos/eMMC/boot1"))
+	if (!sd_file_exists ("sxos/eMMC/00")&!sd_file_exists ("sxos/eMMC/boot0")&!sd_file_exists ("sxos/eMMC/boot1"))
 	{
 	u32 butX = 685;
 	u32 butY = 250;
@@ -260,13 +291,6 @@ if (sd_file_exists ("/switchroot_android/coreboot.rom"))
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Android.bmp"),920, 620, 100, 100, (int (*)(void *))launch_payload, (void*)"/switchroot_android/coreboot.rom"));
 
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/gear.bmp"),250, 650, 70, 70, (int (*)(void *))tool_Menus, (void*)1));
-
-}
-
-//in the midle of 1 and 2
-	if(main_menu <= 1)
-	{
-//Create Icons, themes
 u32 tm_iconsY = 20;
 u32 tm_iconsX = 300;
 if(sd_file_exists("/StarDust/Atheme/1/icon.bmp"))
@@ -283,6 +307,13 @@ if(sd_file_exists("/StarDust/Atheme/6/icon.bmp"))
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/6/icon.bmp"),tm_iconsX+500, tm_iconsY, 70, 70, (int (*)(void *))tool_theme, (void*)"StarDust/Atheme/6"));
 if(sd_file_exists("/StarDust/Atheme/7/icon.bmp"))
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Atheme/7/icon.bmp"),tm_iconsX+600, tm_iconsY, 70, 70, (int (*)(void *))tool_theme, (void*)"StarDust/Atheme/7"));
+
+}
+
+//in the midle of 1 and 2
+	if(main_menu <= 1)
+	{
+//Create Icons, themes
 
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/themes.bmp"),1200, 40, 70, 70, tool_menu_rem, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/SD.bmp"),1200, 140, 70, 70, tool_extr_rSD, NULL));
@@ -326,7 +357,7 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Remove SD->", 1038, 
 	}
 
 
-	if (sd_file_exists ("sxos/eMMC/00")&sd_file_exists ("sxos/eMMC/01")&sd_file_exists ("sxos/eMMC/boot1"))
+	if (sd_file_exists ("sxos/eMMC/00")&sd_file_exists ("sxos/eMMC/boot0")&sd_file_exists ("sxos/eMMC/boot1"))
 	{
     gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/swap.bmp"),455, 250+200, 200 , 75,(int (*)(void *))tool_emu, (void*)66));
 	}
@@ -459,7 +490,7 @@ char* folder = listfol(directory, "*", true);
     while(folder[r * 256])
     {
 	if(f >= 22){
-	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("More...", 1100,670, 150, 100, NULL, NULL));
+	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("More...", 1100,680, 150, 100, NULL, NULL));
 	break;}
 		if(strlen(&folder[r * 256]) <= 100){			
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/folder.bmp"),x, y+30, 500, 25,(int (*)(void *))tool_dir, (void*)&folder[r * 256]));
@@ -481,7 +512,7 @@ char* folder = listfol(directory, "*", true);
     while(files[w * 256])
     {
 	if(f >= 22){
-	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("More...", 1100,670, 150, 100, NULL, NULL));
+	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("More...", 1100,680, 150, 100, NULL, NULL));
 	break;}
 	if(strlen(&files[w * 256]) <= 100){
 			if(strstr(&files[w * 256],".bin") != NULL)
@@ -636,7 +667,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
 	f_rename("sxos/eMMC/full.12.bin","sxos/eMMC/12");
 	f_rename("sxos/eMMC/full.13.bin","sxos/eMMC/13");
 	f_rename("sxos/eMMC/full.14.bin","sxos/eMMC/14");
-		if (sd_file_exists ("sxos/eMMC/00")&sd_file_exists ("sxos/eMMC/01")&sd_file_exists ("sxos/eMMC/boot1"))
+		if (sd_file_exists ("sxos/eMMC/00")&sd_file_exists ("sxos/eMMC/boot0")&sd_file_exists ("sxos/eMMC/boot1"))
 		{
 			f_unlink("emummc/emummc.bak");
 			f_rename("emummc/emummc.ini","emummc/emummc.bak");
@@ -681,7 +712,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
 	f_rename("sxos/eMMC/14","sxos/eMMC/full.14.bin");
 	f_rename("sxos/eMMC","sxos/emunand");
 	
-		if (sd_file_exists ("sxos/emunand/full.00.bin")&sd_file_exists ("sxos/emunand/full.01.bin")&sd_file_exists ("sxos/emunand/boot1.bin"))
+		if (sd_file_exists ("sxos/emunand/full.00.bin")&sd_file_exists ("sxos/emunand/boot0.bin")&sd_file_exists ("sxos/emunand/boot1.bin"))
 		{
 			f_unlink("emummc/emummc.ini");
 			f_rename("emummc/emummc.bak","emummc/emummc.ini");

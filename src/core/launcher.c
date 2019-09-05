@@ -62,17 +62,20 @@ int launch_payload(char *path)
 {
 	if (!sd_mount()){BootStrapNX();}//check sd
 
-    char *atm = "atmos";
-    char *rnx = "reinx";
-    char *sxos = "sxos";
-
     u32 boot = 0;
 
-    if(strstr(path,atm) != NULL)
+    if(strstr(path,"atmos") != NULL)
     	boot=1;
-    if(strstr(path,rnx) != NULL)
+    if(strstr(path,"reinx") != NULL)
     	boot=2;
-    if(strstr(path,sxos) != NULL)
+    if(strstr(path,"sxos") != NULL)
+    	boot=3;
+		
+    if(strstr(path,"Atmos") != NULL)
+    	boot=1;
+    if(strstr(path,"ReiNX") != NULL)
+    	boot=2;
+    if(strstr(path,"SXOS") != NULL)
     	boot=3;
 /*
 	u8* buffer = (u8*)malloc(1);
