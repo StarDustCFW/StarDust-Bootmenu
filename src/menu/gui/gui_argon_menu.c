@@ -87,7 +87,12 @@ void gui_init_argon_boot(void)
     gui_menu_t* menu = gui_menu_create("ArgonNX");
 	display_backlight_brightness(100, 1000);
 	//show display without icons
+		
     gui_menu_open2(menu);
+	if (sd_file_exists("StarDust/autobootecho.txt"))
+	msleep(2000);
+	
+//	btn_wait();
 	if (!sd_mount()){BootStrapNX();}//check sd
 
 	//waith user input
@@ -327,12 +332,13 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icon
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Fix boot->", 1050, 80, 150, 100, NULL, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Remove SD->", 1038, 180, 150, 100, NULL, NULL));
 
+
 	//theme Activator
 	if (!sd_file_exists ("atmosphere/titles/0100000000001000/fsmitm.flag")||!sd_file_exists ("ReiNX/titles/0100000000001000/fsmitm.flag")||!sd_file_exists ("sxos/titles/0100000000001000/fsmitm.flag"))
 	{
 		u32 temX = 1050;
-		u32 temY = 300;
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Themes", temX, temY+80, 150, 100, NULL, NULL));
+		u32 temY = 290;
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Themes", temX+20, temY+80, 150, 100, NULL, NULL));
 			if (!sd_file_exists ("atmosphere/titles/0100000000001000/fsmitm.flag"))
 			{
 			temY = temY + 100;
@@ -371,7 +377,7 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Remove SD->", 1038, 
 
 //services
 u32 linealX = 130;
-u32 linealY = 70;
+u32 linealY = 40;
 u32 separ = 80;
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Services",linealX+30, linealY+60, 150, 100, NULL, NULL));
 	//ftp
@@ -517,10 +523,19 @@ char* folder = listfol(directory, "*", true);
 	if(strlen(&files[w * 256]) <= 100){
 			if(strstr(&files[w * 256],".bin") != NULL)
 			{
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/files-bin.bmp"),x, y+30, 500, 25,(int (*)(void *))tool_filete, (void*)&files[w * 256]));
+				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/files-bin.bmp"),x, y+30, 500, 25,(int (*)(void *))tool_filete, (void*)&files[w * 256]));
 			}else{
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/files.bmp"),x, y+30, 500, 25,(int (*)(void *))tool_filete, (void*)&files[w * 256]));			
+				if(strstr(&files[w * 256],".txt") != NULL||strstr(&files[w * 256],".ini") != NULL||strstr(&files[w * 256],".conf") != NULL)
+				{
+					gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/files-txt.bmp"),x, y+30, 500, 25,(int (*)(void *))tool_filete, (void*)&files[w * 256]));
+				}else{
+					if(strstr(&files[w * 256],".png") != NULL||strstr(&files[w * 256],".bmp") != NULL||strstr(&files[w * 256],".jpg") != NULL)
+						gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/files-img.bmp"),x, y+30, 500, 25,(int (*)(void *))tool_filete, (void*)&files[w * 256]));
+					else
+						gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/files.bmp"),x, y+30, 500, 25,(int (*)(void *))tool_filete, (void*)&files[w * 256]));
+				}
 			}
+			
 
 		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&files[w * 256], x+strlen(&files[w * 256])*8-40, y+35, 150, 100, NULL, NULL));
 		y = y + space;
@@ -570,6 +585,13 @@ char* folder = listfol(directory, "*", true);
 
 	}
 
+	
+	if(main_menu == 4)
+	{
+
+	
+	
+	}
 /* Generate reboot rcm and shutdown entry **/
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/screenshot.bmp"),400, 650, 70, 70, (int (*)(void *))screenshot, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),600, 650, 70, 70, tool_power_off, NULL));
@@ -888,6 +910,19 @@ filete = tmp;
 		{
 		tool_file_act(1);
 		}
+		
+		if(strstr(filete,".txt") != NULL)
+		{
+		tool_file_act(2);
+		}
+		if(strstr(filete,".ini") != NULL)
+		{
+		tool_file_act(2);
+		}
+		if(strstr(filete,".conf") != NULL)
+		{
+		tool_file_act(2);
+		}
 	}
 filpay = filete;
 gui_init_argon_menu();
@@ -907,6 +942,26 @@ if (!sd_mount()){BootStrapNX();}//check sd
 	if(fil == 1)
 	{
 	launch_payload(filete);
+	}
+	
+	if(fil == 2)
+	{
+	//launch_payload(filete);
+		gfx_swap_buffer(&g_gfx_ctxt);
+		g_gfx_con.scale = 2;
+		gfx_con_setpos(&g_gfx_con, 1, 1);
+		gfx_printf(&g_gfx_con, "\nText Reader\n",filete);
+		gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
+		gfx_printf(&g_gfx_con, "\n%s...\n",filete);
+		gfx_printf(&g_gfx_con, "\n-------------------------------------------------------------------------------------------------------------------\n",filete);
+		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
+		g_gfx_con.scale = 1;
+		gfx_printf(&g_gfx_con, "\n%s",sd_file_read(filete));
+	gfx_swap_buffer(&g_gfx_ctxt);
+	gui_menu_pool_init();
+    gui_menu_t* menu = gui_menu_create("ArgonNX");
+    gui_menu_open3(menu);
+
 	}
 gui_init_argon_menu();
 return 0;

@@ -41,6 +41,7 @@ void gui_menu_append_entry(gui_menu_t *menu, gui_menu_entry_t *menu_entry);
 /* Handle all menu related stuff */
 int gui_menu_open(gui_menu_t *menu);
 int gui_menu_open2(gui_menu_t *menu);
+int gui_menu_open3(gui_menu_t *menu);
 
 /* Deallocate a menu from heap */
 void gui_menu_destroy(gui_menu_t *menu);
