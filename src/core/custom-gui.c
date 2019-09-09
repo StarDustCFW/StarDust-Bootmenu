@@ -88,6 +88,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
     //copy to buffer instead of BITMAPFILEHEADER and BITMAPINFOHEADER
     //to avoid problems with structure packing
     unsigned char header[54] = { 0 };
+	char* namef = "";
     memcpy(header, "BM", 2);
     memcpy(header + 2 , &filesize, 4);
     memcpy(header + 10, &buf_offset_bits, 4);
@@ -97,15 +98,25 @@ if (!sd_mount()){BootStrapNX();}//check sd
     memcpy(header + 26, &bi_planes, 2);
     memcpy(header + 28, &bitcount, 2);
     memcpy(header + 34, &imagesize, 4);
-
+	if (sd_file_exists("StarDust/screenshot.bmp"))namef = "-1";
+	if (sd_file_exists("StarDust/screenshot-1.bmp"))namef = "-2";
+	if (sd_file_exists("StarDust/screenshot-2.bmp"))namef = "-3";
+	if (sd_file_exists("StarDust/screenshot-3.bmp"))namef = "-4";
+	if (sd_file_exists("StarDust/screenshot-4.bmp"))namef = "-5";
+	if (sd_file_exists("StarDust/screenshot-5.bmp"))namef = "-6";
+	if (sd_file_exists("StarDust/screenshot-6.bmp"))namef = "-7";
+	char tmp[256];
+    strcpy(tmp, "StarDust/screenshot");
+    strcat(tmp, namef);
+    strcat(tmp, ".bmp");
     u8* buff = (u8*)malloc(imagesize + 54);
     memcpy(buff, header, 54);
     memcpy(buff + 54, g_gfx_ctxt.fb, imagesize);
-    sd_save_to_file(buff, imagesize + 54, "StarDust/screenshot.bmp");
+    sd_save_to_file(buff, imagesize + 54, tmp);
     free(buff);
 
     g_gfx_con.scale = 2;
     gfx_con_setpos(&g_gfx_con, 0, 665);
-    gfx_printf(&g_gfx_con, " Screenshot saved!\n Find it at StarDust/screenshot.bmp");
+    gfx_printf(&g_gfx_con, " Screenshot saved!\n Find it at %s",tmp);
     return 0;
 }

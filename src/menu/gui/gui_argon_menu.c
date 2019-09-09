@@ -21,6 +21,7 @@
 #include "core/custom-gui.h"
 #include "gfx/di.h"
 #include "gfx/gfx.h"
+#include <stdio.h>
 
 #include "utils/types.h"
 #include "utils/fs_utils.h"
@@ -39,9 +40,12 @@
 #define ELEM_SIZE 230
 #define MARGIN_TOP 100
 #define MARGIN_LEFT 46
+#define MAX_CHAR 100 typedef char string[MAX_CHAR+1];
 //static int tool_menu_rSD(void* param);
-static int tool_extr_rSD(void* param);
+//static int findLastIndex(char* str, char* x);
+char *gobacknow(char* sd_path) ;
 
+static int tool_extr_rSD(void* param);
 static int tool_reboot_rcm(void* param);
 static int tool_power_off(void* param);
 static int tool_menu_rem(void* param);
@@ -117,12 +121,56 @@ void gui_init_argon_boot(void)
 		if(strstr(Sversion,"S") != NULL)
 		launch_payload("StarDust/payloads/SXOS.bin");
 	}
+/*	gobacknow("makunga/mitril/tormente");
 
+	char *sd_path = "makunga/mitril/tormente";
+	char *outFilename = sd_path;
+	u32 sdPathLen = strlen(sd_path);
+	char recip[0];
+	while(true)
+	{
+//	outFilename[sdPathLen--];
+	recip[0] = outFilename[sdPathLen--];
+	gfx_printf(&g_gfx_con, "-%s\n",recip);
+//	gfx_printf(&g_gfx_con, "--%s\n",outFilename);
 
+	if(strstr(recip,"/") != NULL){
+	gfx_printf(&g_gfx_con, "1-%s-%d\n",recip,sdPathLen);
+	break;}
+	
+	if(sdPathLen <= 0){
+	gfx_printf(&g_gfx_con, "2\n",recip);
+	break;}
 
-/*
+	}
+	char name[100];
+	u32 i = 0;
+	
+		while(true)
+	{
+		name[i] = outFilename[i];
+		i++;
+		if(sdPathLen+1 <= i)
+		break;
+	}
+
+	gfx_printf(&g_gfx_con, "-%s\n",name);
+	
+	gfx_printf(&g_gfx_con, "%s\n",gobacknow("makunga/mitril/tormente"));
 gfx_swap_buffer(&g_gfx_ctxt);
-btn_wait();
+btn_wait();*/
+/*
+
+
+char etemi = findLastIndex("StarDust/payload/atmos/we", "/");
+		g_gfx_con.scale = 3;
+		gfx_con_setpos(&g_gfx_con, 1070, 10);
+		gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
+		gfx_printf(&g_gfx_con, "-\n",etemi);
+		gfx_printf(&g_gfx_con, "--%s\n",etemi);
+		gfx_printf(&g_gfx_con, "--%d\n",etemi);
+		gfx_printf(&g_gfx_con, "--%f\n",etemi);
+		gfx_printf(&g_gfx_con, "--%x\n",etemi);
     if (!btn_read() & !BTN_VOL_UP)
 	{
 	if(sd_file_exists("StarDust/payload.bin"))	
@@ -470,11 +518,22 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Services",linealX+30
 		}
 	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("ReverseNX",linealX+30, linealY+30, 150, 100, NULL, NULL));
 	}
-
+	
+	//Spoof sxos
+	if (sd_file_exists("atmosphere/titles/0100000000000069/exefs.nsp"))
+	{
+	linealY = linealY + separ;
+		if (sd_file_exists("atmosphere/titles/0100000000000069/flags/boot2.flag"))
+		{
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_off, (void*)"0100000000000069"));
+		}else{
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises_on, (void*)"0100000000000069"));
+		}
+	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("ReverseNX",linealX+30, linealY+30, 150, 100, NULL, NULL));
+	}
 }
 	if(main_menu == 2)
 	{
-//		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("BETA WIP....", 500, 20, 150, 100, NULL, NULL));
 	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowl.bmp"),100, 650, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
 
 	
@@ -482,15 +541,16 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Services",linealX+30
 char* files = listfil(directory, "*", true);
 char* folder = listfol(directory, "*", true);
 		
-    u32 r = 0;
-    u32 w = 0;
-    u32 i = 0;
-    u32 f = 0;
-	u32 y = 90;
-	u32 x = 10;
-	u32 space = 50;
-//	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(directory,600, y-20, 150, 100, (int (*)(void *))tool_Menus, (void*)33));
+		u32 r = 0;
+		u32 w = 0;
+		u32 i = 0;
+		u32 f = 0;
+		u32 y = 90;
+		u32 x = 10;
+		u32 space = 50;
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sd-root.bmp"),170, 30, 70, 70,(int (*)(void *))tool_Menus, (void*)33));
+		if(strlen(directory) >= 1)
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sd-back.bmp"),270, 30, 70, 70,(int (*)(void *))tool_file_act, (void*)99));
 		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(directory, strlen(directory)*8-40+50, 98, 150, 100, NULL, NULL));
 	
     while(folder[r * 256])
@@ -521,6 +581,7 @@ char* folder = listfol(directory, "*", true);
 	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("More...", 1100,680, 150, 100, NULL, NULL));
 	break;}
 	if(strlen(&files[w * 256]) <= 100){
+			//files Icons
 			if(strstr(&files[w * 256],".bin") != NULL)
 			{
 				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/files-bin.bmp"),x, y+30, 500, 25,(int (*)(void *))tool_filete, (void*)&files[w * 256]));
@@ -556,19 +617,7 @@ char* folder = listfol(directory, "*", true);
 		{
 		u32 actX = 800;
 		u32 actY = 1;
-/*
-		if(strstr(filete,".bin") != NULL)
-			{
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/launch.bmp"),actX+100, actY, 75, 75, (int (*)(void *))tool_file_act, (void*)1));
-			}
-			if(strstr(filete,".BIN") != NULL)
-			{
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/launch.bmp"),actX+100, actY, 75, 75, (int (*)(void *))tool_file_act, (void*)1));
-			}
-*/
-		//gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/button.bmp"),1070, 600, 200, 75, (int (*)(void *))zbackup, (void*)"emummc.bk"));
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/del.bmp"),actX, actY, 75, 75, (int (*)(void *))tool_file_act, (void*)0));
-//		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("eliminar", actX+30, actY+30, 150, 100, NULL, NULL));
 		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(filete, actX, actY+70, 150, 100, NULL, NULL));
 		}
 
@@ -577,7 +626,6 @@ char* folder = listfol(directory, "*", true);
 	if(main_menu == 3)
 	{
 	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowl.bmp"),100, 650, 70, 70,(int (*)(void *))tool_Menus, (void*)1));
-	
 	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_boot0.bmp"),80, 170, 200 , 200,(int (*)(void *))memloader, (void*)0));
 	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_boot1.bmp"),380, 170, 200 , 200,(int (*)(void *))memloader, (void*)1));
 	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_emmc.bmp"),680, 170, 200 , 200,(int (*)(void *))memloader, (void*)2));
@@ -585,13 +633,6 @@ char* folder = listfol(directory, "*", true);
 
 	}
 
-	
-	if(main_menu == 4)
-	{
-
-	
-	
-	}
 /* Generate reboot rcm and shutdown entry **/
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/screenshot.bmp"),400, 650, 70, 70, (int (*)(void *))screenshot, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),600, 650, 70, 70, tool_power_off, NULL));
@@ -638,24 +679,6 @@ if (!sd_mount()){BootStrapNX();}//check sd
 	btn_wait_timeout(10000, BTN_POWER);
 	display_backlight_brightness(0, 1000);
 BootStrapNX();
-/*
-if (!sd_mount()){BootStrapNX();}//check sd
-    u32 *fb = display_init_framebuffer();
-    gfx_init_ctxt(&g_gfx_ctxt, fb, 1280, 720, 720);
-    gfx_clear_buffer(&g_gfx_ctxt);
-    gfx_con_init(&g_gfx_con, &g_gfx_ctxt);
-    gfx_con_setcol(&g_gfx_con, 0xFFCCCCCC, 1, BLACK);
-//SD remove Menu
-    gui_menu_pool_cleanup();
-
-	gui_menu_pool_init();
-	gui_menu_t* menu = gui_menu_create("ArgonNX");
-
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/rcm.bmp"),800, 650, 70, 70, tool_reboot_rcm, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),600, 650, 70, 70, tool_power_off, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/extrDS.bmp"),1100, 500, 200, 200, NULL, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/extpower.bmp"),500, 250, 200, 200, tool_menu_rSD, NULL));
-    gui_menu_open2(menu);*/
     return 0;
 }
 
@@ -873,6 +896,9 @@ return 0;
 int tool_dir(char *param)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
+
+
+
 if(strlen(directory) <= 1)
 {
 directory = param;
@@ -955,7 +981,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
 		gfx_printf(&g_gfx_con, "\n%s...\n",filete);
 		gfx_printf(&g_gfx_con, "\n-------------------------------------------------------------------------------------------------------------------\n",filete);
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
-		g_gfx_con.scale = 1;
+		g_gfx_con.scale = 2;
 		gfx_printf(&g_gfx_con, "\n%s",sd_file_read(filete));
 	gfx_swap_buffer(&g_gfx_ctxt);
 	gui_menu_pool_init();
@@ -963,6 +989,54 @@ if (!sd_mount()){BootStrapNX();}//check sd
     gui_menu_open3(menu);
 
 	}
+	//Go back directory
+	if(fil == 99)
+	{
+	
+	//identify last '/' caracter
+	char *outFilename = directory;
+	u32 sdPathLen = strlen(directory);
+	char recip[0];
+		while(true)
+		{
+		recip[0] = outFilename[sdPathLen--];
+		if(strstr(recip,"/") != NULL){
+		break;}
+		
+		
+		if(sdPathLen <= 0){
+		directory = "";
+		break;}
+		}
+	
+		if(strlen(directory) >= 1)
+		{
+			//take position of last / and contruct the variable before hem
+			char name[100];
+//			gfx_swap_buffer(&g_gfx_ctxt);
+			gfx_printf(&g_gfx_con, "-\n\n\n\n\n\n\n");
+			for (u32 i = 0;sdPathLen >= i;i++)
+			{
+				name[i] = outFilename[i];
+				gfx_printf(&g_gfx_con, "name-%s-%d-%d\n",name,i,sdPathLen);
+			}
+			directory = name;
+			//logs 
+			/*
+				gfx_con_setpos(&g_gfx_con, 600, 10);
+				gfx_printf(&g_gfx_con, "dir-%s-\n",directory);
+				
+				gfx_con_setpos(&g_gfx_con, 600, 25);
+				gfx_printf(&g_gfx_con, "name-%s-\n",name);
+				gfx_con_setpos(&g_gfx_con, 600, 40);
+				gfx_printf(&g_gfx_con, "dir-%s-\n",directory);
+	gfx_swap_buffer(&g_gfx_ctxt);
+	btn_wait();			
+				*/
+		}
+	}
+	
+	
 gui_init_argon_menu();
 return 0;
 }
@@ -1115,7 +1189,58 @@ if (!sd_mount()){BootStrapNX();}//check sd
 	}
 return 0;
 }
+
 /*
+char *gobacknow(char* sd_path) 
+{ 
+//	char *sd_path = "makunga/mitril/tormente";
+	char *outFilename = sd_path;
+	u32 sdPathLen = strlen(sd_path);
+	char recip[0];
+	while(true)
+	{
+
+	recip[0] = outFilename[sdPathLen--];
+//	gfx_printf(&g_gfx_con, "-%s\n",recip);
+
+	if(strstr(recip,"/") != NULL){
+//	gfx_printf(&g_gfx_con, "1-%s-%d\n",recip,sdPathLen);
+	break;}
+	
+	if(sdPathLen <= 0){
+//	gfx_printf(&g_gfx_con, "2\n",recip);
+	return 0;
+	break;}
+
+	}
+	char name[100];
+	u32 i = 0;
+	
+		while(true)
+	{
+		name[i] = outFilename[i];
+		i++;
+		if(sdPathLen+1 <= i)
+		break;
+	}
+//	gfx_printf(&g_gfx_con, "%s",name);
+	sd_path = name;
+	return sd_path;
+}
+
+
+
+
+
+
+        // Traverse from right 
+        for (int i = strlen(str) - 1; i >= 0; i--) 
+ //           if (str[i] == x)
+			if(strstr(str[i],x) != NULL)
+                return i; 
+        return -1; 
+
+
 static int zbackup(char* param)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
