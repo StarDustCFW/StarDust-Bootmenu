@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+#include "utils/dirlist.h"
 #include "utils/fs_utils.h"
 #include "utils/util.h"
 #include "gfx/di.h"
@@ -127,12 +127,16 @@ void copyfile(const char* source, const char* target)
 {
         FIL fp;
         if (f_open(&fp, source, FA_READ) != FR_OK)
-                return NULL;
+         {
+		gfx_printf(&g_gfx_con, "file %s mising\n",source);
+	    gfx_swap_buffer(&g_gfx_ctxt);
+		msleep(3000);
+		 }else{
 
         u32 size = f_size(&fp);
 	f_close(&fp);
-
 	sd_save_to_file(sd_file_read(source),size,target);
+	}
 }
 
 void copyfileparam(char* param, char* source, char* target)
@@ -150,11 +154,40 @@ void copyfileparam(char* param, char* source, char* target)
 */		
         FIL fp;
         if (f_open(&fp, path, FA_READ) != FR_OK)
-                return NULL;
+         {
+		gfx_printf(&g_gfx_con, "file %s mising\n",path);
+	    gfx_swap_buffer(&g_gfx_ctxt);
+		msleep(3000);
+		 }else{
 
         u32 size = f_size(&fp);
 	f_close(&fp);
-	
-
 	sd_save_to_file(sd_file_read(path),size,target);
+	}
+}
+
+void copy_folder(char* sourse_folder, char* dest_folder)
+{
+char* Files = listfil(sourse_folder, "*", true);
+    u32 i = 0;
+    while(Files[i * 256])
+    {
+	char* source_file = (char*)malloc(256);
+			if(strlen(&Files[i * 256]) <= 100){			
+			strcpy(source_file, sourse_folder);
+			strcat(source_file, "/");
+			strcat(source_file, &Files[i * 256]);
+			}
+	char* dest_file = (char*)malloc(256);
+			if(strlen(&Files[i * 256]) <= 100){			
+			strcpy(dest_file, dest_folder);
+			strcat(dest_file, "/");
+			strcat(dest_file, &Files[i * 256]);
+			gfx_con_setpos(&g_gfx_con, 10, 90);
+			gfx_printf(&g_gfx_con, "\ncopy %s to %s\n",source_file,dest_file);
+			gfx_swap_buffer(&g_gfx_ctxt);
+			copyfile(source_file,dest_file);//action
+			}
+	i++;
+    }
 }

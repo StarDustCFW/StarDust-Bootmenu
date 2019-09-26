@@ -18,5 +18,6 @@ int sd_save_to_file(void *buf, u32 size, const char *filename);
 bool sd_file_exists(const char* filename);
 void copyfile(const char* source, const char* target);
 void copyfileparam(char* param, char* source, char* target);
+void copy_folder(char* sourse_folder, char* dest_folder);
 
 #endif

@@ -21,7 +21,7 @@
 #include "gfx/gfx.h"
 #include "soc/hw_init.h"
 #include "mem/heap.h"
-
+#include "soc/fuse.h"
 
 #include "core/launcher.h"
 
@@ -68,6 +68,12 @@ f_unlink(directory);
 //first Delete After Update
 void clean_up()
 {
+		g_gfx_con.scale = 3;
+		gfx_con_setpos(&g_gfx_con, 1070, 10);
+		gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
+		gfx_printf(&g_gfx_con, "CleanUP\n");
+		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
+gfx_swap_buffer(&g_gfx_ctxt);
 //delete bootloader for tinfoil
 /*
 deleteall("/bootloader/ini", "*");
@@ -89,28 +95,165 @@ deleteall("/ReiNX/titles/0100000000000032/exefs", "*");
 deleteall("/ReiNX/titles/0100000000000032", "*");
 deleteall("/ReiNX/titles/0100000000000032/flags", "*");
 
-deleteall("/sxos/titles/0100000000000034", "*");
-deleteall("/SXOS/titles/0100000000000034", "*");
+//Delete patches that reinx d'not use any more
+deleteall("/ReiNX/exefs_patches/am_dev_function", "*");
+deleteall("/ReiNX/exefs_patches/disable_ca_verification", "*");
+deleteall("/ReiNX/exefs_patches/es_patches", "*");
+deleteall("/ReiNX/exefs_patches/fatal_force_extra_info", "*");
+deleteall("/ReiNX/exefs_patches/Signature Patches by br4z0rf", "*");
+deleteall("/ReiNX/exefs_patches/Signature Patches by Rajkosto", "*");
+deleteall("/ReiNX/exefs_patches", "*");
+deleteall("/ReiNX/kip_patches/default_nogc", "*");
+deleteall("/ReiNX/kip_patches/fs_patches", "*");
+deleteall("/ReiNX/kip_patches", "*");
+deleteall("/ReiNX/nro_patches/disable_browser_ca_verification", "*");
+deleteall("/ReiNX/nro_patches", "*");
+
+deleteall("/sxos/titles/0100000000000034-OFF", "*");
+f_rename("/sxos/titles/0100000000000034", "/sxos/titles/0100000000000034-OFF");
+
+deleteall("/themes/StarDust-2.0", "*");
 
 
+//pequeña correccion
+f_rename("/switch/incognito/prodinfo.bin", "/backup/prodinfo.bin");
+f_rename("for_tegraRCM_PC.bin", "boot_payload.bin");
+f_unlink("for_tegraRCM_PC.bin");
+copyfile("boot_payload.bin","Payload_de_arranque.bin");
+
+
+//borrar archivos inesesarios que se acumulan 
 deleteall("/switch/KosmosToolbox", "*");
 deleteall("/switch/KosmosUpdater", "*");
+deleteall("/atmosphere/kips", "*");
+deleteall("/Toolkit/splashes", "*");
+deleteall("/Toolkit", "*");
+deleteall("/uboot", "*");
+deleteall("/modules/hid_mitm", "*");
+deleteall("/modules", "*");
+deleteall("/RR/logos", "*");
+deleteall("/RR/payloads", "*");
+deleteall("/RR/sys", "*");
+deleteall("/RR", "*");
+f_unlink("/switch/toolbox.nro");
+f_unlink("/switch/ChoiDujourNX.nro");
+f_unlink("/switch/ftpd.nro");
+f_unlink("/switch/changelog");
+f_unlink("/switch/appstore.nro");
+f_unlink("/switch/Goldleaf.nro");
+f_unlink("/switch/incognito.nro");
+f_unlink("/switch/info.json");
+f_unlink("/switch/In-Home-Switching.nro");
+f_unlink("/switch/ldnmitm_config.nro");
+f_unlink("/switch/lithium.nro");
+f_unlink("/switch/nxmtp.nro");
+f_unlink("/switch/reboot_to_payload.nro");
+f_unlink("/switch/RetroReloadedUpdater.nro");
+f_unlink("/switch/Lithium_README.md");
+f_unlink("/switch/README.md");
+f_unlink("/RR_version.txt");
+f_unlink("/ums_boot0.ini");
+f_unlink("/ums_boot1.ini");
+f_unlink("/ums_emmc.ini");
+f_unlink("/ums_sd.ini");
+f_unlink("/atmosphere/prodinfo.ini");
+f_unlink("/atmosphere/template.txt");
+f_unlink("/ReiNX/template.txt");
+f_unlink("/sxos/template.txt");
+//nada en contra de RR es solo que si usas este pack esos ficheros son innesesarios
 
+//changes for new menu
+f_unlink("/StarDust/payback/Stock.bin");
+f_unlink("/StarDust/payloads/zBackup.bin");
+f_unlink("/StarDust/logos/zBackup.bmp");
+f_unlink("/StarDust/logos/negative.bmp");
+f_unlink("/StarDust/logos/biskeydump.bmp");
+f_unlink("/StarDust/logos/Backup.bmp");
+f_unlink("/StarDust/logos/Hekate.bmp");
+f_unlink("/StarDust/Atheme/1/logos/zBackup.bmp");
+f_unlink("/StarDust/Atheme/2/logos/zBackup.bmp");
+f_unlink("/StarDust/Atheme/3/logos/zBackup.bmp");
+f_unlink("/StarDust/Atheme/4/logos/zBackup.bmp");
+f_unlink("/StarDust/Atheme/5/logos/zBackup.bmp");
+f_unlink("/StarDust/Atheme/6/logos/zBackup.bmp");
+f_unlink("/StarDust/Atheme/7/logos/zBackup.bmp");
+f_unlink("/StarDust/Atheme/1/Icons/arrowr.bmp");
+f_unlink("/StarDust/Atheme/2/Icons/arrowr.bmp");
+f_unlink("/StarDust/Atheme/3/Icons/arrowr.bmp");
+f_unlink("/StarDust/Atheme/4/Icons/arrowr.bmp");
+f_unlink("/StarDust/Atheme/5/Icons/arrowr.bmp");
+f_unlink("/StarDust/Atheme/6/Icons/arrowr.bmp");
+f_unlink("/StarDust/Atheme/7/Icons/arrowr.bmp");
 
-//deleteall("/atmosphere/kips", "*");
-
+f_unlink("/StarDust/Icons/screenshot.bmp");
+f_unlink("/StarDust/Atheme/1/Icons/screenshot.bmp");
+f_unlink("/StarDust/Atheme/2/Icons/screenshot.bmp");
+f_unlink("/StarDust/Atheme/3/Icons/screenshot.bmp");
+f_unlink("/StarDust/Atheme/4/Icons/screenshot.bmp");
+f_unlink("/StarDust/Atheme/5/Icons/screenshot.bmp");
+f_unlink("/StarDust/Atheme/7/Icons/screenshot.bmp");
+/*
+f_unlink("/");
+f_unlink("/");
+f_unlink("/");
+f_unlink("/");
+f_unlink("/");
+f_unlink("/");
+f_unlink("/");
+f_unlink("/");
+f_unlink("/");
+*/
 
 	//remove themes
-	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Set.szs");
+//	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Entrance.szs");//9.0.0 Theme suport
+//	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Set.szs");
+//	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Set.szs");
+//	f_unlink("/sxos/titles/0100000000001000/romfs/lyt/Set.szs");
 	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/common.szs");
-	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Set.szs");
 	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/common.szs");
-	f_unlink("/sxos/titles/0100000000001000/romfs/lyt/Set.szs");
 	f_unlink("/sxos/titles/0100000000001000/romfs/lyt/common.szs");
 	f_unlink("/atmosphere/titles/0100000000001013/fsmitm.flag");
 	f_unlink("/ReiNX/titles/0100000000001013/fsmitm.flag");
 	f_unlink("/sxos/titles/0100000000001013/fsmitm.flag");
 	
+/*	u32 burntFuses = 0;
+	for (u32 i = 0; i < 32; i++)
+	{
+		if ((fuse_read_odm(7) >> i) & 1)
+			burntFuses++;
+	}
+	if(burntFuses == 11)
+	{
+		f_unlink("/atmosphere/titles/0100000000001000/fsmitm.flag");
+		f_unlink("/atmosphere/titles/420000000000000E/flags/boot2.flag");
+	}
+*/
+//fix old Emunand transfer
+	if (sd_file_exists ("sxos/eMMC/00")&sd_file_exists ("sxos/eMMC/boot0")&sd_file_exists ("sxos/eMMC/boot1"))
+	{
+		f_mkdir("emuMMC");
+		f_mkdir("emuMMC/EF00");
+		f_rename("/sxos/eMMC","/emuMMC/EF00/eMMC");
+		f_rename("/Emutendo","/emuMMC/EF00/Nintendo");
+			if (sd_file_exists ("emuMMC/EF00/eMMC/00")&sd_file_exists ("emuMMC/EF00/eMMC/boot0")&sd_file_exists ("emuMMC/EF00/eMMC/boot1"))
+			{
+				f_unlink("emummc/emummc.bak");
+				f_rename("emummc/emummc.ini","emummc/emummc.bak");
+				f_mkdir("emummc");
+				FIL fp;
+				f_open(&fp, "emummc/emummc.ini", FA_WRITE | FA_CREATE_ALWAYS);
+				f_puts("[emummc]\n", &fp);
+				f_puts("enabled=1\n", &fp);
+				f_puts("sector=0x0\n", &fp);
+				f_puts("path=emuMMC/EF00\n", &fp);
+				f_puts("id=0x0000\n", &fp);
+				f_puts("nintendo_path=emuMMC/EF00/Nintendo\n", &fp);
+				f_close(&fp);
+				sd_save_to_file("", 0, "emuMMC/EF00/file_based");
+			}
+	}
+
+
 //deleteall("/////", "*");	
 	//close
 	f_unlink("/fixer.del");
@@ -144,7 +287,13 @@ void ipl_main()
     /* Mount Sd card and launch payload */
     if (sd_mount())
     {
-        
+            // write self to payload.bin
+/*			FIL fp;
+            f_open(&fp, "payload.bik", FA_CREATE_NEW | FA_WRITE);
+            u32 payload_size = *(u32 *)(0x40003000 + 0x84) - 0x40003000;
+            f_write(&fp, (u8 *)0x40003000, payload_size, NULL);
+            f_close(&fp);
+*/
 /*		bool cancel_auto_chainloading = btn_read() & BTN_VOL_DOWN;
         bool load_menu = cancel_auto_chainloading || launch_payload("StarDust/payload.bin");
 */		//remove autoboot

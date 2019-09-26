@@ -16,9 +16,8 @@
 
 #define MINOR_VERSION 3
 #define MAJOR_VERSION 0
-#define REVI_VERSION 26
+#define REVI_VERSION 31
 	char Sversion[4];
-
 
 /* Render the menu */
 static void gui_menu_render_menu(gui_menu_t*);
@@ -63,7 +62,7 @@ static void gui_menu_draw_background(gui_menu_t* menu)
         g_gfx_con.scale = 2;
         gfx_con_setpos(&g_gfx_con, 15, 10);
         gfx_printf(&g_gfx_con, "ArgonNX v%d.%d %k%d%k", MAJOR_VERSION, MINOR_VERSION,0xFF00FF22, REVI_VERSION ,0xFFCCCCCC);
-		
+    }
        //StarDust version
 		char *str;
 		if (g_sd_mounted){
@@ -77,17 +76,11 @@ static void gui_menu_draw_background(gui_menu_t* menu)
 		}	
 	gfx_con_setpos(&g_gfx_con, 1050, 10);
 	gfx_printf(&g_gfx_con, "StarDust v%s", Sversion);
-		
-    }
-		//battery
-		u32 battPercent = 0;
-		max17050_get_property(MAX17050_RepSOC, (int *)&battPercent);		
-		gfx_con_setpos(&g_gfx_con, 1050, 700);
-		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0xFFCCCCCC, 0xFF191414);
-        gfx_printf(&g_gfx_con, "Battery: %k%d%.%k", 0xFF00FF22,(battPercent >> 8) & 0xFF,0xFFCCCCCC ,(battPercent & 0xFF));
+		 
 
 		
 		//Fuses
+		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0xFFCCCCCC, 0xFF191414);
 			u32 burntFuses = 0;
 		for (u32 i = 0; i < 32; i++)
 		{
@@ -105,10 +98,10 @@ static void gui_menu_draw_background(gui_menu_t* menu)
 		if(burntFuses == 8){mindowngrade = "6.2.0";}
 		if(burntFuses == 9){mindowngrade = "7.0.0";}
 		if(burntFuses == 10){mindowngrade = "8.1.0";}
-
+		if(burntFuses == 11){mindowngrade = "9.0.0";}
+		//burntFuses = burntFuses +10;//doble number test
 		g_gfx_con.scale = 2;
-		gfx_con_setpos(&g_gfx_con, 1050, 660);
-		
+		gfx_con_setpos(&g_gfx_con, 1035, 30);
 		gfx_printf(&g_gfx_con,"F%k%d %kLimit%k %s%k\n\n", 0xFFea2f1e, burntFuses ,0xFFCCCCCC ,0xFF00FF22 ,mindowngrade ,0xFFCCCCCC);
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
 /* 

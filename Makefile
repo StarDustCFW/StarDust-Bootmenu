@@ -4,7 +4,7 @@ endif
 
 include $(DEVKITARM)/base_rules
 
-TARGET 					:= payload
+TARGET 					:= Bootmenu
 BLVERSION_MAJOR := 0
 BLVERSION_MINOR := 3
 BUILD 					:= build
@@ -55,6 +55,7 @@ all: directories $(TARGET).bin
 	@echo -n "Payload size is "
 	@wc -c < $(OUTPUT)/$(TARGET).bin
 	@echo "Max size is 126296 Bytes."
+	mv $(OUTPUT)/$(TARGET).bin payload.bin
 
 directories:
 	@mkdir -p "$(BUILD)"
@@ -87,4 +88,5 @@ $(OFILES_SRC)	: $(HFILES_BIN)
 
 $(BUILD)/$(TARGET)/%.bmp.o %_bmp.h:	data/%.bmp
 	@echo $(notdir $<)
-	@$(bin2o)
+	@$(bin2o)	
+	

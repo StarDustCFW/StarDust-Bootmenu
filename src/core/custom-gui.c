@@ -98,13 +98,26 @@ if (!sd_mount()){BootStrapNX();}//check sd
     memcpy(header + 26, &bi_planes, 2);
     memcpy(header + 28, &bitcount, 2);
     memcpy(header + 34, &imagesize, 4);
-	if (sd_file_exists("StarDust/screenshot.bmp"))namef = "-1";
-	if (sd_file_exists("StarDust/screenshot-1.bmp"))namef = "-2";
-	if (sd_file_exists("StarDust/screenshot-2.bmp"))namef = "-3";
-	if (sd_file_exists("StarDust/screenshot-3.bmp"))namef = "-4";
-	if (sd_file_exists("StarDust/screenshot-4.bmp"))namef = "-5";
-	if (sd_file_exists("StarDust/screenshot-5.bmp"))namef = "-6";
-	if (sd_file_exists("StarDust/screenshot-6.bmp"))namef = "-7";
+		if (!sd_file_exists("StarDust/screenshot-1.bmp")){namef = "-1";
+			}else{
+			if (!sd_file_exists("StarDust/screenshot-2.bmp")){namef = "-2";
+				}else{
+				if (!sd_file_exists("StarDust/screenshot-3.bmp")){namef = "-3";
+					}else{
+					if (!sd_file_exists("StarDust/screenshot-4.bmp")){namef = "-4";
+						}else{
+						if (!sd_file_exists("StarDust/screenshot-5.bmp")){namef = "-5";
+							}else{
+							if (!sd_file_exists("StarDust/screenshot-6.bmp")){namef = "-6";
+								}else{
+								if (!sd_file_exists("StarDust/screenshot-7.bmp")){namef = "-7";
+									}else{gfx_printf(&g_gfx_con, " Screenshot limit");}
+								}
+							}
+						}
+					}
+				}
+			}
 	char tmp[256];
     strcpy(tmp, "StarDust/screenshot");
     strcat(tmp, namef);
@@ -116,7 +129,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
     free(buff);
 
     g_gfx_con.scale = 2;
-    gfx_con_setpos(&g_gfx_con, 0, 665);
+    gfx_con_setpos(&g_gfx_con, 0, 605);
     gfx_printf(&g_gfx_con, " Screenshot saved!\n Find it at %s",tmp);
     return 0;
 }
