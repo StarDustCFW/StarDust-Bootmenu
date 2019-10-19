@@ -27,7 +27,7 @@ typedef struct {
 } custom_gui_t;
 
 
-custom_gui_t* custom_gui_load();
+custom_gui_t* custom_gui_load(u32 mem);
 
 void custom_gui_end(custom_gui_t*);
 

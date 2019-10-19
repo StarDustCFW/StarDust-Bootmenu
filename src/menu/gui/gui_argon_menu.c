@@ -65,6 +65,7 @@ int tool_file_act(u32 fil);
 int memloader(u32 fil);
 int Incognito(char* order);
 int Autoboot(u32 fil);
+int AThemes_list(gui_menu_t* menu, u32 gridX, u32 gridY);
 
 int bat_show(u32 percent);
 void serv_display(gui_menu_t* menu,char* titleid,char* name);
@@ -85,9 +86,14 @@ u32 onemi = 0;
 u32 retir = 0;
 
 //services
+u32 servYF = 250;
+u32 servXF = 190;
+//serv2
 u32 servX = 30;
 u32 servY = 80;
 u32 sepaserv = 70;
+u32 servstep = 0;
+
 
 //dinamic directory
 char *directory = "";
@@ -103,8 +109,8 @@ void gui_init_argon_boot(void)
     /* Init pool for menu */
     gui_menu_pool_init();
 
-    gui_menu_t* menu = gui_menu_create("ArgonNX");
-	power_off();
+    gui_menu_t* menu = gui_menu_create("ArgonNX",main_menu);
+
 	display_backlight_brightness(100, 1000);
 	//show display without icons
 		
@@ -118,7 +124,10 @@ void gui_init_argon_boot(void)
 
 	//set archive bit 
 	 f_chmod("switch/mercury", AM_ARC, AM_ARC);
-	power_off();
+	 	u32 bootR = sd_file_size("boot.dat");
+		u32 bootS = sd_file_size("StarDust/boot_forwarder.dat");
+		if (bootR != bootS)
+	copyfile("StarDust/boot_forwarder.dat","boot.dat");//
 	//waith user input
     bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
     if ((!cancel_auto_chainloading) & (!sd_file_exists ("StarDust/inc.return")))
@@ -152,7 +161,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
 gui_init_argon_menu();
 }
 
-/* Generate entries dynamically */
+/* Generate entries dynamically *//*
 static void generate_payloads_entries(char* payloads, gui_menu_t* menu)
 {
     if (payloads == NULL)
@@ -170,7 +179,7 @@ static void generate_payloads_entries(char* payloads, gui_menu_t* menu)
 
     u32 i = 0;//payload name
 	u32 f = 0;//entry number
-    /* For each payload generate its logo, its name and its path */
+    // For each payload generate its logo, its name and its path 
     while(payloads[i * 256])
     {
         char* payload_path = (char*)malloc(256);
@@ -184,7 +193,6 @@ static void generate_payloads_entries(char* payloads, gui_menu_t* menu)
         u32 col = f % COLUMNS;
         u32 x = g_gfx_ctxt.width / COLUMNS * col + MARGIN_LEFT;
         u32 y = 140 / ROWS * row + MARGIN_TOP + MARGIN_TOP;
-		tool_power_off(void);
 	if((retir == 2) & (strstr(payload_wo_bin,"reinx") != NULL))
 	{
 	f++;
@@ -211,187 +219,175 @@ static void generate_payloads_entries(char* payloads, gui_menu_t* menu)
 //        gfx_swap_buffer(&g_gfx_ctxt);
 //		btn_wait();
 }
+*/
 
 /* Init needed menus for ArgonNX */
 void gui_init_argon_menu(void)
 {
-    /* Init pool for menu */
-    gui_menu_pool_init();
-gui_menu_t* menu = gui_menu_create("ArgonNX");
-if (!sd_mount()){BootStrapNX();}//check sd
-
 		if (sd_file_exists("StarDust/inc.return"))
 		{
-			main_menu = 6;
+			main_menu = 4;
 			f_unlink("StarDust/inc.return");
 		}
+    /* Init pool for menu */
+    gui_menu_pool_init();
+gui_menu_t* menu = gui_menu_create("ArgonNX",main_menu);
+if (!sd_mount()){BootStrapNX();}//check sd
+
 //low icons Y
 u64 low_icons = 650;
 
 //main menu 0-------------------------------------
 	if(main_menu == 0)
 	{
+		//generate main menu
+		u32 main_iconY = 210;
+		u32 main_iconX = 90;
+		u32 main_iconXS = 400;
 
 		//Create emummc icon
-		u32 buttonH = 75;
-		u32 buttonW = 200;
-		u32 buttonX = 45;
-		u32 buttonY = 435;
-
+		u32 buttonY = 144;
 		if (sd_file_exists("emummc/emummc.ini"))
 		{
 
-		char *str = sd_file_read("emummc/emummc.ini");
-		if(retir == 0)
-		{
-			if(strstr(str,"emummc_") != NULL)
+			char *str = sd_file_read("emummc/emummc.ini");
+			if(retir == 0)
 			{
-			str = str_replace(str, "emummc_", "");
-			u32 size = strlen(str)-1;
-			sd_save_to_file(str,size,"emummc/emummc.ini");
+				if(strstr(str,"emummc_") != NULL)
+				{
+				str = str_replace(str, "emummc_", "");
+				u32 size = strlen(str)-1;
+				sd_save_to_file(str,size,"emummc/emummc.ini");
 
+				}
+				if(strstr(str," ") != NULL)
+				{
+				str = str_replace(str, " ", "");
+				u32 size = strlen(str)-1;
+				sd_save_to_file(str,size,"emummc/emummc.ini");
+				}
+			retir = 1;
+				if(strstr(str,"enabled=1") != NULL)
+				{retir = 2;}
 			}
-			if(strstr(str," ") != NULL)
-			{
-			str = str_replace(str, " ", "");
-			u32 size = strlen(str)-1;
-			sd_save_to_file(str,size,"emummc/emummc.ini");
-			}
-		retir = 1;
-			if(strstr(str,"enabled=1") != NULL)
-			{retir = 2;}
-		}
+			
 			if(retir == 2)
 			{
-				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/bon.bmp"),buttonX, buttonY, buttonW , buttonH,(int (*)(void *))tool_emu, (void*)0)); //- 80, - 500
+				main_iconX = main_iconX + main_iconXS/2;
+				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/bon.bmp"),main_iconX+50, buttonY, 200 , 75,(int (*)(void *))tool_emu, (void*)0)); //- 80, - 500
 			}else{
-				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/boff.bmp"),buttonX, buttonY, buttonW , buttonH,(int (*)(void *))tool_emu, (void*)1)); //- 80, - 500
+				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/boff.bmp"),main_iconX+50, buttonY, 200 , 75,(int (*)(void *))tool_emu, (void*)1)); //- 80, - 500
 			}
 		}
 
 
-		//generate main menu
-		if (sd_file_exists ("/StarDust/Dinamy"))
-		{
-		//dinamic entries
-		generate_payloads_entries(dirlist(PAYLOADS_DIR, "*.bin", false), menu);
-		}else{
-		//harcode entries
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Atmosphere.bmp"), 46, 200, 200 , 200,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/Atmosphere.bin"));
-			if(retir == 2)
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Reinx-off.bmp"),366, 270, 200 , 200, NULL, NULL));
-			else
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/ReiNX.bmp"), 366, 270, 200 , 200,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/ReiNX.bin"));
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/SXOS.bmp"), 686, 340, 200 , 200,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/SXOS.bin"));
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Stock.bmp"),1010, 300, 200 , 100,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/Stock.bin"));
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/zHekate.bmp"), 1006, 410, 200 , 200,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/zHekate.bin"));
-		}
+			
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Atmosphere.bmp"), main_iconX, main_iconY, 300 , 300,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/Atmosphere.bin"));
+			main_iconX = main_iconX + main_iconXS;
+
+			if(retir <= 1)
+			{
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/ReiNX.bmp"), main_iconX, main_iconY, 300 , 300,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/ReiNX.bin"));
+			main_iconX = main_iconX + main_iconXS;
+			}
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/SXOS.bmp"), main_iconX, main_iconY, 300 , 300,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/SXOS.bin"));
+//				
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Stock.bmp"),540, 100, 200 , 100,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/Stock.bin"));
+//
+			u64 iconrowY = 550;
+			u64 iconrowX = 170;
+			u64 iconrowXS = 250;
+			
+		
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Lockpick_RCM.bmp"),iconrowX, iconrowY, 200 , 75,(int (*)(void *))launch_payload, (void*)"/StarDust/payback/Lockpick_RCM.bin"));
+			iconrowX = iconrowX + iconrowXS;
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader.bmp"),iconrowX, iconrowY, 200 , 75,(int (*)(void *))tool_Menus, (void*)3));
+			iconrowX = iconrowX + iconrowXS;
+//			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Incognito.bmp"),iconrowX, iconrowY, 200 , 75,(int (*)(void *))tool_Menus, (void*)4));
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Incognito.bmp"),iconrowX, iconrowY, 200 , 75,(int (*)(void *))Incognito, (void*)"getinfo"));
+			iconrowX = iconrowX + iconrowXS;
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/zHekate.bmp"), iconrowX, iconrowY, 200 , 75,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/zHekate.bin"));
+		//	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Incognito.bmp"),iconrowX+700, iconrowY, 200 , 200,(int (*)(void *))tool_Menus, (void*)6));
 	
 		if (sd_file_exists ("/switchroot_android/coreboot.rom")|| sd_file_exists ("/switchroot_android/coreboot.bin"))
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Android.bmp"),920, 620, 100, 100, (int (*)(void *))launch_payload, (void*)"/switchroot_android/coreboot.bin"));
 
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/SD.bmp"),1200, 130, 70, 70, tool_extr_rSD, NULL));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/SD.bmp"),1080, low_icons, 70, 70, tool_extr_rSD, NULL));
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/rcm.bmp"),750, low_icons, 70, 70, tool_reboot_rcm, NULL));
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/themes.bmp"),450, low_icons, 70, 70, tool_menu_rem, NULL));
+//			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Reinx-off.bmp"),366, main_iconY, 300 , 300, NULL, NULL));
 		
 
 		//call menu 1
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/gear.bmp"),270, low_icons, 70, 70, (int (*)(void *))tool_Menus, (void*)1));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/gear.bmp"),1200, low_icons, 70, 70, (int (*)(void *))tool_Menus, (void*)1));
 		//call menu 2
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/file-browser.bmp"),150, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)2));
 	}
 
-//Menu 1
+	//Menu 1 Ajustes
 	if(main_menu == 1)
 	{
+//	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Menu de Ajustes", 600,1, 150, 100, NULL, NULL));
 	//generate menu2
-	u64 iconrowX = 80;
-	u64 iconrowY = 200;
-	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Lockpick_RCM.bmp"),iconrowX+200, iconrowY, 200 , 200,(int (*)(void *))launch_payload, (void*)"/StarDust/payback/Lockpick_RCM.bin"));
-	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader.bmp"),iconrowX+450, iconrowY, 200 , 200,(int (*)(void *))tool_Menus, (void*)3));
-	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Incognito.bmp"),iconrowX+700, iconrowY, 200 , 200,(int (*)(void *))Incognito, (void*)"getinfo"));
-//	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Incognito.bmp"),iconrowX+700, iconrowY, 200 , 200,(int (*)(void *))tool_Menus, (void*)6));
 
-	//generate themes Dinamy
-	u32 tm_iconsY = 5;
-	u32 tm_iconsX = 260;
-	u32 tm_ajust = 90;
-	char* tm_directory = "StarDust/Atheme";
-	char* folder = listfol(tm_directory, "*", true);
-			u32 r = 0;
-			u32 w = 0;
-		while(folder[r * 256])
-		{
-			if(strlen(&folder[r * 256]) <= 100){			
-			char* source_fol = (char*)malloc(256);
-			strcpy(source_fol, tm_directory);
-			strcat(source_fol, "/");
-			strcat(source_fol, &folder[r * 256]);
-			char* source_icon = (char*)malloc(256);
-			strcpy(source_icon, source_fol);
-			strcat(source_icon, "/icon.bmp");
-			if(sd_file_exists(source_icon))
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read(source_icon),tm_iconsX, tm_iconsY, 70, 70, (int (*)(void *))tool_theme, (void*)source_fol)); 
-			tm_iconsX = tm_iconsX+tm_ajust;
-			w++;
-			}
-		if(w == 9)
-		break;
-		r++;
-		}
+		//list custom themes
+		AThemes_list(menu,80,90);
+		
 		//draw autoboot
 		if (sd_file_exists ("StarDust/autobootecho.txt"))
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Auton.bmp"),1050, 130, 200 , 75,(int (*)(void *))Autoboot, (void*)0));
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Auton.bmp"),1030, 590, 200 , 75,(int (*)(void *))Autoboot, (void*)0));
 		else
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Autoff.bmp"),1050, 130, 200 , 75,(int (*)(void *))Autoboot, (void*)1));
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Autoff.bmp"),1030, 590, 200 , 75,(int (*)(void *))Autoboot, (void*)1));
 
 
 
-		//theme Activator for cfw
-		if (!sd_file_exists ("atmosphere/titles/0100000000001000/fsmitm.flag")||!sd_file_exists ("ReiNX/titles/0100000000001000/fsmitm.flag")||!sd_file_exists ("sxos/titles/0100000000001000/fsmitm.flag"))
-		{
-			u32 temX = 1050;
-			u32 temY = 290;
-			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Themes", temX+20, temY+80, 150, 100, NULL, NULL));
+		//theme for cfw
+			u32 temX = 80;
+			u32 temY = 440;
+			u32 temS = 290;
+//			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Themes", temX+20, temY+80, 150, 100, NULL, NULL));
+			
+				temX = temX + temS;
 				if (!sd_file_exists ("atmosphere/titles/0100000000001000/fsmitm.flag"))
-				{
-				temY = temY + 100;
 				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),temX, temY, 200, 75,(int (*)(void *))tool_Themes_on, (void*)"atmosphere"));
+				else
+				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),temX, temY, 200, 75,NULL, NULL));
 				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("AMS",temX+30, temY+30, 150, 100, NULL, NULL));
-				}
 				
+				
+				temX = temX + temS;
 				if (!sd_file_exists ("ReiNX/titles/0100000000001000/fsmitm.flag"))
-				{
-				temY = temY + 100;
 				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),temX, temY, 200, 75,(int (*)(void *))tool_Themes_on, (void*)"ReiNX"));
+				else
+				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),temX, temY, 200, 75,NULL, NULL));
 				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("ReiNX",temX+30, temY+30, 150, 100, NULL, NULL));
-				}
 				
+				
+				temX = temX + temS;
 				if (!sd_file_exists ("sxos/titles/0100000000001000/fsmitm.flag"))
-				{
-				temY = temY + 100;
 				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),temX, temY, 200, 75,(int (*)(void *))tool_Themes_on, (void*)"sxos"));
+				else
+				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),temX, temY, 200, 75,NULL, NULL));
 				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("sxos",temX+30, temY+30, 150, 100, NULL, NULL));
-				}
-
-		}
-
+				
 
 		// Create SXOS transfer button
 		if (sd_file_exists ("emuMMC/EF00/eMMC/00")&sd_file_exists ("emuMMC/EF00/eMMC/boot0")&sd_file_exists ("emuMMC/EF00/eMMC/boot1"))
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/swap.bmp"),380, 450, 200 , 75,(int (*)(void *))tool_emu, (void*)66));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/swap.bmp"),420, 600, 200 , 75,(int (*)(void *))tool_emu, (void*)66));
+
 		if (sd_file_exists ("sxos/emunand/full.00.bin")&sd_file_exists ("sxos/emunand/boot0.bin")&sd_file_exists ("sxos/emunand/boot1.bin"))
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Transfer.bmp"),380, 450, 200 , 75,(int (*)(void *))tool_emu, (void*)33)); //- 80, - 500
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Transfer.bmp"),420, 600, 200 , 75,(int (*)(void *))tool_emu, (void*)33)); //- 80, - 500
+
 		if (!sd_file_exists("emummc/emummc.ini"))
-		{
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/link_hide.bmp"),680, 450, 200 , 75,(int (*)(void *))tool_emu, (void*)99)); 
-		}
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/link_hide.bmp"),720, 600, 200 , 75,(int (*)(void *))tool_emu, (void*)99)); 
+
 	
 
 		//services
-		servY = 60;//mandatory
-		servX = 10;
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Services",servX+30, servY-10, 150, 100, NULL, NULL));
+		servY = servYF;
+		servX = servXF;
+		servstep = 0;
+//		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Services",servX+30, servY-10, 150, 100, NULL, NULL));
 		serv_display(menu,"420000000000000E","FTP");
 		serv_display(menu,"0100000000000352","Emuiio"); 
 		serv_display(menu,"4200000000000010","Lan Play");
@@ -400,14 +396,17 @@ u64 low_icons = 650;
 		serv_display(menu,"00FF0000636C6BFF","sys-clk");
 		serv_display(menu,"0100000000534C56","ReverseNX"); 
 		serv_display(menu,"0100000000000069","ReiSpoof");
+		
+		//draw power
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),80, 500, 70, 70, tool_power_off, NULL));
 
 		//call menu 0
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowl.bmp"),100, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/home.bmp"),100, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
 		}
 
-		//Menu 2
-		if(main_menu == 2)
-		{
+	//Menu 2 Explorer
+	if(main_menu == 2)
+	{
 			char* files = listfil(directory, "*", true);
 			char* folder = listfol(directory, "*", true);				
 				u32 r = 0;
@@ -415,30 +414,52 @@ u64 low_icons = 650;
 				u32 i = 0;
 				u32 f = 0;
 				u32 y = 60;
-				u32 x = 10;
+				u32 x = 100;
 				u32 space = 50;
-				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sd-root.bmp"),270, 10, 70, 70,(int (*)(void *))tool_Menus, (void*)33));
+				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/root.bmp"),170, 1, 70, 70,(int (*)(void *))tool_Menus, (void*)33));
 				if(strlen(directory) >= 1)
-				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sd-back.bmp"),370, 10, 70, 70,(int (*)(void *))tool_file_act, (void*)99));
+				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sd-back.bmp"),270, 1, 70, 70,(int (*)(void *))tool_file_act, (void*)99));
 				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(directory, strlen(directory)*8-40+50, 68, 150, 100, NULL, NULL));
 			
 			while(folder[r * 256])
 			{
-			if(f >= 22){
-			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("More...", 1100,680, 150, 100, NULL, NULL));
+			if(f >= 33){
+			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("More...", 1100,690, 150, 100, NULL, NULL));
 			break;}
 				if(strlen(&folder[r * 256]) <= 100){			
-				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/folder.bmp"),x, y+30, 500, 25,(int (*)(void *))tool_dir, (void*)&folder[r * 256]));
-				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&folder[r * 256], x+strlen(&folder[r * 256])*8-40, y+35, 150, 100, NULL, NULL));
+				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/folder.bmp"),x, y+30, 310, 25,(int (*)(void *))tool_dir, (void*)&folder[r * 256]));
+			char folname[17];
+			char *str = &folder[r * 256];
+			folname[0] = str[0];
+			folname[1] = str[1];
+			folname[2] = str[2];
+			folname[3] = str[3];
+			folname[4] = str[4];
+			folname[5] = str[5];
+			folname[6] = str[6];
+			folname[7] = str[7];
+			folname[8] = str[8];
+			folname[9] = str[9];
+			folname[10] = str[10];
+			folname[11] = str[11];
+			folname[12] = str[12];
+			folname[13] = str[13];
+			folname[14] = str[14];
+			folname[15] = str[15];
+			folname[16] = NULL;
+				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(folname, x+strlen(folname)*8-40, y+35, 150, 100, NULL, NULL));
 
 				y = y + space;
 				
 				f++;
 				i++;
-					if(i == 11){
+				if((i == 11)||(i == 22)){
 					y = 60;
-					x = 700;
+					if(i == 22){
 					i = 0;
+					x = 930;}
+					else
+					x = 500;
 					}
 				}
 			r++;
@@ -446,88 +467,91 @@ u64 low_icons = 650;
 
 			while(files[w * 256])
 			{
-			if(f >= 22){
-			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("More...", 1100,680, 150, 100, NULL, NULL));
+			if(f >= 33){
+			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("More...", 1100,690, 150, 100, NULL, NULL));
 			break;}
 			if(strlen(&files[w * 256]) <= 100){
 					//files Icons
 					if(strstr(&files[w * 256],".bin") != NULL)
 					{
-						gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/files-bin.bmp"),x, y+30, 500, 25,(int (*)(void *))tool_filete, (void*)&files[w * 256]));
+						gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/files-bin.bmp"),x, y+30, 310, 25,(int (*)(void *))tool_filete, (void*)&files[w * 256]));
 					}else{
 						if(strstr(&files[w * 256],".txt") != NULL||strstr(&files[w * 256],".ini") != NULL||strstr(&files[w * 256],".conf") != NULL)
 						{
-							gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/files-txt.bmp"),x, y+30, 500, 25,(int (*)(void *))tool_filete, (void*)&files[w * 256]));
+							gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/files-txt.bmp"),x, y+30, 310, 25,(int (*)(void *))tool_filete, (void*)&files[w * 256]));
 						}else{
 							if(strstr(&files[w * 256],".png") != NULL||strstr(&files[w * 256],".bmp") != NULL||strstr(&files[w * 256],".jpg") != NULL)
-								gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/files-img.bmp"),x, y+30, 500, 25,(int (*)(void *))tool_filete, (void*)&files[w * 256]));
+								gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/files-img.bmp"),x, y+30, 310, 25,(int (*)(void *))tool_filete, (void*)&files[w * 256]));
 							else
-								gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/files.bmp"),x, y+30, 500, 25,(int (*)(void *))tool_filete, (void*)&files[w * 256]));
+								gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/files.bmp"),x, y+30, 310, 25,(int (*)(void *))tool_filete, (void*)&files[w * 256]));
 						}
 					}
 					
+			char filname[17];
+			char *str = &files[w * 256];
+			filname[0] = str[0];
+			filname[1] = str[1];
+			filname[2] = str[2];
+			filname[3] = str[3];
+			filname[4] = str[4];
+			filname[5] = str[5];
+			filname[6] = str[6];
+			filname[7] = str[7];
+			filname[8] = str[8];
+			filname[9] = str[9];
+			filname[10] = str[10];
+			filname[11] = str[11];
+			filname[12] = str[12];
+			filname[13] = str[13];
+			filname[14] = str[14];
+			filname[15] = str[15];
+			filname[16] = NULL;
 
-				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&files[w * 256], x+strlen(&files[w * 256])*8-40, y+35, 150, 100, NULL, NULL));
+				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(filname, x+strlen(filname)*8-40, y+35, 150, 100, NULL, NULL));
 				y = y + space;
 
 			f++;			
 			i++;			
 					
-					if(i == 11){
+				if((i == 11)||(i == 22)){
 					y = 60;
-					x = 600;
+					if(i == 22){
 					i = 0;
-					}	
-
+					x = 930;}
+					else
+					x = 500;
+					}
 				}
 			w++;
 			}
 				if(strlen(filete) >= 1)
 				{
-				u32 actX = 800;
+				u32 actX = 900;
 				u32 actY = 1;
 				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/del.bmp"),actX, actY, 70, 70, (int (*)(void *))tool_file_act, (void*)0));
 				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(filete, actX, actY+70, 150, 100, NULL, NULL));
 				}
-			//call menu 0
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowl.bmp"),100, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
-		}
+		//call menu 0
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/home.bmp"),100, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
+	}
 		 
-	//Menu 3
+	//Menu 3 Memloader
 	if(main_menu == 3)
 	{
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_boot0.bmp"),80, 200, 200 , 200,(int (*)(void *))memloader, (void*)0));
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_boot1.bmp"),380, 200, 200 , 200,(int (*)(void *))memloader, (void*)1));
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_emmc.bmp"),680, 200, 200 , 200,(int (*)(void *))memloader, (void*)2));
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_sd.bmp"),980, 200, 200 , 200,(int (*)(void *))memloader, (void*)3));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_boot0.bmp"),80, 300, 200 , 200,(int (*)(void *))memloader, (void*)0));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_boot1.bmp"),380, 300, 200 , 200,(int (*)(void *))memloader, (void*)1));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_emmc.bmp"),680, 300, 200 , 200,(int (*)(void *))memloader, (void*)2));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_sd.bmp"),980, 300, 200 , 200,(int (*)(void *))memloader, (void*)3));
 		//call
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowl.bmp"),100, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)1));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/home.bmp"),100, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
+//		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowl.bmp"),200, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)1));
 
 	}
 	
-		//Menu 4
+		//Menu 4 Incognito
 	if(main_menu == 4)
 	{
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Pagina de Ayuda 1/2...", 600, 1, 150, 100, NULL, NULL));
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/1-help.bmp"),50, 30, 1200, 650,(int (*)(void *))tool_Menus, (void*)5));
-			//call menu 0
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowl.bmp"),100, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
-
-	}
-		//Menu 5
-	if(main_menu == 5)
-	{
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Pagina de Ayuda 2/2...", 600,1, 150, 100, NULL, NULL));
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/2-help.bmp"),50, 30, 1200, 650,(int (*)(void *))tool_Menus, (void*)4));
-			//call menu 0
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowl.bmp"),100, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
-
-	}
-
-		//Menu 6
-	if(main_menu == 6)
-	{
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Menu de Incognito", 600,1, 150, 100, NULL, NULL));
+//		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Menu de Incognito", 600,1, 150, 100, NULL, NULL));
 		
 		//Getinfo from text
 		char sysserial[14];
@@ -654,25 +678,48 @@ u64 low_icons = 650;
 
 		}
 
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowl.bmp"),100, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/home.bmp"),100, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
+//		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowl.bmp"),200, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)1));
+
+	}
+
+	//Menu 5
+	if(main_menu == 5)
+	{
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Pagina de Ayuda 1/2...", 600, 1, 150, 100, NULL, NULL));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/1-help.bmp"),50, 30, 1200, 650,(int (*)(void *))tool_Menus, (void*)5));
+			//call menu 0
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/home.bmp"),100, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
+
+	}
+	//Menu 6
+	if(main_menu == 6)
+	{
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Pagina de Ayuda 2/2...", 600,1, 150, 100, NULL, NULL));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/2-help.bmp"),50, 30, 1200, 650,(int (*)(void *))tool_Menus, (void*)4));
+			//call menu 0
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/home.bmp"),100, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
 
 	}
 
 /* Generate permanent entries**/
-if (help_switch == 0)
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/logoSD.bmp"),1, 630, 100, 100,(int (*)(void *)) help_display, NULL));
-else
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/help.bmp"),10, 650, 70, 70, (int (*)(void *))tool_Menus, (void*)4));
+//if (help_switch == 0)
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/logoSD.bmp"),1, 630, 100, 100, NULL, NULL));
+//gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/logoSD.bmp"),1, 630, 100, 100,(int (*)(void *)) help_display, NULL));
+//else
+//gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/help.bmp"),10, 650, 70, 70, (int (*)(void *))tool_Menus, (void*)4));
 
-help_switch = 0;
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),600, low_icons, 70, 70, tool_power_off, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read(""),1240, 680, 35, 35, (int (*)(void *))screenshot, NULL));
+//help_switch = 0;
+
+if(main_menu != 1)
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),605, low_icons, 70, 70, tool_power_off, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read(""),0, 0, 35, 35, (int (*)(void *))screenshot, NULL));
 //battery
 u32 battPercent = 0;
 max17050_get_property(MAX17050_RepSOC, (int *)&battPercent);		
 u32 battimgper = (battPercent >> 8) & 0xFF;
-u32 batY = 50;
-u32 batX = 1210;
+u32 batY = 5;
+u32 batX = 1200;
 if ((battimgper <= 100) & (battimgper >= 76))
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/bat1.bmp"),batX, batY, 70, 35,(int (*)(void *))bat_show, (void*)battimgper));
 if ((battimgper <= 75) & (battimgper >= 51))
@@ -1051,7 +1098,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
 		gfx_printf(&g_gfx_con, "\n%s",sd_file_read(filete));
 	gfx_swap_buffer(&g_gfx_ctxt);
 	gui_menu_pool_init();
-    gui_menu_t* menu = gui_menu_create("ArgonNX");
+    gui_menu_t* menu = gui_menu_create("ArgonNX",main_menu);
     gui_menu_open3(menu);
 
 	}
@@ -1177,6 +1224,7 @@ int tool_theme(char* param)
 if (!sd_mount()){BootStrapNX();}//check sd
 display_backlight_brightness(1, 1000);
 copyfileparam(param,"background.bmp","StarDust/background.bmp");
+copyfileparam(param,"back-set.bmp","StarDust/back-set.bmp");
 
 char* sourse_folder = (char*)malloc(256);	
 			strcpy(sourse_folder, param);
@@ -1293,7 +1341,7 @@ return 0;
 int bat_show(u32 percent)
 {
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0xFFCCCCCC, 0xFF191414);
-		gfx_con_setpos(&g_gfx_con, 1215, 60);
+		gfx_con_setpos(&g_gfx_con, 1210, 15);
         gfx_printf(&g_gfx_con, "%k%d%%%k", 0xFF00FF22,percent,0xFFCCCCCC);
 //      gfx_printf(&g_gfx_con, "%k%d%%%k", 0xFF00FF22,percent,0xFFCCCCCC);
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
@@ -1322,7 +1370,15 @@ if (!sd_mount()){BootStrapNX();}//check sd
 	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),servX, servY, 200, 75,(int (*)(void *))tool_servises_on, (void*)titleid));
 		}
 	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(name,servX+30, servY+30, 150, 100, NULL, NULL));
-	servY = servY + sepaserv;
+		servstep++;
+		if(servstep>= 2)
+		{
+			servY = servYF;
+			servX = servX + 250;
+			servstep = 0;
+		}else{
+		servY = servY + sepaserv;		
+		}
 	}
 }
 
@@ -1358,6 +1414,35 @@ int Autoboot(u32 fil)
 return 0;
 };
 
+int AThemes_list(gui_menu_t* menu, u32 gridX, u32 gridY)
+{
+		//generate themes Dinamy
+	u32 tm_ajust = 90;
+	char* tm_directory = "StarDust/Atheme";
+	char* folder = listfol(tm_directory, "*", true);
+			u32 r = 0;
+			u32 w = 0;
+		while(folder[r * 256])
+		{
+			if(strlen(&folder[r * 256]) <= 100){			
+			char* source_fol = (char*)malloc(256);
+			strcpy(source_fol, tm_directory);
+			strcat(source_fol, "/");
+			strcat(source_fol, &folder[r * 256]);
+			char* source_icon = (char*)malloc(256);
+			strcpy(source_icon, source_fol);
+			strcat(source_icon, "/icon.bmp");
+			if(sd_file_exists(source_icon))
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read(source_icon),gridX, gridY, 70, 70, (int (*)(void *))tool_theme, (void*)source_fol)); 
+			gridX = gridX+tm_ajust;
+			w++;
+			}
+		if(w == 11)
+		break;
+		r++;
+		}
+return 0;
+}
 
 /*
 void update_script(gui_menu_t* menu,char* titleid,char* name) 

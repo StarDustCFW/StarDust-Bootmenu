@@ -16,7 +16,7 @@
 
 #define MINOR_VERSION 3
 #define MAJOR_VERSION 0
-#define REVI_VERSION 38
+#define REVI_VERSION 40
 	char Sversion[4];
 
 /* Render the menu */
@@ -30,10 +30,10 @@ static int gui_menu_update(gui_menu_t*);
 /* Handle input */
 static int handle_touch_input(gui_menu_t*);
 
-gui_menu_t *gui_menu_create(const char *title)
+gui_menu_t *gui_menu_create(const char *title,u32 mem)
 {
 	gui_menu_t *menu = (gui_menu_t *)malloc(sizeof(gui_menu_t));
-    menu->custom_gui = custom_gui_load();
+    menu->custom_gui = custom_gui_load(mem);
 	strcpy(menu->title, title);
 	menu->next_entry = 0;
 	menu->selected_index = 0;
@@ -57,12 +57,12 @@ static void gui_menu_draw_background(gui_menu_t* menu)
         gfx_clear_color(&g_gfx_ctxt, 0xFF191414);
     
     /* Render title */
-    if (!render_custom_title(menu->custom_gui)) 
-    {
-        g_gfx_con.scale = 2;
-        gfx_con_setpos(&g_gfx_con, 15, 10);
-        gfx_printf(&g_gfx_con, "ArgonNX v%d.%d %k%d%k", MAJOR_VERSION, MINOR_VERSION,0xFF00FF22, REVI_VERSION ,0xFFCCCCCC);
-    }
+//    if (!render_custom_title(menu->custom_gui)) 
+//   {
+//        g_gfx_con.scale = 2;
+//        gfx_con_setpos(&g_gfx_con, 15, 10);
+//        gfx_printf(&g_gfx_con, "ArgonNX v%d.%d %k%d%k", MAJOR_VERSION, MINOR_VERSION,0xFF00FF22, REVI_VERSION ,0xFFCCCCCC);
+ //   }
        //StarDust version
 		char *str;
 		if (g_sd_mounted){
@@ -74,8 +74,10 @@ static void gui_menu_draw_background(gui_menu_t* menu)
 			Sversion[2] = str[2];
 			Sversion[3] = str[3];
 		}	
-	gfx_con_setpos(&g_gfx_con, 1050, 10);
-	gfx_printf(&g_gfx_con, "StarDust v%s", Sversion);
+		gfx_con_setcol(&g_gfx_con, 0xFFCCCCCC, 0xFFCCCCCC, 0xFF191414);
+		g_gfx_con.scale = 2;
+	gfx_con_setpos(&g_gfx_con, 1200, 50);
+	gfx_printf(&g_gfx_con, "v%s", Sversion);
 		 
 
 		
@@ -88,6 +90,7 @@ static void gui_menu_draw_background(gui_menu_t* menu)
 				burntFuses++;
 		}
 		char *mindowngrade = "unknow";
+		//burntFuses = 11; //for test
 		if(burntFuses == 1){mindowngrade = "1.0.0";}
 		if(burntFuses == 2){mindowngrade = "2.0.0";}
 		if(burntFuses == 3){mindowngrade = "3.0.0";}
@@ -100,9 +103,12 @@ static void gui_menu_draw_background(gui_menu_t* menu)
 		if(burntFuses == 10){mindowngrade = "8.1.0";}
 		if(burntFuses == 11){mindowngrade = "9.0.0";}
 		//burntFuses = burntFuses +10;//doble number test
-		g_gfx_con.scale = 2;
-		gfx_con_setpos(&g_gfx_con, 1035, 30);
-		gfx_printf(&g_gfx_con,"F%k%d %kLimit%k %s%k\n\n", 0xFFea2f1e, burntFuses ,0xFFCCCCCC ,0xFF00FF22 ,mindowngrade ,0xFFCCCCCC);
+//		u32 jump = 0;
+//		if(burntFuses < 9){jump = 20;}
+
+		gfx_con_setpos(&g_gfx_con, 1, 1);
+//		gfx_con_setpos(&g_gfx_con, 1145+jump, 60);
+		gfx_printf(&g_gfx_con,"%k%d%k-%k%d%k-%k%s%k\n\n",0xFF00FF22, REVI_VERSION ,0xFFCCCCCC, 0xFFea2f1e, burntFuses ,0xFFCCCCCC ,0xFF00FF22 ,mindowngrade ,0xFFCCCCCC);
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
 /* 
 Rojo  0xFFea2f1e

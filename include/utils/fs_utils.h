@@ -19,5 +19,5 @@ bool sd_file_exists(const char* filename);
 void copyfile(const char* source, const char* target);
 void copyfileparam(char* param, char* source, char* target);
 void copy_folder(char* sourse_folder, char* dest_folder);
-
+bool sd_file_size(char *path);
 #endif

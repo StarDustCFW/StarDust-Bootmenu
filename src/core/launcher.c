@@ -88,6 +88,9 @@ int launch_payload(char *path)
     if(boot==1)
     {
 		display_backlight_brightness(0, 1000);
+		if (sd_file_exists ("atmosphere/fusee-secondary_ori.bin"))
+		copyfile("atmosphere/fusee-secondary_ori.bin","sept/payload.bin");
+		else
 		copyfile("atmosphere/fusee-secondary.bin","sept/payload.bin");
 		if (sd_file_exists ("StarDust/autobootecho.txt"))
 		sd_save_to_file("Atmosphere", 10, "StarDust/autobootecho.txt");
@@ -103,6 +106,11 @@ int launch_payload(char *path)
 
 	if(boot==3)
     {
+		display_backlight_brightness(0, 1000);
+		u32 bootR = sd_file_size("boot.dat");
+		u32 bootS = sd_file_size("StarDust/boot.dat");
+		if (bootR != bootS)
+		copyfile("StarDust/boot.dat","boot.dat");//
 		if (sd_file_exists ("StarDust/autobootecho.txt"))
 		sd_save_to_file("SXOS", 4, "StarDust/autobootecho.txt");
 	}

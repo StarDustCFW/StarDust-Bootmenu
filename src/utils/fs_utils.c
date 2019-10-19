@@ -191,3 +191,14 @@ char* Files = listfil(sourse_folder, "*", true);
 	i++;
     }
 }
+
+bool sd_file_size(char *path)
+{
+	FIL fp;
+	if (f_open(&fp, path, FA_READ) != FR_OK)
+		return 0;
+
+	u32 size = f_size(&fp);
+	f_close(&fp);
+	return size;
+}
