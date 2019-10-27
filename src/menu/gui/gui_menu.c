@@ -16,7 +16,7 @@
 
 #define MINOR_VERSION 3
 #define MAJOR_VERSION 0
-#define REVI_VERSION 40
+#define REVI_VERSION 41
 	char Sversion[4];
 
 /* Render the menu */
@@ -157,7 +157,7 @@ int gui_menu_open(gui_menu_t *menu)
      */
     gui_menu_render_menu(menu);
 sd_unmount();
-display_backlight_brightness(100, 1000);
+
 
 	while (gui_menu_update(menu))
     ;
@@ -174,7 +174,7 @@ int gui_menu_open3(gui_menu_t *menu)
      * flush buffers
      */
 //    gui_menu_render_menu(menu);
-display_backlight_brightness(100, 1000);
+
 
 	gui_menu_update(menu);
 
