@@ -47,9 +47,66 @@ static inline void setup_gfx()
     gfx_con_setcol(&g_gfx_con, 0xFFCCCCCC, 1, BLACK);
 }
 
-void deleteall(char* directory, char* filet)
+//copy code
+void copyarall(char* directory, char* destdir, char* filet, char* coment)
+{
+char* files = listfil(directory, filet, true);
+char* folder = listfol(directory, "*", true);
+f_mkdir(destdir);
+    u32 i = 0;
+    while(files[i * 256])
+    {
+char* sourcefile = (char*)malloc(256);
+			if(strlen(&files[i * 256]) <= 100){			
+			strcpy(sourcefile, directory);
+			strcat(sourcefile, "/");
+			strcat(sourcefile, &files[i * 256]);
+			
+char* destfile = (char*)malloc(256);
+			strcpy(destfile, destdir);
+			strcat(destfile, "/");
+			strcat(destfile, &files[i * 256]);
+			if(strlen(coment) > 0){
+				gfx_con_setpos(&g_gfx_con, 1, 10);	
+				gfx_printf(&g_gfx_con, "\n %s \n", coment);
+				gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
+				gfx_con_setpos(&g_gfx_con, 1, 100);		
+				gfx_printf(&g_gfx_con, "\n %s\n", destfile);
+				gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
+				gfx_swap_buffer(&g_gfx_ctxt);}
+			copyfile(sourcefile,destfile);
+//			f_unlink(sourcefile);
+			}
+	i++;
+    }
+
+    u32 r = 0;
+    while(folder[r * 256])
+    {
+char* folderpath = (char*)malloc(256);
+			if((strlen(&folder[r * 256]) <= 100) & (strlen(&folder[r * 256]) > 0)){			
+			strcpy(folderpath, directory);
+			strcat(folderpath, "/");
+			strcat(folderpath, &folder[r * 256]);
+//			deleteall(folderpath, "*","");
+
+char* folderdest = (char*)malloc(256);
+			strcpy(folderdest, destdir);
+			strcat(folderdest, "/");
+			strcat(folderdest, &folder[r * 256]);
+//			deleteall(folderpath, "*","");
+			copyarall(folderpath, folderdest, filet, coment);
+			}
+	r++;
+    }
+}
+
+//folder delete use with care
+void deleteall(char* directory, char* filet, char* coment)
 {
 char* payloads = listfil(directory, filet, true);
+char* folder = listfol(directory, "*", true);
+
     u32 i = 0;
     while(payloads[i * 256])
     {
@@ -58,9 +115,30 @@ char* payloadpath = (char*)malloc(256);
 			strcpy(payloadpath, directory);
 			strcat(payloadpath, "/");
 			strcat(payloadpath, &payloads[i * 256]);
+			if(strlen(coment) > 0){
+				gfx_con_setpos(&g_gfx_con, 1, 10);	
+				gfx_printf(&g_gfx_con, "\n %s \n", coment);
+				gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
+				gfx_con_setpos(&g_gfx_con, 1, 100);		
+				gfx_printf(&g_gfx_con, "\n %s\n", payloadpath);
+				gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
+				gfx_swap_buffer(&g_gfx_ctxt);}
 			f_unlink(payloadpath);
 			}
 	i++;
+    }
+
+    u32 r = 0;
+    while(folder[r * 256])
+    {
+char* folderpath = (char*)malloc(256);
+			if((strlen(&folder[r * 256]) <= 100) & (strlen(&folder[r * 256]) > 0)){			
+			strcpy(folderpath, directory);
+			strcat(folderpath, "/");
+			strcat(folderpath, &folder[r * 256]);
+			deleteall(folderpath, filet,coment);
+			}
+	r++;
     }
 f_unlink(directory);
 }
@@ -74,62 +152,46 @@ void clean_up()
 		gfx_printf(&g_gfx_con, "CleanUP\n");
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
 gfx_swap_buffer(&g_gfx_ctxt);
-//delete bootloader for tinfoil
-/*
-deleteall("/bootloader/ini", "*");
-deleteall("/bootloader/payloads", "*");
-deleteall("/bootloader/libtools", "*");
-deleteall("/bootloader/sys", "*");
-deleteall("/bootloader", "*");
-*/
-deleteall("/ftpd", "*");
-deleteall("/StarDust/ftpd", "*");
+deleteall("/ftpd", "*","");
+deleteall("/StarDust/ftpd", "*","");
 
-deleteall("/ReiNX/patches/es_patches", "*");
-deleteall("/ReiNX/sysmodules.dis", "*");
+deleteall("/ReiNX/patches/es_patches", "*","");
+deleteall("/ReiNX/sysmodules.dis", "*","");
 f_unlink("/ReiNX/sysmodules/fs_mitm.kip");
 f_unlink("/ReiNX/sysmodules/ldn_mitm.kip");
-deleteall("/ReiNX/exefs_patches/Youtube", "*");
-//deleteall("/ReiNX/titles/010000000000000D/exefs", "*");
-//deleteall("/ReiNX/titles/010000000000000D", "*");
-deleteall("/ReiNX/titles/0100000000000032/exefs", "*");
-deleteall("/ReiNX/titles/0100000000000032", "*");
-deleteall("/ReiNX/titles/0100000000000032/flags", "*");
+//deleteall("/ReiNX/titles/010000000000000D/exefs", "*","");
+//deleteall("/ReiNX/titles/010000000000000D", "*","");
+deleteall("/ReiNX/titles/0100000000000032/exefs", "*","");
+deleteall("/ReiNX/titles/0100000000000032", "*","");
+deleteall("/ReiNX/titles/0100000000000032/flags", "*","");
 
 //Delete patches that reinx d'not use any more
-deleteall("/ReiNX/exefs_patches/am_dev_function", "*");
-deleteall("/ReiNX/exefs_patches/disable_ca_verification", "*");
-deleteall("/ReiNX/exefs_patches/es_patches", "*");
-deleteall("/ReiNX/exefs_patches/fatal_force_extra_info", "*");
-deleteall("/ReiNX/exefs_patches/Signature Patches by br4z0rf", "*");
-deleteall("/ReiNX/exefs_patches/Signature Patches by Rajkosto", "*");
-deleteall("/ReiNX/exefs_patches", "*");
-deleteall("/ReiNX/kip_patches/default_nogc", "*");
-deleteall("/ReiNX/kip_patches/fs_patches", "*");
-deleteall("/ReiNX/kip_patches", "*");
-deleteall("/ReiNX/nro_patches/disable_browser_ca_verification", "*");
-deleteall("/ReiNX/nro_patches", "*");
+deleteall("/ReiNX/exefs_patches", "*","");
+deleteall("/ReiNX/kip_patches", "*","");
+deleteall("/ReiNX/nro_patches", "*","");
 
 
 //ams Blawar mod
+/*
 f_unlink("/atmosphere/fusee-secondary.bin.sig");
 f_unlink("/atmosphere/hbl.json");
 f_unlink("/atmosphere/hbl.nsp.sig");
 f_unlink("/atmosphere/hbl_ori.nsp");
-deleteall("/switch/mercury", "*");
+deleteall("/switch/mercury", "*","");
 f_unlink("atmosphere/flags/bis_write.flag");
+*/
 
 //music
-f_rename("/StarDust/music/fondo.mp3", "/StarDust/music/0.mp3");
-f_rename("/StarDust/music/fondo1.mp3","/StarDust/music/1.mp3");
-f_rename("/StarDust/music/fondo2.mp3","/StarDust/music/2.mp3");
-f_rename("/StarDust/music/fondo3.mp3","/StarDust/music/3.mp3");
-f_rename("/StarDust/music/fondo4.mp3","/StarDust/music/4.mp3");
-f_rename("/StarDust/music/fondo5.mp3","/StarDust/music/5.mp3");
-f_rename("/StarDust/music/fondo6.mp3","/StarDust/music/6.mp3");
+f_rename("/StarDust/music/fondo.mp3", "/StarDust/music/weed-0.mp3");
+f_rename("/StarDust/music/fondo1.mp3","/StarDust/music/weed-1.mp3");
+f_rename("/StarDust/music/fondo2.mp3","/StarDust/music/weed-2.mp3");
+f_rename("/StarDust/music/fondo3.mp3","/StarDust/music/weed-3.mp3");
+f_rename("/StarDust/music/fondo4.mp3","/StarDust/music/weed-4.mp3");
+f_rename("/StarDust/music/fondo5.mp3","/StarDust/music/weed-5.mp3");
+f_rename("/StarDust/music/fondo6.mp3","/StarDust/music/weed-6.mp3");
 
 
-deleteall("/themes/StarDust-2.0", "*");
+deleteall("/themes/StarDust-2.0", "*","");
 
 
 //pequeña correccion
@@ -141,18 +203,13 @@ f_unlink("Payload_de_arranque.bin");
 
 
 //borrar archivos inesesarios que se acumulan 
-deleteall("/switch/KosmosToolbox", "*");
-deleteall("/switch/KosmosUpdater", "*");
-deleteall("/atmosphere/kips", "*");
-deleteall("/Toolkit/splashes", "*");
-deleteall("/Toolkit", "*");
-deleteall("/uboot", "*");
-deleteall("/modules/hid_mitm", "*");
-deleteall("/modules", "*");
-deleteall("/RR/logos", "*");
-deleteall("/RR/payloads", "*");
-deleteall("/RR/sys", "*");
-deleteall("/RR", "*");
+deleteall("/switch/KosmosToolbox", "*","");
+deleteall("/switch/KosmosUpdater", "*","");
+deleteall("/atmosphere/kips", "*","");
+deleteall("/Toolkit", "*","");
+deleteall("/uboot", "*","");
+deleteall("/modules", "*","");
+deleteall("/RR", "*","");
 f_unlink("/switch/toolbox.nro");
 f_unlink("/switch/ChoiDujourNX.nro");
 f_unlink("/switch/ftpd.nro");
@@ -188,27 +245,19 @@ f_unlink("/StarDust/logos/negative.bmp");
 f_unlink("/StarDust/logos/biskeydump.bmp");
 f_unlink("/StarDust/logos/Backup.bmp");
 f_unlink("/StarDust/logos/Hekate.bmp");
-f_unlink("/StarDust/Atheme/1/logos/zBackup.bmp");
-f_unlink("/StarDust/Atheme/2/logos/zBackup.bmp");
-f_unlink("/StarDust/Atheme/3/logos/zBackup.bmp");
-f_unlink("/StarDust/Atheme/4/logos/zBackup.bmp");
-f_unlink("/StarDust/Atheme/5/logos/zBackup.bmp");
-f_unlink("/StarDust/Atheme/6/logos/zBackup.bmp");
-f_unlink("/StarDust/Atheme/7/logos/zBackup.bmp");
-f_unlink("/StarDust/Atheme/1/Icons/arrowr.bmp");
-f_unlink("/StarDust/Atheme/2/Icons/arrowr.bmp");
-f_unlink("/StarDust/Atheme/3/Icons/arrowr.bmp");
-f_unlink("/StarDust/Atheme/4/Icons/arrowr.bmp");
-f_unlink("/StarDust/Atheme/5/Icons/arrowr.bmp");
-f_unlink("/StarDust/Atheme/6/Icons/arrowr.bmp");
-f_unlink("/StarDust/Atheme/7/Icons/arrowr.bmp");
+deleteall("/StarDust/Atheme/1", "*","");
+deleteall("/StarDust/Atheme/2", "*","");
+deleteall("/StarDust/Atheme/3", "*","");
+deleteall("/StarDust/Atheme/4", "*","");
+deleteall("/StarDust/Atheme/5", "*","");
+deleteall("/StarDust/Atheme/6", "*","");
+deleteall("/StarDust/Atheme/7", "*","");
 f_unlink("/StarDust/Icons/screenshot.bmp");
-f_unlink("/StarDust/Atheme/1/Icons/screenshot.bmp");
-f_unlink("/StarDust/Atheme/2/Icons/screenshot.bmp");
-f_unlink("/StarDust/Atheme/3/Icons/screenshot.bmp");
-f_unlink("/StarDust/Atheme/4/Icons/screenshot.bmp");
-f_unlink("/StarDust/Atheme/5/Icons/screenshot.bmp");
-f_unlink("/StarDust/Atheme/7/Icons/screenshot.bmp");
+f_unlink("/StarDust/payback/Stock.bin");
+f_unlink("/StarDust/payloads/zBackup.bin");
+
+
+
 /*
 f_unlink("/");
 f_unlink("/");
@@ -273,11 +322,10 @@ f_unlink("/nsp/Haku33SwitchCleaner_[05229B5E9D160000].nsp");
 	}
 
 
-//deleteall("/////", "*");	
+//deleteall("/////", "*","");	
 	//close
 	f_unlink("/fixer.del");
 }
-
 
 void ipl_main()
 {
@@ -316,12 +364,24 @@ void ipl_main()
 /*		bool cancel_auto_chainloading = btn_read() & BTN_VOL_DOWN;
         bool load_menu = cancel_auto_chainloading || launch_payload("StarDust/payload.bin");
 */		//remove autoboot
-
+		if(sd_file_exists("StarDust_update/fixer.del"))
+		{
+			copyarall("/StarDust_update", "", "*","Updating");
+			deleteall("/StarDust_update", "*","Clean Update");
+			f_rename("/StarDust_update", "/StarDust_corrupt_update");//just in case
+			launch_payload("payload.bin");
+		}
+		
+		
+		
 		if(sd_file_exists("fixer.del"))
-		clean_up();		
+		clean_up();
+
 //        gfx_printf(&g_gfx_con, "Autochainload canceled. Loading menu...\n");
-//        gfx_swap_buffer(&g_gfx_ctxt);
-//		msleep(25000);
+//      gfx_swap_buffer(&g_gfx_ctxt);
+//		msleep(2000);
+//		BootStrapNX();
+		
 //        if (load_menu)
         gui_init_argon_boot();
 //		gui_init_argon_menu();
