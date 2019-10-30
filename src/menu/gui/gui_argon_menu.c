@@ -70,6 +70,12 @@ int AThemes_list(gui_menu_t* menu, u32 gridX, u32 gridY);
 int bat_show(u32 percent);
 void serv_display(gui_menu_t* menu,char* titleid,char* name);
 void help_display(void);
+void Ajbrillo(u32 tipo);
+void medislay(char *flags);
+u32 brillo = 100;
+u32 brilloM = 50;
+
+
 //menus
 u64 main_menu = 0;
 u32 submenu = 0;
@@ -103,6 +109,25 @@ char Sversion[1];
 
 //help Switch
 u32 help_switch = 1;
+void Ajbrillo(u32 tipo)
+{
+if (!sd_mount()){BootStrapNX();}//check sd
+		if (sd_file_exists("StarDust/b50.flag"))
+		{
+			brillo = 20;
+			brilloM = brillo/2;
+		}else{
+			brillo = 100;
+			brilloM = brillo/2;
+		}
+		
+		if (tipo == 0)
+		display_backlight_brightness(brillo, 1000);
+
+		if (tipo == 1)
+		display_backlight_brightness(brilloM, 1000);
+}
+
 
 void gui_init_argon_boot(void)
 {
@@ -110,8 +135,7 @@ void gui_init_argon_boot(void)
     gui_menu_pool_init();
 
     gui_menu_t* menu = gui_menu_create("ArgonNX",main_menu);
-
-	display_backlight_brightness(100, 1000);
+	Ajbrillo(0);
 	//show display without icons
 		
     gui_menu_open2(menu);
@@ -224,6 +248,7 @@ static void generate_payloads_entries(char* payloads, gui_menu_t* menu)
 /* Init needed menus for ArgonNX */
 void gui_init_argon_menu(void)
 {
+
 		if (sd_file_exists("StarDust/inc.return"))
 		{
 			main_menu = 4;
@@ -397,6 +422,13 @@ u64 low_icons = 650;
 		serv_display(menu,"0100000000534C56","ReverseNX"); 
 		serv_display(menu,"0100000000000069","ReiSpoof");
 		
+		//brillo
+		
+	if (!sd_file_exists("StarDust/b50.flag"))
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/day.bmp"),1200, 100, 70, 70,(int (*)(void *))medislay, (void*)0));
+		else
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/nay.bmp"),1200, 100, 70, 70,(int (*)(void *))medislay, (void*)0));
+
 		//draw power
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),80, 500, 70, 70, tool_power_off, NULL));
 
@@ -732,6 +764,7 @@ if (battimgper <= 2)
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/bat5.bmp"),batX, batY, 70, 35,(int (*)(void *))bat_show, (void*)battimgper));
 
     /* Start menu */
+	Ajbrillo(0);
     gui_menu_open(menu);
 
     /* Clear all entries and menus */
@@ -755,7 +788,7 @@ static int tool_extr_rSD(void* param)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
 	gfx_swap_buffer(&g_gfx_ctxt);
-	display_backlight_brightness(100, 1000);
+	Ajbrillo(0);
 	g_gfx_con.scale = 3;
     gfx_con_setpos(&g_gfx_con, 160, 100);
     gfx_printf(&g_gfx_con, "Ya puedes extraer la SD, Al terminar\n");
@@ -781,7 +814,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
 	if(status == 33)
 	{
 	f_unlink("sxos/eMMC");
-	display_backlight_brightness(1, 1000);
+	Ajbrillo(1);
 	f_mkdir("emuMMC");
 	f_mkdir("emuMMC/EF00");
 	f_rename("/sxos/emunand","/emuMMC/EF00/eMMC");
@@ -830,7 +863,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
 	if(status == 66)
 	{
 	f_unlink("sxos/emunand");
-	display_backlight_brightness(1, 1000);
+	Ajbrillo(1);
 	f_rename("/emuMMC/EF00/eMMC","/sxos/emunand");
 	
 	f_rename("sxos/emunand/boot0","sxos/emunand/boot0.bin");
@@ -870,7 +903,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
 	//link sxos hide partition to ams
 	if(status == 99)
 	{
-	display_backlight_brightness(1, 1000);
+	Ajbrillo(1);
 			f_mkdir("emummc");
 			FIL fp;
 			f_open(&fp, "emummc/emummc.ini", FA_WRITE | FA_CREATE_ALWAYS);
@@ -929,7 +962,7 @@ directory = "";
 gui_init_argon_menu();
 return 0;
 }
-display_backlight_brightness(50, 1000);
+Ajbrillo(1);
 //check if is the same menu
 if(main_menu == param)
 return 0;
@@ -950,7 +983,7 @@ return 0;
 int tool_servises_on(char* title)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
-display_backlight_brightness(50, 1000);
+Ajbrillo(1);
 char* path = (char*)malloc(256);
 		strcpy(path, "atmosphere/titles/");
 		strcat(path, title);
@@ -975,7 +1008,7 @@ return 0;
 int tool_servises_off(char* title)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
-display_backlight_brightness(50, 1000);
+Ajbrillo(1);
 char* path = (char*)malloc(256);
 		strcpy(path, "atmosphere/titles/");
 		strcat(path, title);
@@ -1222,7 +1255,7 @@ return 0;
 int tool_theme(char* param)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
-display_backlight_brightness(1, 1000);
+Ajbrillo(1);
 copyfileparam(param,"background.bmp","StarDust/background.bmp");
 copyfileparam(param,"back-set.bmp","StarDust/back-set.bmp");
 
@@ -1233,7 +1266,7 @@ copy_folder(sourse_folder, "StarDust/Icons");
 			strcpy(sourse_folder, param);
 			strcat(sourse_folder, "/logos");
 copy_folder(sourse_folder, "StarDust/logos");
-//display_backlight_brightness(100, 1000);
+//display_backlight_brightness(brillo, 1000);
 gui_init_argon_menu();
 return 0;
 }
@@ -1444,6 +1477,19 @@ int AThemes_list(gui_menu_t* menu, u32 gridX, u32 gridY)
 return 0;
 }
 
+void medislay(char *flags)
+{
+if (!sd_mount()){BootStrapNX();}//check sd
+	if (sd_file_exists("StarDust/b50.flag"))
+	f_unlink("StarDust/b50.flag");
+		else
+	sd_save_to_file("", 0, "StarDust/b50.flag");
+	Ajbrillo(0);
+	gui_init_argon_menu();
+}
+
+		
+
 /*
 void update_script(gui_menu_t* menu,char* titleid,char* name) 
 {
@@ -1541,7 +1587,7 @@ f_unlink(directory);
 static int zbackup(char* param)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
-display_backlight_brightness(1, 1000);
+Ajbrillo(1);
 sd_save_to_file("", 0, param);
 launch_payload("StarDust/payloads/zbackup.bin");
 return 0;

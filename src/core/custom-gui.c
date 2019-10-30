@@ -22,10 +22,31 @@
 #include <string.h>
 
 
-custom_gui_t* custom_gui_load()
+custom_gui_t* custom_gui_load(u32 mem)
 {
     custom_gui_t* custom_gui = (custom_gui_t*)malloc(sizeof(custom_gui_t));
-    custom_gui->custom_bg = (u8*)sd_file_read(CUSTOM_BG_PATH);
+	//custom backgroun for heach menu
+	switch(mem)
+	{
+		case 1:
+		custom_gui->custom_bg = (u8*)sd_file_read("StarDust/back-set.bmp");
+		break;
+		
+		case 2:
+		custom_gui->custom_bg = (u8*)sd_file_read("StarDust/back-exp.bmp");
+		break;
+		
+		case 3:
+		custom_gui->custom_bg = (u8*)sd_file_read("StarDust/back-mem.bmp");
+		break;
+		
+		case 4:
+		custom_gui->custom_bg = (u8*)sd_file_read("StarDust/back-inc.bmp");
+		break;
+		
+		default:
+		custom_gui->custom_bg = (u8*)sd_file_read(CUSTOM_BG_PATH);
+	}
     custom_gui->title_bmp = (u8*)sd_file_read(CUSTOM_TITLE_PATH);
     return custom_gui;
 }
