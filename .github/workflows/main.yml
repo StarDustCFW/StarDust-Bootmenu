@@ -34,5 +34,5 @@ jobs:
         
     - uses: actions/upload-artifact@master
       with:
-        name: Build
+        name: Payload
         path: payload.bin
