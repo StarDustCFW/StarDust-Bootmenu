@@ -16,7 +16,7 @@
 
 #define MINOR_VERSION 3
 #define MAJOR_VERSION 0
-#define REVI_VERSION 41
+#define REVI_VERSION 43
 	char Sversion[4];
 
 /* Render the menu */

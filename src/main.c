@@ -172,12 +172,12 @@ deleteall("/ReiNX/nro_patches", "*","");
 
 
 //ams Blawar mod
-/*
 f_unlink("/atmosphere/fusee-secondary.bin.sig");
 f_unlink("/atmosphere/hbl.json");
 f_unlink("/atmosphere/hbl.nsp.sig");
 f_unlink("/atmosphere/hbl_ori.nsp");
 deleteall("/switch/mercury", "*","");
+/*
 f_unlink("atmosphere/flags/bis_write.flag");
 */
 
