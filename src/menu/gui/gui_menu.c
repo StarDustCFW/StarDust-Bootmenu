@@ -16,7 +16,7 @@
 
 #define MINOR_VERSION 3
 #define MAJOR_VERSION 0
-#define REVI_VERSION 43
+#define REVI_VERSION 45
 	char Sversion[4];
 
 /* Render the menu */
@@ -102,6 +102,7 @@ static void gui_menu_draw_background(gui_menu_t* menu)
 		if(burntFuses == 9){mindowngrade = "7.0.0";}
 		if(burntFuses == 10){mindowngrade = "8.1.0";}
 		if(burntFuses == 11){mindowngrade = "9.0.0";}
+		if(burntFuses == 12){mindowngrade = "9.1.0";}
 		//burntFuses = burntFuses +10;//doble number test
 //		u32 jump = 0;
 //		if(burntFuses < 9){jump = 20;}
@@ -194,12 +195,29 @@ int gui_menu_open2(gui_menu_t *menu)
 //    gui_menu_draw_entries(menu);
 		if (sd_file_exists("StarDust/autobootecho.txt"))
 		{
+
 		g_gfx_con.scale = 3;
 		gfx_con_setpos(&g_gfx_con, 1070, 10);
 		gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
 		gfx_printf(&g_gfx_con, "AutoBoot\n");
 		gfx_con_setpos(&g_gfx_con, 500, 10);
 		gfx_printf(&g_gfx_con, "Vol +: BootMenu\n");
+		
+		gfx_con_setpos(&g_gfx_con, 50, 10);
+			char *str;
+			void *buf;
+			buf = sd_file_read("StarDust/autobootecho.txt");
+			str = buf;
+			Sversion[0] = str[0];
+		if(strstr(Sversion,"A") != NULL)
+		gfx_printf(&g_gfx_con, "-> Atmosphere\n");
+
+		if(strstr(Sversion,"R") != NULL)
+		gfx_printf(&g_gfx_con, "-> ReiNX\n");
+		
+		if(strstr(Sversion,"S") != NULL)
+		gfx_printf(&g_gfx_con, "-> SXOS\n");
+
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
 		}
     gfx_swap_buffer(&g_gfx_ctxt);

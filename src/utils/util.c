@@ -225,6 +225,7 @@ u32 letY = 380;
 	if(burntFuses == 9){mindowngrade = "7.0.0";}
 	if(burntFuses == 10){mindowngrade = "8.1.0";}
 	if(burntFuses == 11){mindowngrade = "9.0.0";}
+	if(burntFuses == 12){mindowngrade = "9.1.0";}
 display_backlight_brightness(0, 1000);
 	while (true) {
 		max17050_get_property(MAX17050_RepSOC, (int *)&battPercent);
