@@ -47,6 +47,60 @@ static inline void setup_gfx()
     gfx_con_setcol(&g_gfx_con, 0xFFCCCCCC, 1, BLACK);
 }
 
+//move code
+void moverall(char* directory, char* destdir, char* filet, char* coment)
+{
+char* files = listfil(directory, filet, true);
+char* folder = listfol(directory, "*", true);
+f_mkdir(destdir);
+    u32 i = 0;
+    while(files[i * 256])
+    {
+char* sourcefile = (char*)malloc(256);
+			if(strlen(&files[i * 256]) <= 100){			
+			strcpy(sourcefile, directory);
+			strcat(sourcefile, "/");
+			strcat(sourcefile, &files[i * 256]);
+			
+char* destfile = (char*)malloc(256);
+			strcpy(destfile, destdir);
+			strcat(destfile, "/");
+			strcat(destfile, &files[i * 256]);
+			if(strlen(coment) > 0){
+				gfx_con_setpos(&g_gfx_con, 1, 10);	
+				gfx_printf(&g_gfx_con, "\n %s \n", coment);
+				gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
+				gfx_con_setpos(&g_gfx_con, 1, 100);		
+				gfx_printf(&g_gfx_con, "\n %s\n", destfile);
+				gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
+				gfx_swap_buffer(&g_gfx_ctxt);}
+			f_unlink(destfile);
+			f_rename(sourcefile,destfile);
+			}
+	i++;
+    }
+
+    u32 r = 0;
+    while(folder[r * 256])
+    {
+char* folderpath = (char*)malloc(256);
+			if((strlen(&folder[r * 256]) <= 100) & (strlen(&folder[r * 256]) > 0)){			
+			strcpy(folderpath, directory);
+			strcat(folderpath, "/");
+			strcat(folderpath, &folder[r * 256]);
+//			deleteall(folderpath, "*","");
+
+char* folderdest = (char*)malloc(256);
+			strcpy(folderdest, destdir);
+			strcat(folderdest, "/");
+			strcat(folderdest, &folder[r * 256]);
+//			deleteall(folderpath, "*","");
+			moverall(folderpath, folderdest, filet, coment);
+			}
+	r++;
+    }
+}
+
 //copy code
 void copyarall(char* directory, char* destdir, char* filet, char* coment)
 {
@@ -74,8 +128,8 @@ char* destfile = (char*)malloc(256);
 				gfx_printf(&g_gfx_con, "\n %s\n", destfile);
 				gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
 				gfx_swap_buffer(&g_gfx_ctxt);}
+			f_unlink(destfile);
 			copyfile(sourcefile,destfile);
-//			f_unlink(sourcefile);
 			}
 	i++;
     }
@@ -152,151 +206,114 @@ void clean_up()
 		gfx_printf(&g_gfx_con, "CleanUP\n");
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
 gfx_swap_buffer(&g_gfx_ctxt);
-deleteall("/ftpd", "*","");
-deleteall("/StarDust/ftpd", "*","");
 
-deleteall("/ReiNX/patches/es_patches", "*","");
-deleteall("/ReiNX/sysmodules.dis", "*","");
-f_unlink("/ReiNX/sysmodules/fs_mitm.kip");
-f_unlink("/ReiNX/sysmodules/ldn_mitm.kip");
-//deleteall("/ReiNX/titles/010000000000000D/exefs", "*","");
-//deleteall("/ReiNX/titles/010000000000000D", "*","");
-deleteall("/ReiNX/titles/0100000000000032/exefs", "*","");
-deleteall("/ReiNX/titles/0100000000000032", "*","");
-deleteall("/ReiNX/titles/0100000000000032/flags", "*","");
+	//Delete Reinx d'not use any more
+	deleteall("/ReiNX", "*","");
+	deleteall("/sept/reinx.bin", "*","");
+	f_unlink("/ReiNX.bin");
+	f_unlink("StarDust/payloads/ReiNX.bin");
 
-//Delete patches that reinx d'not use any more
-deleteall("/ReiNX/exefs_patches", "*","");
-deleteall("/ReiNX/kip_patches", "*","");
-deleteall("/ReiNX/nro_patches", "*","");
+	//Ams Blawar mod
+	f_unlink("/atmosphere/fusee-secondary_ori.bin");
+	f_unlink("/atmosphere/fusee-secondary.bin.sig");
+	f_unlink("/atmosphere/hbl.json");
+	f_unlink("/atmosphere/hbl.nsp.sig");
+	f_unlink("/atmosphere/hbl_ori.nsp");
+	deleteall("/switch/mercury", "*","");
 
+	//Pequeña correccion
+	f_rename("Payload_de_arranque.bin","boot_payload.bin");
+	f_unlink("Payload_de_arranque.bin");
+	f_rename("/Backup/prodinfo.bin", "/prodinfo_sysnand.bin");
 
-//ams Blawar mod
-f_unlink("/atmosphere/fusee-secondary.bin.sig");
-f_unlink("/atmosphere/hbl.json");
-f_unlink("/atmosphere/hbl.nsp.sig");
-f_unlink("/atmosphere/hbl_ori.nsp");
-deleteall("/switch/mercury", "*","");
-/*
-f_unlink("atmosphere/flags/bis_write.flag");
-*/
+	//borrar archivos inesesarios que se acumulan
+	deleteall("/nsp", "*","");
+	f_unlink("/StarDust/payloads/Stock.bin");
+	f_unlink("/atmosphere/BCT.ini");
+	f_unlink("/atmosphere/loader.ini");
+	f_unlink("/atmosphere/system_settings.ini");
+	deleteall("/switch/Z-stuff", "*","");
+	deleteall("/sxos/titles/0100000000000034-OFF", "*","");
+	deleteall("/sxos/titles/0100000000000034", "*","");
+	f_unlink("/Haku33.nro");
+	f_unlink("/Lock-Logs.nro");
+	deleteall("/ftpd", "*","");
+	deleteall("/StarDust/ftpd", "*","");
+	deleteall("/themes/StarDust-2.0", "*","");
+	f_unlink("for_tegraRCM_PC.bin");
+	deleteall("/switch/KosmosToolbox", "*","");
+	deleteall("/switch/KosmosUpdater", "*","");
+	deleteall("/atmosphere/kips", "*","");
+	deleteall("/Toolkit", "*","");
+	deleteall("/uboot", "*","");
+	deleteall("/modules", "*","");
+	deleteall("/RR", "*","");
+	f_unlink("/switch/toolbox.nro");
+	f_unlink("/switch/ChoiDujourNX.nro");
+	f_unlink("/switch/ftpd.nro");
+	f_unlink("/switch/changelog");
+	f_unlink("/switch/appstore.nro");
+	f_unlink("/switch/Goldleaf.nro");
+	f_unlink("/switch/incognito.nro");
+	f_unlink("/switch/info.json");
+	f_unlink("/switch/In-Home-Switching.nro");
+	f_unlink("/switch/ldnmitm_config.nro");
+	f_unlink("/switch/lithium.nro");
+	f_unlink("/switch/nxmtp.nro");
+	f_unlink("/switch/reboot_to_payload.nro");
+	f_unlink("/switch/RetroReloadedUpdater.nro");
+	f_unlink("/switch/Lithium_README.md");
+	f_unlink("/switch/README.md");
+	f_unlink("/RR_version.txt");
+	f_unlink("/ums_boot0.ini");
+	f_unlink("/ums_boot1.ini");
+	f_unlink("/ums_emmc.ini");
+	f_unlink("/ums_sd.ini");
+	f_unlink("/atmosphere/prodinfo.ini");
+	f_unlink("/atmosphere/template.txt");
+	f_unlink("/sxos/template.txt");
+	//nada en contra de RR es solo que si usas este pack esos ficheros son innesesarios
 
-//music
-f_rename("/StarDust/music/fondo.mp3", "/StarDust/music/weed-0.mp3");
-f_rename("/StarDust/music/fondo1.mp3","/StarDust/music/weed-1.mp3");
-f_rename("/StarDust/music/fondo2.mp3","/StarDust/music/weed-2.mp3");
-f_rename("/StarDust/music/fondo3.mp3","/StarDust/music/weed-3.mp3");
-f_rename("/StarDust/music/fondo4.mp3","/StarDust/music/weed-4.mp3");
-f_rename("/StarDust/music/fondo5.mp3","/StarDust/music/weed-5.mp3");
-f_rename("/StarDust/music/fondo6.mp3","/StarDust/music/weed-6.mp3");
-
-
-deleteall("/themes/StarDust-2.0", "*","");
-
-
-//pequeña correccion
-f_rename("/switch/incognito/prodinfo.bin", "/backup/prodinfo.bin");
-f_rename("for_tegraRCM_PC.bin", "boot_payload.bin");
-f_unlink("for_tegraRCM_PC.bin");
-f_rename("Payload_de_arranque.bin","boot_payload.bin");
-f_unlink("Payload_de_arranque.bin");
-
-
-//borrar archivos inesesarios que se acumulan 
-deleteall("/switch/KosmosToolbox", "*","");
-deleteall("/switch/KosmosUpdater", "*","");
-deleteall("/atmosphere/kips", "*","");
-deleteall("/Toolkit", "*","");
-deleteall("/uboot", "*","");
-deleteall("/modules", "*","");
-deleteall("/RR", "*","");
-f_unlink("/switch/toolbox.nro");
-f_unlink("/switch/ChoiDujourNX.nro");
-f_unlink("/switch/ftpd.nro");
-f_unlink("/switch/changelog");
-f_unlink("/switch/appstore.nro");
-f_unlink("/switch/Goldleaf.nro");
-f_unlink("/switch/incognito.nro");
-f_unlink("/switch/info.json");
-f_unlink("/switch/In-Home-Switching.nro");
-f_unlink("/switch/ldnmitm_config.nro");
-f_unlink("/switch/lithium.nro");
-f_unlink("/switch/nxmtp.nro");
-f_unlink("/switch/reboot_to_payload.nro");
-f_unlink("/switch/RetroReloadedUpdater.nro");
-f_unlink("/switch/Lithium_README.md");
-f_unlink("/switch/README.md");
-f_unlink("/RR_version.txt");
-f_unlink("/ums_boot0.ini");
-f_unlink("/ums_boot1.ini");
-f_unlink("/ums_emmc.ini");
-f_unlink("/ums_sd.ini");
-f_unlink("/atmosphere/prodinfo.ini");
-f_unlink("/atmosphere/template.txt");
-f_unlink("/ReiNX/template.txt");
-f_unlink("/sxos/template.txt");
-//nada en contra de RR es solo que si usas este pack esos ficheros son innesesarios
-
-//changes for new menu
-f_unlink("/StarDust/payback/Stock.bin");
-f_unlink("/StarDust/payloads/zBackup.bin");
-f_unlink("/StarDust/logos/zBackup.bmp");
-f_unlink("/StarDust/logos/negative.bmp");
-f_unlink("/StarDust/logos/biskeydump.bmp");
-f_unlink("/StarDust/logos/Backup.bmp");
-f_unlink("/StarDust/logos/Hekate.bmp");
-deleteall("/StarDust/Atheme/1", "*","");
-deleteall("/StarDust/Atheme/2", "*","");
-deleteall("/StarDust/Atheme/3", "*","");
-deleteall("/StarDust/Atheme/4", "*","");
-deleteall("/StarDust/Atheme/5", "*","");
-deleteall("/StarDust/Atheme/6", "*","");
-deleteall("/StarDust/Atheme/7", "*","");
-f_unlink("/StarDust/Icons/screenshot.bmp");
-f_unlink("/StarDust/payback/Stock.bin");
-f_unlink("/StarDust/payloads/zBackup.bin");
-
-
-
-/*
-f_unlink("/");
-f_unlink("/");
-f_unlink("/");
-f_unlink("/");
-f_unlink("/");
-f_unlink("/");
-f_unlink("/");
-f_unlink("/");
-f_unlink("/");
-*/
-f_rename("/Backup/prodinfo.bin", "/prodinfo_sysnand.bin");
-f_unlink("/nsp/Haku33SwitchCleaner_[05229B5E9D160000].nsp");
+	//changes for new menu
+	f_unlink("/StarDust/payback/Stock.bin");
+	f_unlink("/StarDust/payloads/zBackup.bin");
+	f_unlink("/StarDust/logos/zBackup.bmp");
+	f_unlink("/StarDust/logos/negative.bmp");
+	f_unlink("/StarDust/logos/biskeydump.bmp");
+	f_unlink("/StarDust/logos/Backup.bmp");
+	f_unlink("/StarDust/logos/Hekate.bmp");
+	deleteall("/StarDust/Atheme/1", "*","");
+	deleteall("/StarDust/Atheme/2", "*","");
+	deleteall("/StarDust/Atheme/3", "*","");
+	deleteall("/StarDust/Atheme/4", "*","");
+	deleteall("/StarDust/Atheme/5", "*","");
+	deleteall("/StarDust/Atheme/6", "*","");
+	deleteall("/StarDust/Atheme/7", "*","");
+	f_unlink("/StarDust/Icons/screenshot.bmp");
+	f_unlink("/StarDust/payback/Stock.bin");
+	f_unlink("/StarDust/payloads/zBackup.bin");
+	deleteall("/StarDust", "ReiNX.bmp","");
 
 	//remove themes
-//	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Entrance.szs");//9.0.0 Theme suport
+	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Entrance.szs");//9.1.0 Theme suport
 	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Set.szs");
-	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Set.szs");
-	f_unlink("/sxos/titles/0100000000001000/romfs/lyt/Set.szs");
-	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/common.szs");
-	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/common.szs");
-	f_unlink("/sxos/titles/0100000000001000/romfs/lyt/common.szs");
 	f_unlink("/atmosphere/titles/0100000000001013/fsmitm.flag");
-	f_unlink("/ReiNX/titles/0100000000001013/fsmitm.flag");
+	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/common.szs");
+	
+	f_unlink("/atmosphere/contents/0100000000001000/romfs/lyt/Entrance.szs");//9.1.0 Theme suport
+	f_unlink("/atmosphere/contents/0100000000001000/romfs/lyt/Set.szs");
+	f_unlink("/atmosphere/contents/0100000000001013/fsmitm.flag");
+	f_unlink("/atmosphere/contents/0100000000001000/romfs/lyt/common.szs");
+//	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Set.szs");
+//	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/common.szs");
+//	f_unlink("/ReiNX/titles/0100000000001013/fsmitm.flag");
+
+	f_unlink("/sxos/titles/0100000000001000/romfs/lyt/Entrance.szs");//9.1.0 Theme suport
+	f_unlink("/sxos/titles/0100000000001000/romfs/lyt/Set.szs");
+	f_unlink("/sxos/titles/0100000000001000/romfs/lyt/common.szs");
 	f_unlink("/sxos/titles/0100000000001013/fsmitm.flag");
 	
-/*	u32 burntFuses = 0;
-	for (u32 i = 0; i < 32; i++)
-	{
-		if ((fuse_read_odm(7) >> i) & 1)
-			burntFuses++;
-	}
-	if(burntFuses == 11)
-	{
-		f_unlink("/atmosphere/titles/0100000000001000/fsmitm.flag");
-		f_unlink("/atmosphere/titles/420000000000000E/flags/boot2.flag");
-	}
-*/
-//fix old Emunand transfer
+	//fix old Emunand transfer
 	if (sd_file_exists ("sxos/eMMC/00")&sd_file_exists ("sxos/eMMC/boot0")&sd_file_exists ("sxos/eMMC/boot1"))
 	{
 		f_mkdir("emuMMC");
@@ -320,7 +337,6 @@ f_unlink("/nsp/Haku33SwitchCleaner_[05229B5E9D160000].nsp");
 				sd_save_to_file("", 0, "emuMMC/EF00/file_based");
 			}
 	}
-
 
 //deleteall("/////", "*","");	
 	//close
@@ -363,10 +379,15 @@ void ipl_main()
 */
 /*		bool cancel_auto_chainloading = btn_read() & BTN_VOL_DOWN;
         bool load_menu = cancel_auto_chainloading || launch_payload("StarDust/payload.bin");
-*/		//remove autoboot
-		if(sd_file_exists("StarDust_update/fixer.del"))
+*/
+		//update stardust
+		bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
+		if(sd_file_exists("StarDust_update/fixer.del")& !cancel_auto_chainloading)
 		{
-			copyarall("/StarDust_update", "", "*","Updating");
+			moverall("/StarDust_update", "", "*","Updating");
+				gfx_con_setpos(&g_gfx_con, 1, 100);		
+				gfx_printf(&g_gfx_con, "\n Clean Update\n");
+				gfx_swap_buffer(&g_gfx_ctxt);
 			deleteall("/StarDust_update", "*","Clean Update");
 			f_rename("/StarDust_update", "/StarDust_corrupt_update");//just in case
 			launch_payload("payload.bin");

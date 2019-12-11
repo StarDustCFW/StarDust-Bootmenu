@@ -66,15 +66,15 @@ int launch_payload(char *path)
 
     if(strstr(path,"atmos") != NULL)
     	boot=1;
-    if(strstr(path,"reinx") != NULL)
-    	boot=2;
+//    if(strstr(path,"reinx") != NULL)
+//    	boot=2;
     if(strstr(path,"sxos") != NULL)
     	boot=3;
 		
     if(strstr(path,"Atmos") != NULL)
     	boot=1;
-    if(strstr(path,"ReiNX") != NULL)
-    	boot=2;
+//    if(strstr(path,"ReiNX") != NULL)
+//    	boot=2;
     if(strstr(path,"SXOS") != NULL)
     	boot=3;
     if(strstr(path,"coreboot") != NULL)
@@ -88,14 +88,14 @@ int launch_payload(char *path)
     if(boot==1)
     {
 		display_backlight_brightness(0, 1000);
-		if (sd_file_exists ("atmosphere/fusee-secondary_ori.bin"))
-		copyfile("atmosphere/fusee-secondary_ori.bin","sept/payload.bin");
-		else
-		copyfile("atmosphere/fusee-secondary.bin","sept/payload.bin");
+//		if (sd_file_exists ("atmosphere/fusee-secondary_ori.bin"))
+//		copyfile("atmosphere/fusee-secondary_ori.bin","sept/payload.bin");
+//		else
+//		copyfile("atmosphere/fusee-secondary.bin","sept/payload.bin");
 		if (sd_file_exists ("StarDust/autobootecho.txt"))
 		sd_save_to_file("Atmosphere", 10, "StarDust/autobootecho.txt");
     }
-
+/*
     if(boot==2)
     {
 		display_backlight_brightness(0, 1000);
@@ -103,7 +103,7 @@ int launch_payload(char *path)
 		if (sd_file_exists ("StarDust/autobootecho.txt"))
 		sd_save_to_file("ReiNX", 5, "StarDust/autobootecho.txt");
     }
-
+*/
 	if(boot==3)
     {
 		display_backlight_brightness(0, 1000);
