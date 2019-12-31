@@ -438,13 +438,13 @@ u64 low_icons = 650;
 		serv_display(menu,"420000000000000E","FTP");
 		serv_display(menu,"0100000000000352","Emuiio"); 
 		serv_display(menu,"4200000000000010","Lan Play");
-		serv_display(menu,"0100000000000FAF","HDI");
+		serv_display(menu,"0100000000000069","ReiSpoof");
 		serv_display(menu,"420000000000000B","SysPlay"); 
 		serv_display(menu,"00FF0000636C6BFF","sys-clk");
 		serv_display(menu,"690000000000000D","Sys-Con");
 		serv_display(menu,"00FF0000A53BB665","SysDVR");
 		serv_display(menu,"0100000000534C56","ReverseNX");
-		serv_display(menu,"0100000000000069","ReiSpoof");
+		serv_display(menu,"0100000000000FAF","HDI");
 		
 		//brillo
 		

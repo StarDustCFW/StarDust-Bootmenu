@@ -16,7 +16,7 @@
 
 #define MINOR_VERSION 3
 #define MAJOR_VERSION 0
-#define REVI_VERSION 47
+#define REVI_VERSION 48
 	char Sversion[4];
 
 /* Render the menu */
@@ -109,7 +109,7 @@ static void gui_menu_draw_background(gui_menu_t* menu)
 
 		gfx_con_setpos(&g_gfx_con, 1, 1);
 //		gfx_con_setpos(&g_gfx_con, 1145+jump, 60);
-		gfx_printf(&g_gfx_con,"%k%d%k-%k%d%k-%k%s%k\n\n",0xFF00FF22, REVI_VERSION ,0xFFCCCCCC, 0xFFea2f1e, burntFuses ,0xFFCCCCCC ,0xFF00FF22 ,mindowngrade ,0xFFCCCCCC);
+		gfx_printf(&g_gfx_con,"%k%d%k-%k%d%k-%k%s%k\n\n",0xFF00FF22, REVI_VERSION ,0xFFCCCCCC, 0xFFea2f1e, burntFuses ,0xFFCCCCCC ,0xFF331ad8 ,mindowngrade ,0xFFCCCCCC);
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
 /* 
 Rojo  0xFFea2f1e
