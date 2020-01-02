@@ -253,35 +253,30 @@ display_backlight_brightness(0, 1000);
         if (btn_read() & BTN_POWER)
 		{
 			if (btn_read() & BTN_VOL_UP){reboot_rcm();}
-			if (sd_mount())
-			{
-				g_gfx_con.mute = 0;
-				launch_payload("payload.bin");
-				sd_unmount();
-				display_backlight_brightness(100, 1000);
-				gfx_con_setpos(&g_gfx_con, 250, 230);
-				gfx_printf(&g_gfx_con, "%kpayload.bin%k missing%k\n",0xFF008F39,0xFFea2f1e,0xFFF9F9F9);
-				gfx_swap_buffer(&g_gfx_ctxt);
-				btn_wait_timeout(7000, BTN_POWER);
-				
-			}else{
-				g_gfx_con.mute = 0;
-				display_backlight_brightness(100, 1000);
-				gfx_con_setpos(&g_gfx_con, 250, 230);
-				gfx_printf(&g_gfx_con, "%kSD card Mount failed...%k\n",0xFFea2f1e,0xFFF9F9F9);
-				sd_mount();
-				gfx_swap_buffer(&g_gfx_ctxt);
-				btn_wait_timeout(7000, BTN_POWER);
+			msleep(500);
+			if (!(btn_read() & BTN_POWER)){
+				if (sd_mount())
+				{
+					g_gfx_con.mute = 0;
+					launch_payload("payload.bin");
+					sd_unmount();
+					display_backlight_brightness(100, 1000);
+					gfx_con_setpos(&g_gfx_con, 250, 230);
+					gfx_printf(&g_gfx_con, "%kpayload.bin%k missing%k\n",0xFF008F39,0xFFea2f1e,0xFFF9F9F9);
+					gfx_swap_buffer(&g_gfx_ctxt);
+					btn_wait_timeout(7000, BTN_POWER);
+					
+				}else{
+					g_gfx_con.mute = 0;
+					display_backlight_brightness(100, 1000);
+					gfx_con_setpos(&g_gfx_con, 250, 230);
+					gfx_printf(&g_gfx_con, "%kSD card Mount failed...%k\n",0xFFea2f1e,0xFFF9F9F9);
+					sd_mount();
+					gfx_swap_buffer(&g_gfx_ctxt);
+					btn_wait_timeout(7000, BTN_POWER);
+				}
 			}
-			//if hold power buton then power off
-			if (btn_read() & BTN_POWER){
-			display_backlight_brightness(0, 1000);
-			msleep(1000);
-			if (btn_read() & BTN_POWER)
-			power_off();}
-		
-        }
-		
+		}
 		if (btn_read() & BTN_VOL_DOWN)
 		{	
 				display_backlight_brightness(100, 1000);

@@ -376,7 +376,11 @@ void ipl_main()
             u32 payload_size = *(u32 *)(0x40003000 + 0x84) - 0x40003000;
             f_write(&fp, (u8 *)0x40003000, payload_size, NULL);
             f_close(&fp);
+			
 */
+//some test verify payload 
+		if(sd_file_exists("StarDust/flags/ONE.flag"))
+		launch_payload("payload.bin");
 /*		bool cancel_auto_chainloading = btn_read() & BTN_VOL_DOWN;
         bool load_menu = cancel_auto_chainloading || launch_payload("StarDust/payload.bin");
 */
