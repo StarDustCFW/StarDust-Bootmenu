@@ -227,7 +227,14 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	f_rename("/Backup/prodinfo.bin", "/prodinfo_sysnand.bin");
 
 	//borrar archivos inesesarios que se acumulan
+	deleteall("/atmosphere/flags", "*","");
+	deleteall("/sxos/flags", "*","");
+	deleteall("/sxos/titles/4200000000000010", "*","");
+	deleteall("/sxos/titles/420000000000000E", "*","");
+	f_unlink("/bootloader/payloads/boot_menu.bin");
+	f_unlink("/bootloader/update.bin");
 	deleteall("/nsp", "*","");
+	deleteall("/BCAT", "*","");
 	f_unlink("/StarDust/payloads/Stock.bin");
 	f_unlink("/atmosphere/BCT.ini");
 	f_unlink("/atmosphere/loader.ini");
@@ -304,15 +311,25 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	f_unlink("/atmosphere/contents/0100000000001000/romfs/lyt/Set.szs");
 	f_unlink("/atmosphere/contents/0100000000001013/fsmitm.flag");
 	f_unlink("/atmosphere/contents/0100000000001000/romfs/lyt/common.szs");
-//	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/Set.szs");
-//	f_unlink("/ReiNX/titles/0100000000001000/romfs/lyt/common.szs");
-//	f_unlink("/ReiNX/titles/0100000000001013/fsmitm.flag");
 
 	f_unlink("/sxos/titles/0100000000001000/romfs/lyt/Entrance.szs");//9.1.0 Theme suport
 	f_unlink("/sxos/titles/0100000000001000/romfs/lyt/Set.szs");
 	f_unlink("/sxos/titles/0100000000001000/romfs/lyt/common.szs");
 	f_unlink("/sxos/titles/0100000000001013/fsmitm.flag");
-	
+
+	//not pegascape units
+	u32 burntFuses = 0;
+	for (u32 i = 0; i < 32; i++)
+	{
+		if ((fuse_read_odm(7) >> i) & 1)
+			burntFuses++;
+	}
+	if(burntFuses >= 5)
+	{
+		deleteall("/pegascape", "*","");
+	}
+
+
 	//fix old Emunand transfer
 	if (sd_file_exists ("sxos/eMMC/00")&sd_file_exists ("sxos/eMMC/boot0")&sd_file_exists ("sxos/eMMC/boot1"))
 	{

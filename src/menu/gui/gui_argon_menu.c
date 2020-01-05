@@ -355,7 +355,7 @@ u64 low_icons = 650;
 		//	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Incognito.bmp"),iconrowX+700, iconrowY, 200 , 200,(int (*)(void *))tool_Menus, (void*)6));
 	
 		if (sd_file_exists ("/switchroot_android/coreboot.rom")|| sd_file_exists ("/switchroot_android/coreboot.bin"))
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Android.bmp"),920, 620, 100, 100, (int (*)(void *))launch_payload, (void*)"/switchroot_android/coreboot.bin"));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Android.bmp"),590, 320, 100, 100, (int (*)(void *))launch_payload, (void*)"/switchroot_android/coreboot.bin"));
 
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/SD.bmp"),10, low_icons, 70, 70, tool_extr_rSD, NULL));
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/rcm.bmp"),750, low_icons, 70, 70, tool_reboot_rcm, NULL));
@@ -438,13 +438,14 @@ u64 low_icons = 650;
 		serv_display(menu,"420000000000000E","FTP");
 		serv_display(menu,"0100000000000352","Emuiio"); 
 		serv_display(menu,"4200000000000010","Lan Play");
-		serv_display(menu,"0100000000000069","ReiSpoof");
+		serv_display(menu,"0100000000000BEF","Disk-USB");
 		serv_display(menu,"420000000000000B","SysPlay"); 
 		serv_display(menu,"00FF0000636C6BFF","sys-clk");
 		serv_display(menu,"690000000000000D","Sys-Con");
 		serv_display(menu,"00FF0000A53BB665","SysDVR");
 		serv_display(menu,"0100000000534C56","ReverseNX");
 		serv_display(menu,"0100000000000FAF","HDI");
+		serv_display(menu,"0100000000000069","ReiSpoof");
 		
 		//brillo
 		

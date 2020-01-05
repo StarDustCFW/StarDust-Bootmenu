@@ -88,6 +88,9 @@ int launch_payload(char *path)
     if(boot==1)
     {
 		display_backlight_brightness(0, 1000);
+		if (sd_file_size("atmosphere/fusee-secondary.bin") != sd_file_size("sept/payload.bin"))
+		copyfile("atmosphere/fusee-secondary.bin","sept/payload.bin");
+		
 //		if (sd_file_exists ("atmosphere/fusee-secondary_ori.bin"))
 //		copyfile("atmosphere/fusee-secondary_ori.bin","sept/payload.bin");
 //		else
@@ -123,6 +126,11 @@ int launch_payload(char *path)
 		copyfile("switchroot_android/coreboot.rom","switchroot_android/coreboot.bin");
 		copyfile("atmosphere/reboot_payload.bin","switchroot_android/coreboot.rom");
 		}
+		//small correction
+		if (sd_file_size("switchroot_android/coreboot.rom") == sd_file_size("switchroot_android/coreboot.bin"))
+			copyfile("atmosphere/reboot_payload.bin","switchroot_android/coreboot.rom");
+
+
     }
 	
 
