@@ -227,6 +227,7 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	f_rename("/Backup/prodinfo.bin", "/prodinfo_sysnand.bin");
 
 	//borrar archivos inesesarios que se acumulan
+	deleteall("System Volume Information", "*","");
 	deleteall("/atmosphere/flags", "*","");
 	deleteall("/sxos/flags", "*","");
 	deleteall("/sxos/titles/4200000000000010", "*","");
