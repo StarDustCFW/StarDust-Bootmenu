@@ -6,7 +6,7 @@
 Is not recomended use this out of StarDustCFWpack
 
 ## What StarDust Boot is?
-![picture](https://raw.githubusercontent.com/Kronos2308/argon-nx/master/sd-card-example/old-stuf/screenshot.png)
+![picture](sd-card-example/screenshot.png)
 
 
 ## Features
