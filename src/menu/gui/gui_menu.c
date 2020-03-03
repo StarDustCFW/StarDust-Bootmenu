@@ -16,7 +16,7 @@
 
 #define MINOR_VERSION 3
 #define MAJOR_VERSION 0
-#define REVI_VERSION 50
+#define REVI_VERSION 56
 	char Sversion[4];
 
 /* Render the menu */
@@ -72,13 +72,13 @@ static void gui_menu_draw_background(gui_menu_t* menu)
 			Sversion[0] = str[0];
 			Sversion[1] = str[1];
 			Sversion[2] = str[2];
-			Sversion[3] = str[3];
-		}	
+			Sversion[3] = str[3];		
+			
+		}
 		gfx_con_setcol(&g_gfx_con, 0xFFCCCCCC, 0xFFCCCCCC, 0xFF191414);
 		g_gfx_con.scale = 2;
-	gfx_con_setpos(&g_gfx_con, 1200, 50);
-	gfx_printf(&g_gfx_con, "v%s", Sversion);
-		 
+		gfx_con_setpos(&g_gfx_con, 1200, 50);
+		gfx_printf(&g_gfx_con, "v%s", Sversion);
 
 		
 		//Fuses

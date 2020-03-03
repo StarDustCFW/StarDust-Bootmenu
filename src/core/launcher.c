@@ -61,6 +61,7 @@ void reloc_patcher(u32 payload_size)
 int launch_payload(char *path)
 {
 	if (!sd_mount()){BootStrapNX();}//check sd
+	
 
     u32 boot = 0;
 
@@ -80,33 +81,19 @@ int launch_payload(char *path)
     if(strstr(path,"coreboot") != NULL)
     	boot=4;
 
-/*
-	u8* buffer = (u8*)malloc(1);
-    memcpy(buffer, &boot, 1);
-    sd_save_to_file(buffer, 1, "StarDust/boot.txt");
-*/
+
+
+	if (!sd_file_exists (path)& boot!=4) BootStrapNX();
+
     if(boot==1)
     {
 		display_backlight_brightness(0, 1000);
 		if (sd_file_size("atmosphere/fusee-secondary.bin") != sd_file_size("sept/payload.bin"))
 		copyfile("atmosphere/fusee-secondary.bin","sept/payload.bin");
-		
-//		if (sd_file_exists ("atmosphere/fusee-secondary_ori.bin"))
-//		copyfile("atmosphere/fusee-secondary_ori.bin","sept/payload.bin");
-//		else
-//		copyfile("atmosphere/fusee-secondary.bin","sept/payload.bin");
 		if (sd_file_exists ("StarDust/autobootecho.txt"))
 		sd_save_to_file("Atmosphere", 10, "StarDust/autobootecho.txt");
     }
-/*
-    if(boot==2)
-    {
-		display_backlight_brightness(0, 1000);
-		copyfile("sept/reinx.bin","sept/payload.bin");
-		if (sd_file_exists ("StarDust/autobootecho.txt"))
-		sd_save_to_file("ReiNX", 5, "StarDust/autobootecho.txt");
-    }
-*/
+
 	if(boot==3)
     {
 		display_backlight_brightness(0, 1000);
@@ -121,19 +108,22 @@ int launch_payload(char *path)
 	if(boot==4)
     {
 	display_backlight_brightness(0, 1000);
-		if (!sd_file_exists ("/switchroot_android/coreboot.bin"))
+		if (sd_file_exists ("/atmosphere/reboot_payload.bin"))
 		{
-		copyfile("switchroot_android/coreboot.rom","switchroot_android/coreboot.bin");
-		copyfile("atmosphere/reboot_payload.bin","switchroot_android/coreboot.rom");
-		}
+			if (sd_file_size("/atmosphere/reboot_payload.bin") != sd_file_size("switchroot_android/coreboot.rom"))
+			{
+				if (!sd_file_exists ("switchroot_android/coreboot.bin"))
+				copyfile("switchroot_android/coreboot.rom","switchroot_android/coreboot.bin");
+				copyfile("atmosphere/reboot_payload.bin","switchroot_android/coreboot.rom");
+			}
 		//small correction
 		if (sd_file_size("switchroot_android/coreboot.rom") == sd_file_size("switchroot_android/coreboot.bin"))
 			copyfile("atmosphere/reboot_payload.bin","switchroot_android/coreboot.rom");
-
-
+		}
     }
 	
-
+	
+	
     FIL fp;
     if (f_open(&fp, path, FA_READ))
     {

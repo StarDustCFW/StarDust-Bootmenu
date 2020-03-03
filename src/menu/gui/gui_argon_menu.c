@@ -60,6 +60,7 @@ int tool_servises(u32 param);
 int tool_servises_on(char* title);
 int tool_servises_off(char* title);
 int tool_Themes_on(char* cfw);
+int tool_Themes_off(char* cfw);
 int tool_filete(char* fil);
 int tool_file_act(u32 fil);
 int memloader(u32 fil);
@@ -99,7 +100,7 @@ u32 retir = 0;
 
 //services
 u32 servYF = 250;
-u32 servXF = 190;
+u32 servXF = 170;
 //serv2
 u32 servX = 30;
 u32 servY = 80;
@@ -148,25 +149,32 @@ void gui_init_argon_boot(void)
     gui_menu_open2(menu);
 	if (!sd_mount()){BootStrapNX();}//check sd
 
-	if (sd_file_exists("StarDust/autobootecho.txt")& (!sd_file_exists ("StarDust/inc.return")))
-	msleep(2000);
+
 	
+	//corrections on start
+	f_mkdir("StarDust/flags");
+	f_unlink("auto.bak");
 
-
-	//set archive bit 
+	//set archive bit
 	 f_chmod("switch/mercury", AM_ARC, AM_ARC);
+	 f_chmod("switch/LinkUser", AM_ARC, AM_ARC);
+	 f_chmod("switch/incognito", AM_ARC, AM_ARC);
 	 
-//	prepare use of sxos dongle 
-	 	u32 bootR = sd_file_size("boot.dat");
-		u32 bootS = sd_file_size("StarDust/boot_forwarder.dat");
-		if (bootR != bootS)
+	//prepare use of sxos dongle 
+	if (sd_file_size("boot.dat") != sd_file_size("StarDust/boot_forwarder.dat")&(sd_file_exists ("StarDust/boot_forwarder.dat")))
 	copyfile("StarDust/boot_forwarder.dat","boot.dat");//
+
+	//prevent accidental boot to ofw
+	if (sd_file_size("bootloader/hekate_ipl.ini") != sd_file_size("bootloader/hekate_ipl.conf"))
+	copyfile("bootloader/hekate_ipl.conf","bootloader/hekate_ipl.ini");//
 	
 	//waith user input
+	if (sd_file_exists("StarDust/autobootecho.txt")& (!sd_file_exists ("StarDust/inc.return")))
+	btn_wait_timeout(3000, BTN_VOL_UP);
+
     bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
     if ((!cancel_auto_chainloading) & (!sd_file_exists ("StarDust/inc.return")))
 	{
-
 		//autoboot
 		char *str;
 		if (g_sd_mounted){
@@ -190,84 +198,22 @@ void gui_init_argon_boot(void)
 	
 	//dinamic correction for ams folder
 	sd_save_to_file("", 0, "atmosphere/titles/killme.flag");
-if (sd_file_exists("atmosphere/titles/killme.flag"))
-{
-	f_rename("/atmosphere/titles","/atmosphere/contents");
-	copyarall("/atmosphere/titles/0100000000001000", "/atmosphere/contents/0100000000001000", "*","");
-	deleteall("/atmosphere/titles", "*","");
-}
-
-	f_mkdir("StarDust/flags");
-	f_unlink("auto.bak");
+	if (sd_file_exists("atmosphere/titles/killme.flag"))
+	{
+		f_rename("/atmosphere/titles","/atmosphere/contents");
+		copyarall("/atmosphere/titles/0100000000001000", "/atmosphere/contents/0100000000001000", "*","");
+		deleteall("/atmosphere/titles", "*","");
+	}
 gui_menu_pool_cleanup();
-if (!sd_mount()){BootStrapNX();}//check sd
 gui_init_argon_menu();
 }
 
-/* Generate entries dynamically *//*
-static void generate_payloads_entries(char* payloads, gui_menu_t* menu)
-{
-    if (payloads == NULL)
-    {
-        g_gfx_con.scale = 4;
-        gfx_con_setpos(&g_gfx_con, 140, 250);
-        gfx_printf(&g_gfx_con, "Payloads directory is empty...\n");
-        
-        g_gfx_con.scale = 3;
-        gfx_con_setpos(&g_gfx_con, 110, 370);
-        gfx_printf(&g_gfx_con, "Place your payloads inside \"%s\"", PAYLOADS_DIR);
-
-        return;
-    }
-
-    u32 i = 0;//payload name
-	u32 f = 0;//entry number
-    // For each payload generate its logo, its name and its path 
-    while(payloads[i * 256])
-    {
-        char* payload_path = (char*)malloc(256);
-        payload_full_path(&payloads[i * 256], payload_path);
-        
-        char payload_logo[256];
-        payload_logo_path(&payloads[i * 256], payload_logo);
-        const char* payload_wo_bin = str_replace(&payloads[i * 256], ".bin", "");
-		
-		u32 row = f;
-        u32 col = f % COLUMNS;
-        u32 x = g_gfx_ctxt.width / COLUMNS * col + MARGIN_LEFT;
-        u32 y = 140 / ROWS * row + MARGIN_TOP + MARGIN_TOP;
-	if((retir == 2) & (strstr(payload_wo_bin,"reinx") != NULL))
-	{
-	f++;
-	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Reinx-off.bmp"),x, y, 200 , 200, NULL, NULL));
-	}else{
-		if(strstr(payload_wo_bin,"Stock") != NULL){
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Stock.bmp"),1010, 300, 200 , 100,(int (*)(void *))launch_payload, (void*)payload_path));
-		}else{
-		
-			gui_menu_append_entry(menu, 
-				gui_create_menu_entry(payload_wo_bin,
-										sd_file_read(payload_logo), 
-										x, y,
-										200, 200,
-										(int (*)(void *))launch_payload, (void*)payload_path));
-				f++;						
-			}
-		}
-		
-//        gfx_printf(&g_gfx_con, "-%s\n-X%d\n-Y%d\n-E%d\n\n\n",payload_wo_bin, x, y, i);
-	
-	i++;
-    }
-//        gfx_swap_buffer(&g_gfx_ctxt);
-//		btn_wait();
-}
-*/
 
 /* Init needed menus for ArgonNX */
 void gui_init_argon_menu(void)
 {
-
+if (!sd_mount()){BootStrapNX();}//check sd
+		//catch incognito return
 		if (sd_file_exists("StarDust/inc.return"))
 		{
 			main_menu = 4;
@@ -276,7 +222,7 @@ void gui_init_argon_menu(void)
     /* Init pool for menu */
     gui_menu_pool_init();
 gui_menu_t* menu = gui_menu_create("ArgonNX",main_menu);
-if (!sd_mount()){BootStrapNX();}//check sd
+
 
 //low icons Y
 u64 low_icons = 650;
@@ -370,8 +316,6 @@ u64 low_icons = 650;
 	//Menu 1 Ajustes
 	if(main_menu == 1)
 	{
-//	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Menu de Ajustes", 600,1, 150, 100, NULL, NULL));
-	//generate menu2
 
 		//list custom themes
 		AThemes_list(menu,80,90);
@@ -391,30 +335,22 @@ u64 low_icons = 650;
 		//theme for cfw
 			u32 temX = 150;
 			u32 temY = 440;
-			u32 temS = 150;
-//			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Themes", temX+20, temY+80, 150, 100, NULL, NULL));
+			u32 temS = 250;
 			
 				temX = temX + temS;
 				if (!sd_file_exists ("atmosphere/contents/0100000000001000/fsmitm.flag"))
 				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),temX, temY, 200, 75,(int (*)(void *))tool_Themes_on, (void*)"atmosphere"));
 				else
-				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),temX, temY, 200, 75,NULL, NULL));
+				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),temX, temY, 200, 75,(int (*)(void *))tool_Themes_off, (void*)"atmosphere"));
 				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("AMS",temX+30, temY+30, 150, 100, NULL, NULL));
 				
 				temX = temX + temS;
-/*				
-				if (!sd_file_exists ("ReiNX/titles/0100000000001000/fsmitm.flag"))
-				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),temX, temY, 200, 75,(int (*)(void *))tool_Themes_on, (void*)"ReiNX"));
-				else
-				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),temX, temY, 200, 75,NULL, NULL));
-				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("ReiNX",temX+30, temY+30, 150, 100, NULL, NULL));
-*/				
 				
 				temX = temX + temS;
 				if (!sd_file_exists ("sxos/titles/0100000000001000/fsmitm.flag"))
 				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),temX, temY, 200, 75,(int (*)(void *))tool_Themes_on, (void*)"sxos"));
 				else
-				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),temX, temY, 200, 75,NULL, NULL));
+				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),temX, temY, 200, 75,(int (*)(void *))tool_Themes_off, (void*)"sxos"));
 				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("SXOS",temX+30, temY+30, 150, 100, NULL, NULL));
 				
 
@@ -440,12 +376,13 @@ u64 low_icons = 650;
 		serv_display(menu,"4200000000000010","Lan Play");
 		serv_display(menu,"0100000000000BEF","Disk-USB");
 		serv_display(menu,"420000000000000B","SysPlay"); 
-		serv_display(menu,"00FF0000636C6BFF","sys-clk");
 		serv_display(menu,"690000000000000D","Sys-Con");
+		serv_display(menu,"010000000007E51A","Tesla");
 		serv_display(menu,"00FF0000A53BB665","SysDVR");
 		serv_display(menu,"0100000000534C56","ReverseNX");
-		serv_display(menu,"0100000000000FAF","HDI");
+		serv_display(menu,"00FF0000636C6BFF","sys-clk");
 		serv_display(menu,"0100000000000069","ReiSpoof");
+		serv_display(menu,"0100000000000FAF","HDI");
 		
 		//brillo
 		
@@ -593,6 +530,9 @@ u64 low_icons = 650;
 				}
 		//call menu 0
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/home.bmp"),100, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
+		
+		//call menu 1
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/gear.bmp"),1200, low_icons, 70, 70, (int (*)(void *))tool_Menus, (void*)1));
 	}
 		 
 	//Menu 3 Memloader
@@ -793,6 +733,7 @@ static int tool_power_off(void* param)
     return 0;
 }
 
+//eject sd card
 static int tool_extr_rSD(void* param)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
@@ -810,11 +751,11 @@ if (!sd_mount()){BootStrapNX();}//check sd
     gfx_swap_buffer(&g_gfx_ctxt);
 	btn_wait_timeout(10000, BTN_POWER);
 	display_backlight_brightness(0, 1000);
-BootStrapNX();
+	BootStrapNX();
     return 0;
 }
 
-
+//Emu tool
 static int tool_emu(u32 status)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
@@ -1028,6 +969,7 @@ gui_init_argon_menu();
 return 0;
 }
 
+//Themes ON
 int tool_Themes_on(char* cfw)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
@@ -1048,40 +990,57 @@ gui_init_argon_menu();
 return 0;
 }
 
-//file mgr
-int tool_dir(char *param)
+//Themes OFF
+int tool_Themes_off(char* cfw)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
-
-
-
-if(strlen(directory) <= 1)
-{
-directory = param;
-}else{
-strcat(directory, "/");
-strcat(directory, param);
-
-}
+char* path = (char*)malloc(256);
+		if(strstr(cfw,"sxos") != NULL)
+		{
+			strcpy(path, cfw);
+			strcat(path, "/titles/0100000000001000/fsmitm.flag");
+			f_unlink(path);
+		}
+		
+		if(strstr(cfw,"atmosphere") != NULL)
+		{
+			deleteall("/atmosphere/contents/0100000000001000/romfs", "*", "");
+			f_unlink("atmosphere/contents/0100000000001000/fsmitm.flag");
+		}
 gui_init_argon_menu();
 return 0;
 }
-//hacer doble toque
+
+//file mgr dir change
+int tool_dir(char *param)
+{
+if (!sd_mount()){BootStrapNX();}//check sd
+	if(strlen(directory) <= 1)
+	{
+	directory = param;
+	}else{
+	strcat(directory, "/");
+	strcat(directory, param);
+
+	}
+gui_init_argon_menu();
+return 0;
+}
+
+//hacer doble toque file mgr
 int tool_filete(char* fil)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
-if(strlen(directory) <= 1)
-{
-filete = fil;
-}else{
-    char tmp[256];
-    strcpy(tmp, directory);
-    strcat(tmp, "/");
-	strcat(tmp, fil);
-filete = tmp;		
-}
+	if(strlen(directory) <= 1)
+	{filete = fil;
+	}else{
+		char tmp[256];
+		strcpy(tmp, directory);
+		strcat(tmp, "/");
+		strcat(tmp, fil);
+	filete = tmp;		
+	}
 	
-//	if(filete == filpay)
 	if(strstr(filete,filpay) != NULL)
 	{
 		if(strstr(filete,".bin") != NULL)
@@ -1111,24 +1070,28 @@ gui_init_argon_menu();
 return 0;
 }
 
+//flie browser actions
 int tool_file_act(u32 fil)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
+
+	//delete files
 	if(fil == 0)
 	{
-	f_unlink(filete);
-	free(filete);
-	filete = "";
+		f_unlink(filete);
+		free(filete);
+		filete = "";
 	}
 	
+	//launch payload 
 	if(fil == 1)
 	{
-	launch_payload(filete);
+		launch_payload(filete);
 	}
 	
+	//read text file
 	if(fil == 2)
 	{
-	//launch_payload(filete);
 		gfx_swap_buffer(&g_gfx_ctxt);
 		g_gfx_con.scale = 2;
 		gfx_con_setpos(&g_gfx_con, 1, 1);
@@ -1139,12 +1102,13 @@ if (!sd_mount()){BootStrapNX();}//check sd
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
 		g_gfx_con.scale = 2;
 		gfx_printf(&g_gfx_con, "\n%s",sd_file_read(filete));
-	gfx_swap_buffer(&g_gfx_ctxt);
-	gui_menu_pool_init();
-    gui_menu_t* menu = gui_menu_create("ArgonNX",main_menu);
-    gui_menu_open3(menu);
+		gfx_swap_buffer(&g_gfx_ctxt);
+		gui_menu_pool_init();
+		gui_menu_t* menu = gui_menu_create("ArgonNX",main_menu);
+		gui_menu_open3(menu);
 
 	}
+	
 	//Go back directory
 	if(fil == 99)
 	{
@@ -1159,7 +1123,6 @@ if (!sd_mount()){BootStrapNX();}//check sd
 		if(strstr(recip,"/") != NULL){
 		break;}
 		
-		
 		if(sdPathLen <= 0){
 		directory = "";
 		break;}
@@ -1169,7 +1132,6 @@ if (!sd_mount()){BootStrapNX();}//check sd
 		{
 			//take position of last / and contruct the variable before hem
 			char name[100];
-//			gfx_swap_buffer(&g_gfx_ctxt);
 			gfx_printf(&g_gfx_con, "-\n\n\n\n\n\n\n");
 			for (u32 i = 0;sdPathLen >= i;i++)
 			{
@@ -1177,18 +1139,6 @@ if (!sd_mount()){BootStrapNX();}//check sd
 				gfx_printf(&g_gfx_con, "name-%s-%d-%d\n",name,i,sdPathLen);
 			}
 			directory = name;
-			//logs 
-			/*
-				gfx_con_setpos(&g_gfx_con, 600, 10);
-				gfx_printf(&g_gfx_con, "dir-%s-\n",directory);
-				
-				gfx_con_setpos(&g_gfx_con, 600, 25);
-				gfx_printf(&g_gfx_con, "name-%s-\n",name);
-				gfx_con_setpos(&g_gfx_con, 600, 40);
-				gfx_printf(&g_gfx_con, "dir-%s-\n",directory);
-	gfx_swap_buffer(&g_gfx_ctxt);
-	btn_wait();			
-				*/
 		}
 	}
 	
@@ -1197,6 +1147,7 @@ gui_init_argon_menu();
 return 0;
 }
 
+//safe boot
 static int tool_menu_rem(void* param)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
@@ -1206,7 +1157,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
 	f_unlink("/atmosphere/contents/0100000000001000/romfs_metadata.bin");
 	deleteall("/atmosphere/contents/0100000000001000/romfs", "*","");
 	f_unlink("/SXOS/titles/0100000000001000/fsmitm.flag");
-	f_unlink("/sxos/titles/0100000000001000/fsmitm.flag");
+	f_unlink("/sxos/titles/0100000000001000/romfs_metadata.bin");
 	f_unlink("/sxos/titles/0100000000000034-OFF/exefs.nsp");
 	f_unlink("/sxos/titles/0100000000000034-OFF");
 	f_rename("/sxos/titles/0100000000000034", "/sxos/titles/0100000000000034-OFF");
@@ -1267,17 +1218,8 @@ int tool_theme(char* param)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
 Ajbrillo(1);
-copyfileparam(param,"background.bmp","StarDust/background.bmp");
-copyfileparam(param,"back-set.bmp","StarDust/back-set.bmp");
-
-char* sourse_folder = (char*)malloc(256);	
-			strcpy(sourse_folder, param);
-			strcat(sourse_folder, "/Icons");
-copy_folder(sourse_folder, "StarDust/Icons");
-			strcpy(sourse_folder, param);
-			strcat(sourse_folder, "/logos");
-copy_folder(sourse_folder, "StarDust/logos");
-//display_backlight_brightness(brillo, 1000);
+gfx_swap_buffer(&g_gfx_ctxt);
+copyarall(param, "/StarDust", "*", "Applying Theme");
 gui_init_argon_menu();
 return 0;
 }
@@ -1405,7 +1347,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
 		strcat(flagpath, titleid);
 		strcat(flagpath, "/flags/boot2.flag");
 
-	if (sd_file_exists(path) && servstep <= 7)
+	if (sd_file_exists(path) && servstep <= 9)
 	{
 		if (sd_file_exists(flagpath))
 		{
@@ -1415,10 +1357,10 @@ if (!sd_mount()){BootStrapNX();}//check sd
 		}
 	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(name,servX+30, servY+30, 150, 100, NULL, NULL));
 		servstep++;
-		if(servstep == 2 || servstep == 4 || servstep == 6 || servstep == 8)
+		if(servstep == 2 || servstep == 4 || servstep == 6 || servstep == 8|| servstep == 10)
 		{
 			servY = servYF;
-			servX = servX + 250;
+			servX = servX + 205;
 //			servstep = 0;
 		}else{
 		servY = servY + sepaserv;		
@@ -1476,9 +1418,9 @@ int AThemes_list(gui_menu_t* menu, u32 gridX, u32 gridY)
 			char* source_icon = (char*)malloc(256);
 			strcpy(source_icon, source_fol);
 			strcat(source_icon, "/icon.bmp");
-			if(sd_file_exists(source_icon))
+			if(sd_file_exists(source_icon)){
 			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read(source_icon),gridX, gridY, 70, 70, (int (*)(void *))tool_theme, (void*)source_fol)); 
-			gridX = gridX+tm_ajust;
+			gridX = gridX+tm_ajust;}
 			w++;
 			}
 		if(w == 11)
@@ -1546,7 +1488,7 @@ void hekateOFW(u32 tipo)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
 	if(tipo == 0)
-		copyfile("bootloader/hekate_ipl.bak","bootloader/hekate_ipl.ini");
+		copyfile("bootloader/hekate_ipl.conf","bootloader/hekate_ipl.ini");
 
 	if(tipo == 1)
 		copyfile("bootloader/stock","bootloader/hekate_ipl.ini");
