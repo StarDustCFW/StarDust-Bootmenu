@@ -16,7 +16,7 @@
 
 #define MINOR_VERSION 3
 #define MAJOR_VERSION 0
-#define REVI_VERSION 56
+#define REVI_VERSION LOAD_BUILD_VER
 	char Sversion[4];
 
 /* Render the menu */
@@ -103,6 +103,7 @@ static void gui_menu_draw_background(gui_menu_t* menu)
 		if(burntFuses == 10){mindowngrade = "8.1.0";}
 		if(burntFuses == 11){mindowngrade = "9.0.0";}
 		if(burntFuses == 12){mindowngrade = "9.1.0";}
+		if(burntFuses == 13){mindowngrade = "10.0.0";}
 		//burntFuses = burntFuses +10;//doble number test
 //		u32 jump = 0;
 //		if(burntFuses < 9){jump = 20;}

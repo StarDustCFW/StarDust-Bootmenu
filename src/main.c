@@ -208,8 +208,8 @@ void clean_up()
 gfx_swap_buffer(&g_gfx_ctxt);
 
 	//Delete Reinx d'not use any more
-	deleteall("/ReiNX", "*","CleanUP");
-	deleteall("/sept/reinx.bin", "*","CleanUP");
+	deleteall("/ReiNX", "*","");
+	deleteall("/sept/reinx.bin", "*","");
 	f_unlink("/ReiNX.bin");
 	f_unlink("StarDust/payloads/ReiNX.bin");
 
@@ -219,7 +219,7 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	f_unlink("/atmosphere/hbl.json");
 	f_unlink("/atmosphere/hbl.nsp.sig");
 	f_unlink("/atmosphere/hbl_ori.nsp");
-	deleteall("/switch/mercury", "*","CleanUP");
+	deleteall("/switch/mercury", "*","");
 
 	//Pequeña correccion
 	f_rename("Payload_de_arranque.bin","boot_payload.bin");
@@ -227,35 +227,35 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	f_rename("/Backup/prodinfo.bin", "/prodinfo_sysnand.bin");
 
 	//borrar archivos inesesarios que se acumulan
-	deleteall("System Volume Information", "*","CleanUP");
-	deleteall("/atmosphere/flags", "*","CleanUP");
-	deleteall("/sxos/flags", "*","CleanUP");
-	deleteall("/sxos/titles/4200000000000010", "*","CleanUP");
-	deleteall("/sxos/titles/420000000000000E", "*","CleanUP");
+	deleteall("System Volume Information", "*","");
+	deleteall("/atmosphere/flags", "*","");
+	deleteall("/sxos/flags", "*","");
+	deleteall("/sxos/titles/4200000000000010", "*","");
+	deleteall("/sxos/titles/420000000000000E", "*","");
 	f_unlink("/bootloader/payloads/boot_menu.bin");
 	f_unlink("/bootloader/update.bin");
-	deleteall("/nsp", "*","CleanUP");
-	deleteall("/BCAT", "*","CleanUP");
+	deleteall("/nsp", "*","");
+	deleteall("/BCAT", "*","");
 	f_unlink("/StarDust/payloads/Stock.bin");
 	f_unlink("/atmosphere/BCT.ini");
 	f_unlink("/atmosphere/loader.ini");
 	f_unlink("/atmosphere/system_settings.ini");
-	deleteall("/switch/Z-stuff", "*","CleanUP");
-	deleteall("/sxos/titles/0100000000000034-OFF", "*","CleanUP");
-	deleteall("/sxos/titles/0100000000000034", "*","CleanUP");
+	deleteall("/switch/Z-stuff", "*","");
+	deleteall("/sxos/titles/0100000000000034-OFF", "*","");
+	deleteall("/sxos/titles/0100000000000034", "*","");
 	f_unlink("/Haku33.nro");
 	f_unlink("/Lock-Logs.nro");
-	deleteall("/ftpd", "*","CleanUP");
-	deleteall("/StarDust/ftpd", "*","CleanUP");
-	deleteall("/themes/StarDust-2.0", "*","CleanUP");
+	deleteall("/ftpd", "*","");
+	deleteall("/StarDust/ftpd", "*","");
+	deleteall("/themes/StarDust-2.0", "*","");
 	f_unlink("for_tegraRCM_PC.bin");
-	deleteall("/switch/KosmosToolbox", "*","CleanUP");
-	deleteall("/switch/KosmosUpdater", "*","CleanUP");
-	deleteall("/atmosphere/kips", "*","CleanUP");
-	deleteall("/Toolkit", "*","CleanUP");
-	deleteall("/uboot", "*","CleanUP");
-	deleteall("/modules", "*","CleanUP");
-	deleteall("/RR", "*","CleanUP");
+	deleteall("/switch/KosmosToolbox", "*","");
+	deleteall("/switch/KosmosUpdater", "*","");
+	deleteall("/atmosphere/kips", "*","");
+	deleteall("/Toolkit", "*","");
+	deleteall("/uboot", "*","");
+	deleteall("/modules", "*","");
+	deleteall("/RR", "*","");
 	f_unlink("/switch/toolbox.nro");
 	f_unlink("/switch/ChoiDujourNX.nro");
 	f_unlink("/switch/ftpd.nro");
@@ -277,13 +277,18 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	f_unlink("/ums_boot1.ini");
 	f_unlink("/ums_emmc.ini");
 	f_unlink("/ums_sd.ini");
+	//nada en contra de RR es solo que si usas este pack esos ficheros son innesesarios
 	f_unlink("/atmosphere/prodinfo.ini");
 	f_unlink("/atmosphere/template.txt");
 	f_unlink("/sxos/template.txt");
 	f_unlink("/switch/Amiigo.nro");
 	f_unlink("/bootloader/hekate_ipl.bak");
-	deleteall("/switch/incognito", "*","CleanUP");
-	//nada en contra de RR es solo que si usas este pack esos ficheros son innesesarios
+	deleteall("/switch/incognito", "*","");
+	deleteall("/atmosphere/exefs_patches/NxThemesInstaller", "*","");
+	deleteall("/sxos/exefs_patches/NxThemesInstaller", "*","");
+	deleteall("/atmosphere/contents/010000000007E51A", "*","");//Tesla change
+	
+	
 
 	//changes for new menu
 	f_unlink("/StarDust/payback/Stock.bin");
@@ -293,36 +298,42 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	f_unlink("/StarDust/logos/biskeydump.bmp");
 	f_unlink("/StarDust/logos/Backup.bmp");
 	f_unlink("/StarDust/logos/Hekate.bmp");
-	deleteall("/StarDust/Atheme/1", "*","CleanUP");
-	deleteall("/StarDust/Atheme/2", "*","CleanUP");
-	deleteall("/StarDust/Atheme/3", "*","CleanUP");
-	deleteall("/StarDust/Atheme/4", "*","CleanUP");
-	deleteall("/StarDust/Atheme/5", "*","CleanUP");
-	deleteall("/StarDust/Atheme/6", "*","CleanUP");
-	deleteall("/StarDust/Atheme/7", "*","CleanUP");
+	deleteall("/StarDust/Atheme/1", "*","");
+	deleteall("/StarDust/Atheme/2", "*","");
+	deleteall("/StarDust/Atheme/3", "*","");
+	deleteall("/StarDust/Atheme/4", "*","");
+	deleteall("/StarDust/Atheme/5", "*","");
+	deleteall("/StarDust/Atheme/6", "*","");
+	deleteall("/StarDust/Atheme/7", "*","");
 	f_unlink("/StarDust/Icons/screenshot.bmp");
 	f_unlink("/StarDust/payback/Stock.bin");
 	f_unlink("/StarDust/payloads/zBackup.bin");
 	deleteall("/StarDust", "ReiNX.bmp","CleanUP");
 	
-	deleteall("/atmosphere/contents", "fsmitm.flag","CleanUP");
+	deleteall("/atmosphere/contents", "fsmitm.flag","");
 	deleteall("/atmosphere/contents", "romfs_metadata.bin","CleanUP");
+	sd_save_to_file("",0,"atmosphere/contents/0100000000001000/fsmitm.flag");
 
-	//remove themes
-	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Entrance.szs");//9.1.0 Theme suport
-	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Set.szs");
-	f_unlink("/atmosphere/titles/0100000000001013/fsmitm.flag");
-	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/common.szs");
 	
+	//remove themes
 	f_unlink("/atmosphere/contents/0100000000001000/romfs/lyt/Entrance.szs");//9.1.0 Theme suport
+	f_unlink("/atmosphere/contents/0100000000001000/sfmor/lyt/Entrance.szs");//9.1.0 Theme suport
 	f_unlink("/atmosphere/contents/0100000000001000/romfs/lyt/Set.szs");
 	f_unlink("/atmosphere/contents/0100000000001013/fsmitm.flag");
 	f_unlink("/atmosphere/contents/0100000000001000/romfs/lyt/common.szs");
+	deleteall("/atmosphere/contents/0100000000001013/romfs/", "*","");
 
 	f_unlink("/sxos/titles/0100000000001000/romfs/lyt/Entrance.szs");//9.1.0 Theme suport
 	f_unlink("/sxos/titles/0100000000001000/romfs/lyt/Set.szs");
 	f_unlink("/sxos/titles/0100000000001000/romfs/lyt/common.szs");
 	f_unlink("/sxos/titles/0100000000001013/fsmitm.flag");
+	deleteall("/sxos/titles/0100000000001013/romfs/", "*","");
+	
+	//old stuff
+	//f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Entrance.szs");//9.1.0 Theme suport
+	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Set.szs");
+	f_unlink("/atmosphere/titles/0100000000001013/fsmitm.flag");
+	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/common.szs");
 
 	//not pegascape units
 	u32 burntFuses = 0;
@@ -333,7 +344,7 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	}
 	if(burntFuses >= 5)
 	{
-		deleteall("/pegascape", "*","CleanUP");
+		deleteall("/pegascape", "*","");
 	}
 
 
@@ -404,7 +415,10 @@ void ipl_main()
 */
 //some test verify payload 
 		if(sd_file_exists("StarDust/flags/ONE.flag"))
-		launch_payload("payload.bin");
+		{
+			f_unlink("StarDust/flags/ONE.flag");
+			launch_payload("payload.bin");
+		}
 /*		bool cancel_auto_chainloading = btn_read() & BTN_VOL_DOWN;
         bool load_menu = cancel_auto_chainloading || launch_payload("StarDust/payload.bin");
 */
