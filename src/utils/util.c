@@ -199,6 +199,42 @@ char *str_replace(char *orig, char *rep, char *with) {
 }
 
 
+u32 fusesB()
+{
+	u32 burntFuses = 0;
+	for (u32 i = 0; i < 32; i++)
+	{
+		if ((fuse_read_odm(7) >> i) & 1)
+			burntFuses++;
+	}
+return burntFuses;
+}
+
+char *fusesM()
+{
+	u32 burntFuses = 0;
+	burntFuses = fusesB();
+	char *mine;
+	switch (burntFuses)
+	{
+            case 1:mine = "1.0.0"; break;
+            case 2:mine = "2.0.0";break;
+            case 3:mine = "3.0.0";break;
+            case 4:mine = "3.0.1";break;
+            case 5:mine = "4.0.0";break;
+            case 6:mine = "5.0.0";break;
+            case 7:mine = "6.0.0";break;
+            case 8:mine = "6.2.0";break;
+            case 9:mine = "7.0.0";break;
+            case 10:mine = "8.1.0";break;
+            case 11:mine = "9.0.0";break;
+            case 12:mine = "9.2.0";break;
+            case 13:mine = "10.0.0";break;
+            default:mine = "Unknow";
+	}
+return mine;
+}
+
 void BootStrapNX()
 {
 gfx_clear_buffer(&g_gfx_ctxt);
@@ -207,27 +243,11 @@ u32 battPercent = 0;
 u32 letX = 20;
 u32 letY = 380;
 
-	u32 burntFuses = 0;
-	for (u32 i = 0; i < 32; i++)
-	{
-		if ((fuse_read_odm(7) >> i) & 1)
-			burntFuses++;
-	}
-	char *mindowngrade = "unknow";
-	if(burntFuses == 1){mindowngrade = "1.0.0";}
-	if(burntFuses == 2){mindowngrade = "2.0.0";}
-	if(burntFuses == 3){mindowngrade = "3.0.0";}
-	if(burntFuses == 4){mindowngrade = "3.0.1";}
-	if(burntFuses == 5){mindowngrade = "4.0.0";}
-	if(burntFuses == 6){mindowngrade = "5.0.0";}
-	if(burntFuses == 7){mindowngrade = "6.0.0";}
-	if(burntFuses == 8){mindowngrade = "6.2.0";}
-	if(burntFuses == 9){mindowngrade = "7.0.0";}
-	if(burntFuses == 10){mindowngrade = "8.1.0";}
-	if(burntFuses == 11){mindowngrade = "9.0.0";}
-	if(burntFuses == 12){mindowngrade = "9.1.0";}
-	if(burntFuses == 13){mindowngrade = "10.0.0";}
-display_backlight_brightness(0, 1000);
+u32 b = 0;
+	u32 burntFuses = fusesB();
+	char* mindowngrade = fusesM();
+
+display_backlight_brightness(b, 1000);
 	while (true) {
 		max17050_get_property(MAX17050_RepSOC, (int *)&battPercent);
 		gfx_swap_buffer(&g_gfx_ctxt);
@@ -254,36 +274,53 @@ display_backlight_brightness(0, 1000);
         if (btn_read() & BTN_POWER)
 		{
 			if (btn_read() & BTN_VOL_UP){reboot_rcm();}
-			msleep(500);
-			if (!(btn_read() & BTN_POWER)){
-				if (sd_mount())
-				{
-					g_gfx_con.mute = 0;
-					launch_payload("payload.bin");
-					sd_unmount();
-					display_backlight_brightness(100, 1000);
-					gfx_con_setpos(&g_gfx_con, 250, 230);
-					gfx_printf(&g_gfx_con, "%kpayload.bin%k missing%k\n",0xFF008F39,0xFFea2f1e,0xFFF9F9F9);
-					gfx_swap_buffer(&g_gfx_ctxt);
-					btn_wait_timeout(7000, BTN_POWER);
-					
-				}else{
-					g_gfx_con.mute = 0;
-					display_backlight_brightness(100, 1000);
-					gfx_con_setpos(&g_gfx_con, 250, 230);
-					gfx_printf(&g_gfx_con, "%kSD card Mount failed...%k\n",0xFFea2f1e,0xFFF9F9F9);
-					sd_mount();
-					gfx_swap_buffer(&g_gfx_ctxt);
-					btn_wait_timeout(7000, BTN_POWER);
-				}
+				//if hold power buton then power off
+				if (btn_read() & BTN_POWER)
+				msleep(1000);
+				if (btn_read() & BTN_POWER)
+				msleep(1000);
+				if (btn_read() & BTN_POWER)
+				msleep(1000);
+				if (btn_read() & BTN_POWER)
+				power_off();
+			
+			if (sd_mount())
+			{
+
+				g_gfx_con.mute = 0;
+				launch_payload("payload.bin");
+				sd_unmount();
+				display_backlight_brightness(100, 1000);
+				gfx_con_setpos(&g_gfx_con, 250, 230);
+				gfx_printf(&g_gfx_con, "%kpayload.bin%k missing%k\n",0xFF008F39,0xFFea2f1e,0xFFF9F9F9);
+				gfx_swap_buffer(&g_gfx_ctxt);
+				btn_wait_timeout(7000, BTN_POWER);
+				
+			}else{
+				g_gfx_con.mute = 0;
+				display_backlight_brightness(100, 1000);
+				gfx_con_setpos(&g_gfx_con, 250, 230);
+				gfx_printf(&g_gfx_con, "%kSD card Mount failed...%k\n",0xFFea2f1e,0xFFF9F9F9);
+				sd_mount();
+				gfx_swap_buffer(&g_gfx_ctxt);
+				btn_wait_timeout(7000, BTN_POWER);
 			}
-		}
+			//if hold power buton then power off
+			if (btn_read() & BTN_POWER)
+			display_backlight_brightness(b, 1000);
+			if (btn_read() & BTN_POWER)
+			msleep(1000);
+			if (btn_read() & BTN_POWER)
+			power_off();
+		
+        }
+		
 		if (btn_read() & BTN_VOL_DOWN)
 		{	
 				display_backlight_brightness(100, 1000);
 				gfx_swap_buffer(&g_gfx_ctxt);
-				btn_wait_timeout(7000, BTN_VOL_DOWN);
+				btn_wait_timeout(7000, BTN_POWER);
         }
-	display_backlight_brightness(0, 1000);
+	display_backlight_brightness(b, 1000);
 	}
 }

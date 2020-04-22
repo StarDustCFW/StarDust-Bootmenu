@@ -33,6 +33,7 @@ custom_gui_t* custom_gui_load(u32 mem)
 		break;
 		
 		case 2:
+		case 5:
 		custom_gui->custom_bg = (u8*)sd_file_read("StarDust/back-exp.bmp");
 		break;
 		

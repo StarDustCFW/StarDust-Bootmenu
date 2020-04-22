@@ -43,6 +43,8 @@ u32 crc32c(const void *buf, u32 len);
 void reboot_normal(void);
 void reboot_rcm(void);
 void power_off(void);
+u32 fusesB();
+char *fusesM();
 
 /* This is a faster implementation of memcmp that checks two u32 values */
 /* every 128 Bytes block. Intented only for Backup and Restore          */

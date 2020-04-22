@@ -81,32 +81,8 @@ static void gui_menu_draw_background(gui_menu_t* menu)
 		gfx_printf(&g_gfx_con, "v%s", Sversion);
 
 		
-		//Fuses
-		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0xFFCCCCCC, 0xFF191414);
-			u32 burntFuses = 0;
-		for (u32 i = 0; i < 32; i++)
-		{
-			if ((fuse_read_odm(7) >> i) & 1)
-				burntFuses++;
-		}
-		char *mindowngrade = "unknow";
-		//burntFuses = 11; //for test
-		if(burntFuses == 1){mindowngrade = "1.0.0";}
-		if(burntFuses == 2){mindowngrade = "2.0.0";}
-		if(burntFuses == 3){mindowngrade = "3.0.0";}
-		if(burntFuses == 4){mindowngrade = "3.0.1";}
-		if(burntFuses == 5){mindowngrade = "4.0.0";}
-		if(burntFuses == 6){mindowngrade = "5.0.0";}
-		if(burntFuses == 7){mindowngrade = "6.0.0";}
-		if(burntFuses == 8){mindowngrade = "6.2.0";}
-		if(burntFuses == 9){mindowngrade = "7.0.0";}
-		if(burntFuses == 10){mindowngrade = "8.1.0";}
-		if(burntFuses == 11){mindowngrade = "9.0.0";}
-		if(burntFuses == 12){mindowngrade = "9.1.0";}
-		if(burntFuses == 13){mindowngrade = "10.0.0";}
-		//burntFuses = burntFuses +10;//doble number test
-//		u32 jump = 0;
-//		if(burntFuses < 9){jump = 20;}
+	u32 burntFuses = fusesB();
+	char* mindowngrade = fusesM();
 
 		gfx_con_setpos(&g_gfx_con, 1, 1);
 //		gfx_con_setpos(&g_gfx_con, 1145+jump, 60);

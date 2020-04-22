@@ -47,155 +47,6 @@ static inline void setup_gfx()
     gfx_con_setcol(&g_gfx_con, 0xFFCCCCCC, 1, BLACK);
 }
 
-//move code
-void moverall(char* directory, char* destdir, char* filet, char* coment)
-{
-char* files = listfil(directory, filet, true);
-char* folder = listfol(directory, "*", true);
-f_mkdir(destdir);
-    u32 i = 0;
-    while(files[i * 256])
-    {
-char* sourcefile = (char*)malloc(256);
-			if(strlen(&files[i * 256]) <= 100){			
-			strcpy(sourcefile, directory);
-			strcat(sourcefile, "/");
-			strcat(sourcefile, &files[i * 256]);
-			
-char* destfile = (char*)malloc(256);
-			strcpy(destfile, destdir);
-			strcat(destfile, "/");
-			strcat(destfile, &files[i * 256]);
-			if(strlen(coment) > 0){
-				gfx_con_setpos(&g_gfx_con, 1, 10);	
-				gfx_printf(&g_gfx_con, "\n %s \n", coment);
-				gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
-				gfx_con_setpos(&g_gfx_con, 1, 100);		
-				gfx_printf(&g_gfx_con, "\n %s\n", destfile);
-				gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
-				gfx_swap_buffer(&g_gfx_ctxt);}
-			f_unlink(destfile);
-			f_rename(sourcefile,destfile);
-			}
-	i++;
-    }
-
-    u32 r = 0;
-    while(folder[r * 256])
-    {
-char* folderpath = (char*)malloc(256);
-			if((strlen(&folder[r * 256]) <= 100) & (strlen(&folder[r * 256]) > 0)){			
-			strcpy(folderpath, directory);
-			strcat(folderpath, "/");
-			strcat(folderpath, &folder[r * 256]);
-//			deleteall(folderpath, "*","");
-
-char* folderdest = (char*)malloc(256);
-			strcpy(folderdest, destdir);
-			strcat(folderdest, "/");
-			strcat(folderdest, &folder[r * 256]);
-//			deleteall(folderpath, "*","");
-			moverall(folderpath, folderdest, filet, coment);
-			}
-	r++;
-    }
-}
-
-//copy code
-void copyarall(char* directory, char* destdir, char* filet, char* coment)
-{
-char* files = listfil(directory, filet, true);
-char* folder = listfol(directory, "*", true);
-f_mkdir(destdir);
-    u32 i = 0;
-    while(files[i * 256])
-    {
-char* sourcefile = (char*)malloc(256);
-			if(strlen(&files[i * 256]) <= 100){			
-			strcpy(sourcefile, directory);
-			strcat(sourcefile, "/");
-			strcat(sourcefile, &files[i * 256]);
-			
-char* destfile = (char*)malloc(256);
-			strcpy(destfile, destdir);
-			strcat(destfile, "/");
-			strcat(destfile, &files[i * 256]);
-			if(strlen(coment) > 0){
-				gfx_con_setpos(&g_gfx_con, 1, 10);	
-				gfx_printf(&g_gfx_con, "\n %s \n", coment);
-				gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
-				gfx_con_setpos(&g_gfx_con, 1, 100);		
-				gfx_printf(&g_gfx_con, "\n %s\n", destfile);
-				gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
-				gfx_swap_buffer(&g_gfx_ctxt);}
-			f_unlink(destfile);
-			copyfile(sourcefile,destfile);
-			}
-	i++;
-    }
-
-    u32 r = 0;
-    while(folder[r * 256])
-    {
-char* folderpath = (char*)malloc(256);
-			if((strlen(&folder[r * 256]) <= 100) & (strlen(&folder[r * 256]) > 0)){			
-			strcpy(folderpath, directory);
-			strcat(folderpath, "/");
-			strcat(folderpath, &folder[r * 256]);
-//			deleteall(folderpath, "*","");
-
-char* folderdest = (char*)malloc(256);
-			strcpy(folderdest, destdir);
-			strcat(folderdest, "/");
-			strcat(folderdest, &folder[r * 256]);
-//			deleteall(folderpath, "*","");
-			copyarall(folderpath, folderdest, filet, coment);
-			}
-	r++;
-    }
-}
-
-//folder delete use with care
-void deleteall(char* directory, char* filet, char* coment)
-{
-char* payloads = listfil(directory, filet, true);
-char* folder = listfol(directory, "*", true);
-
-    u32 i = 0;
-    while(payloads[i * 256])
-    {
-char* payloadpath = (char*)malloc(256);
-			if(strlen(&payloads[i * 256]) <= 100){			
-			strcpy(payloadpath, directory);
-			strcat(payloadpath, "/");
-			strcat(payloadpath, &payloads[i * 256]);
-			if(strlen(coment) > 0){
-				gfx_con_setpos(&g_gfx_con, 1, 10);	
-				gfx_printf(&g_gfx_con, "\n %s \n", coment);
-				gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
-				gfx_con_setpos(&g_gfx_con, 1, 100);		
-				gfx_printf(&g_gfx_con, "\n %s\n", payloadpath);
-				gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
-				gfx_swap_buffer(&g_gfx_ctxt);}
-			f_unlink(payloadpath);
-			}
-	i++;
-    }
-
-    u32 r = 0;
-    while(folder[r * 256])
-    {
-char* folderpath = (char*)malloc(256);
-			if((strlen(&folder[r * 256]) <= 100) & (strlen(&folder[r * 256]) > 0)){			
-			strcpy(folderpath, directory);
-			strcat(folderpath, "/");
-			strcat(folderpath, &folder[r * 256]);
-			deleteall(folderpath, filet,coment);
-			}
-	r++;
-    }
-f_unlink(directory);
-}
 
 //first Delete After Update
 void clean_up()
@@ -287,9 +138,15 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	deleteall("/atmosphere/exefs_patches/NxThemesInstaller", "*","");
 	deleteall("/sxos/exefs_patches/NxThemesInstaller", "*","");
 	deleteall("/atmosphere/contents/010000000007E51A", "*","");//Tesla change
-	
-	
+	//tinfoil clean
+	deleteall("/atmosphere/kip_patches/loader_patches", "*","");
+	f_unlink("/bootloader/patches.ini");
 
+	//shop FS
+	f_unlink("/atmosphere/contents/010000000000100B/exefs.nsp");
+	f_unlink("/atmosphere/contents/010000000000100B/romfs.bin");
+	f_unlink("/reboot.nro");
+	
 	//changes for new menu
 	f_unlink("/StarDust/payback/Stock.bin");
 	f_unlink("/StarDust/payloads/zBackup.bin");

@@ -13,11 +13,15 @@ bool g_sd_mounted;
 
 bool sd_mount();
 void sd_unmount();
-void *sd_file_read(char *path);
-int sd_save_to_file(void *buf, u32 size, const char *filename);
+void *sd_file_read(const char *path);
+int sd_save_to_file(void *buf, u32 size,const  char *filename);
 bool sd_file_exists(const char* filename);
 void copyfile(const char* source, const char* target);
 void copyfileparam(char* param, char* source, char* target);
 void copy_folder(char* sourse_folder, char* dest_folder);
 bool sd_file_size(char *path);
+
+void moverall(char* directory, char* destdir, char* filet, char* coment);
+void copyarall(char* directory, char* destdir, char* filet, char* coment);
+void deleteall(char* directory, char* filet, char* coment);
 #endif

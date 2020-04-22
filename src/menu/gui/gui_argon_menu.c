@@ -68,8 +68,11 @@ int Incognito(char* order);
 int Autoboot(u32 fil);
 int uLaunch(u32 fil);
 int AThemes_list(gui_menu_t* menu, u32 gridX, u32 gridY);
-extern void copyarall(char* directory, char* destdir, char* filet, char* coment);
-extern void deleteall(char* directory, char* filet, char* coment);
+//extern void copyarall(char* directory, char* destdir, char* filet, char* coment);
+//extern void deleteall(char* directory, char* filet, char* coment);
+
+void HBhide(char* folder);
+
 
 int bat_show(u32 percent);
 void serv_display(gui_menu_t* menu,char* titleid,char* name);
@@ -97,10 +100,11 @@ u32 sub_buttonH = 0;
 //some indicators
 u32 onemi = 0;
 u32 retir = 0;
+u32 Incac = 0;
 
 //services
 u32 servYF = 250;
-u32 servXF = 170;
+u32 servXF = 160;
 //serv2
 u32 servX = 30;
 u32 servY = 80;
@@ -224,6 +228,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
 gui_menu_t* menu = gui_menu_create("ArgonNX",main_menu);
 
 
+
 //low icons Y
 u64 low_icons = 645;
 
@@ -295,8 +300,12 @@ u64 low_icons = 645;
 			iconrowX = iconrowX + iconrowXS;
 			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader.bmp"),iconrowX, iconrowY, 200 , 75,(int (*)(void *))tool_Menus, (void*)3));
 			iconrowX = iconrowX + iconrowXS;
-//			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Incognito.bmp"),iconrowX, iconrowY, 200 , 75,(int (*)(void *))tool_Menus, (void*)4));
+			
+			if (Incac == 0)
 			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Incognito.bmp"),iconrowX, iconrowY, 200 , 75,(int (*)(void *))Incognito, (void*)"getinfo"));
+			else
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Incognito.bmp"),iconrowX, iconrowY, 200 , 75,(int (*)(void *))tool_Menus, (void*)4));
+		
 			iconrowX = iconrowX + iconrowXS;
 			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/zHekate.bmp"), iconrowX, iconrowY, 200 , 75,(int (*)(void *))hekateOFW, (void*)0));
 		//	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Incognito.bmp"),iconrowX+700, iconrowY, 200 , 200,(int (*)(void *))tool_Menus, (void*)6));
@@ -336,14 +345,15 @@ u64 low_icons = 645;
 //		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Services",servX+30, servY-10, 150, 100, NULL, NULL));
 		serv_display(menu,"420000000000000E","FTP");
 		serv_display(menu,"0100000000000352","Emuiio"); 
-		serv_display(menu,"4200000000000010","Lan Play");
+		serv_display(menu,"4200000000000010","LanPlay");
 		serv_display(menu,"0100000000000BEF","Disk-USB");
-		serv_display(menu,"420000000000000B","SysPlay"); 
+		serv_display(menu,"4200000000000000","SysTune"); 
 		serv_display(menu,"690000000000000D","Sys-Con");
-		serv_display(menu,"420000000007E51A","Tesla");
+		serv_display(menu,"420000000007E51A","TeslaOVL");
 		serv_display(menu,"00FF0000A53BB665","SysDVR");
-		serv_display(menu,"0100000000534C56","ReverseNX");
 		serv_display(menu,"00FF0000636C6BFF","Sys-Clk");
+		serv_display(menu,"420000000000000B","SysPlay"); 
+		serv_display(menu,"0100000000534C56","ReverseNX");
 		serv_display(menu,"0100000000000069","ReiSpoof");
 		serv_display(menu,"0100000000000FAF","HDI");
 
@@ -366,13 +376,16 @@ u64 low_icons = 645;
 
 		//Create SXOS transfer buttons
 		if (sd_file_exists ("emuMMC/EF00/eMMC/00")&sd_file_exists ("emuMMC/EF00/eMMC/boot0")&sd_file_exists ("emuMMC/EF00/eMMC/boot1"))
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/swap.bmp"),400, 600, 200 , 75,(int (*)(void *))tool_emu, (void*)66));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/swap.bmp"),380, 600, 200 , 75,(int (*)(void *))tool_emu, (void*)66));
 
 		if (sd_file_exists ("sxos/emunand/full.00.bin")&sd_file_exists ("sxos/emunand/boot0.bin")&sd_file_exists ("sxos/emunand/boot1.bin"))
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Transfer.bmp"),400, 600, 200 , 75,(int (*)(void *))tool_emu, (void*)33)); //- 80, - 500
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Transfer.bmp"),380, 600, 200 , 75,(int (*)(void *))tool_emu, (void*)33)); //- 80, - 500
 
 		if (!sd_file_exists("emummc/emummc.ini"))
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/link_hide.bmp"),620, 600, 200 , 75,(int (*)(void *))tool_emu, (void*)99)); 
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/link_hide.bmp"),580, 600, 200 , 75,(int (*)(void *))tool_emu, (void*)99)); 
+
+		//call menu 5
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/HB.bmp"),790, 600, 70, 70,(int (*)(void *))tool_Menus, (void*)5));
 
 	
 
@@ -389,8 +402,8 @@ u64 low_icons = 645;
 		//call menu 2
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/file-browser.bmp"),250, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)2));
 
-		//call menu 0
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/home.bmp"),100, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
+		
+		
 		}
 
 	//Menu 2 Explorer
@@ -504,8 +517,8 @@ u64 low_icons = 645;
 				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(filto, 60+strlen(filto)*8-40, actY+70, 150, 100, NULL, NULL));
 			}
 
-		//call menu 0
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/home.bmp"),100, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
+		
+		
 		
 		//call menu 1
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/gear.bmp"),1200, low_icons, 70, 70, (int (*)(void *))tool_Menus, (void*)1));
@@ -519,14 +532,14 @@ u64 low_icons = 645;
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_emmc.bmp"),680, 300, 200 , 200,(int (*)(void *))memloader, (void*)2));
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_sd.bmp"),980, 300, 200 , 200,(int (*)(void *))memloader, (void*)3));
 		//call
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/home.bmp"),100, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
+		
 	}
 	
 	//Menu 4 Incognito
 	if(main_menu == 4)
 	{
-//		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Menu de Incognito", 600,1, 150, 100, NULL, NULL));
-		
+//		incognito togle
+		Incac = 1;
 		//Getinfo from text
 		u32 sys_inc = 0;
 		u32 emu_inc = 0;
@@ -539,8 +552,6 @@ u64 low_icons = 645;
 
 		if (sd_mount())
 		{
-			
-
 				if (sd_file_exists("emummc/emummc.ini"))
 				{
 					void *buf = sd_file_read("StarDust/emunand_serial.txt");
@@ -574,8 +585,11 @@ u64 low_icons = 645;
 					colinc = colinc + colsepar;
 					if (sd_file_exists("prodinfo_emunand.bin"))
 					gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/inc5.bmp"),rowinc, colinc, 200, 75,(int (*)(void *))Incognito, (void*)"restore_emunand"));
-					else
+					else{
 					gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/inc2-off.bmp"),rowinc, colinc, 200, 75,NULL, NULL));
+					gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Missing", rowinc+30,colinc+100, 150, 100, NULL, NULL));						
+					gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("/prodinfo_emunand.bin", rowinc+30,colinc+120, 150, 100, NULL, NULL));						
+					}
 
 				}else{
 					rowinc = 550;
@@ -609,7 +623,7 @@ u64 low_icons = 645;
 
 				rowinc = rowinc + rowsepar;
 				colinc = colinc + colsepar;
-				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(sysserial, rowinc+30,colinc-20, 150, 100, NULL, NULL));
+				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(sysserial, rowinc+40,colinc-20, 150, 100, NULL, NULL));
 				if (!sd_file_exists("prodinfo_sysnand.bin"))
 				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/inc0.bmp"),rowinc, colinc, 200, 75,(int (*)(void *))Incognito, (void*)"backup_sysnand"));
 				else
@@ -626,18 +640,90 @@ u64 low_icons = 645;
 				colinc = colinc + colsepar;
 				if (sd_file_exists("prodinfo_sysnand.bin"))
 				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/inc2.bmp"),rowinc, colinc, 200, 75,(int (*)(void *))Incognito, (void*)"restore_sysnand"));
-				else
+				else{
 				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/inc2-off.bmp"),rowinc, colinc, 200, 75,NULL, NULL));
+				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Missing", rowinc+30,colinc+100, 150, 100, NULL, NULL));						
+				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("/prodinfo_sysnand.bin", rowinc+30,colinc+120, 150, 100, NULL, NULL));						
+				
+				}
+			
 			}else{
 				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Biskeys error, try again", rowinc+30,colinc-10, 150, 100, NULL, NULL));
 				}
 
 
-				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/home.bmp"),100, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
+				
 		//		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/arrowl.bmp"),200, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)1));
 		}
 
 	}
+
+	//Menu 5 Homebrew
+	if(main_menu == 5)
+	{
+			//List Files And folders
+			char* HBpath = "/switch";
+			char* folder = listfol(HBpath, "*", true);				
+			u32 r = 0; u32 i = 0; u32 f = 0; u32 y = 60; u32 x = 150; u32 space = 80;
+				
+			//nav Buttons
+//			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/root.bmp"),170, 1, 70, 70,(int (*)(void *))tool_Menus, (void*)33));
+//			if(strlen(HBpath) >= 1)
+//			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sd-back.bmp"),270, 1, 70, 70,(int (*)(void *))tool_file_act, (void*)99));
+		
+			//display folder
+			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(HBpath, strlen(HBpath)*8-40+150, 30, 5, 5, NULL, NULL));
+			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Homebrew", strlen(HBpath)*8-40+150, 50, 5, 5, NULL, NULL));
+			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Homebrew      Toogle.", strlen(HBpath)*8-40+890, 690, 5, 5, NULL, NULL));
+			
+			while(folder[r * 256])
+			{
+			if(f >= 33){gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("More...", 1100,690, 150, 100, NULL, NULL));	break;}
+				if(strlen(&folder[r * 256]) <= 100){			
+				char folname[20];
+				char *str = &folder[r * 256];
+				int h;
+				for (h = 0;h< 19;h++)
+				folname[h] = str[h];
+				folname[h] = NULL;
+				if((strstr(folname,".overlays") == NULL)&(strstr(folname,"XXX") == NULL)){		
+					char* source_fol = (char*)malloc(256);
+					char* source_folder = (char*)malloc(256);
+					strcpy(source_fol, "/switch");
+					strcat(source_fol, "/");
+					strcat(source_fol, folname);
+					strcpy(source_folder ,source_fol);
+					strcat(source_fol, "/hide.flag");
+						if (sd_file_exists (source_fol)){
+							f_chmod(source_folder, AM_ARC, AM_ARC);
+							gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),x, y+30, 200, 75,(int (*)(void *))HBhide, (void*)source_fol));
+						}else{
+							f_chmod(source_folder, AM_RDO, AM_RDO | AM_ARC);
+							gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),x, y+30, 200, 75,(int (*)(void *))HBhide, (void*)source_fol));
+						}
+//					gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(folname, x+strlen(folname)*8-80, y+25, 150, 0, NULL, NULL));
+					gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(folname, x+25, y+25, 150, 0, NULL, NULL));
+					y = y + space;
+				}
+
+				f++;
+				i++;
+				if((i == 8)||(i == 15)){
+					y = 60;
+					if(i == 15){i = 0;x = 940;}else x = 545;
+					}
+				}
+			r++;
+			}
+
+
+		
+		
+		
+		//call menu 1
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/gear.bmp"),1200, low_icons, 70, 70, (int (*)(void *))tool_Menus, (void*)1));
+	}
+		 
 
 /* Generate permanent entries**/
 //if (help_switch == 0)
@@ -647,6 +733,8 @@ u64 low_icons = 645;
 //gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/help.bmp"),10, 650, 70, 70, (int (*)(void *))tool_Menus, (void*)4));
 
 //help_switch = 0;
+if(main_menu != 0)
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/home.bmp"),10, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)0));
 
 if(main_menu != 1)
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),605, low_icons, 70, 70, tool_power_off, NULL));
@@ -1456,6 +1544,22 @@ if (!sd_mount()){BootStrapNX();}//check sd
 	
 launch_payload("/StarDust/payloads/zHekate.bin");
 }
+
+void HBhide(char* folder){
+if (!sd_mount()){BootStrapNX();}//check sd
+	char* source_fol = (char*)malloc(256);
+	strcpy(source_fol, "/switch");
+	strcat(source_fol, "/");
+	strcat(source_fol, folder);
+	strcat(source_fol, "/hide.flag");
+	if (sd_file_exists (folder))
+	f_unlink(folder);
+	else
+	sd_save_to_file("", 0, folder);
+gui_init_argon_menu();
+}
+
+
 /*
 void update_script(gui_menu_t* menu,char* titleid,char* name) 
 {
