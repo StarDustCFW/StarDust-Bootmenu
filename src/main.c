@@ -51,12 +51,13 @@ static inline void setup_gfx()
 //first Delete After Update
 void clean_up()
 {
-//		g_gfx_con.scale = 3;
+		g_gfx_con.scale = 3;
 		gfx_con_setpos(&g_gfx_con, 1070, 10);
 		gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
 		gfx_printf(&g_gfx_con, "CleanUP\n");
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
 gfx_swap_buffer(&g_gfx_ctxt);
+		g_gfx_con.scale = 2;
 
 	//Delete Reinx d'not use any more
 	deleteall("/ReiNX", "*","");
@@ -170,7 +171,10 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	deleteall("/atmosphere/contents", "fsmitm.flag","");
 	deleteall("/atmosphere/contents", "romfs_metadata.bin","CleanUP");
 	sd_save_to_file("",0,"atmosphere/contents/0100000000001000/fsmitm.flag");
-
+	
+	//old reverse
+	deleteall("/atmosphere/contents/0100000000534C56", "*","");
+	deleteall("/sxos/titles/0100000000534C56", "*","");
 	
 	//remove themes
 	f_unlink("/atmosphere/contents/0100000000001000/romfs/lyt/Entrance.szs");//9.1.0 Theme suport

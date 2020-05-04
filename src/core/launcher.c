@@ -79,11 +79,11 @@ int launch_payload(char *path)
     if(strstr(path,"SXOS") != NULL)
     	boot=3;
     if(strstr(path,"coreboot") != NULL)
-    	boot=4;
+	{boot=4;}
 
 
 
-	if (!sd_file_exists (path)& boot!=4) BootStrapNX();
+	if (!sd_file_exists (path)&( boot!=4)) BootStrapNX();
 
     if(boot==1)
     {
@@ -96,7 +96,12 @@ int launch_payload(char *path)
 
 	if(boot==3)
     {
-		display_backlight_brightness(0, 1000);
+	gfx_swap_buffer(&g_gfx_ctxt);
+	g_gfx_con.scale = 3;
+    gfx_con_setpos(&g_gfx_con, 470, 350);
+    gfx_printf(&g_gfx_con, "Loading Boot.dat\n");
+    gfx_swap_buffer(&g_gfx_ctxt);
+//		display_backlight_brightness(0, 1000);
 		u32 bootR = sd_file_size("boot.dat");
 		u32 bootS = sd_file_size("StarDust/boot.dat");
 		if (bootR != bootS)

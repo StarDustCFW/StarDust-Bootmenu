@@ -69,10 +69,14 @@ static void gui_menu_draw_background(gui_menu_t* menu)
 			void *buf;
 			buf = sd_file_read("StarDust/StarDustV.txt");
 			str = buf;
+			if (strlen(str)!=0)
+			{
+				
 			Sversion[0] = str[0];
 			Sversion[1] = str[1];
 			Sversion[2] = str[2];
 			Sversion[3] = str[3];		
+			}
 			
 		}
 		gfx_con_setcol(&g_gfx_con, 0xFFCCCCCC, 0xFFCCCCCC, 0xFF191414);

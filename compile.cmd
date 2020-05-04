@@ -1,4 +1,5 @@
 @echo off
+del build\Bootmenu\gui_menu.o
 make
 echo completado
 echo %cd%

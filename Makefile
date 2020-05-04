@@ -7,6 +7,10 @@ include $(DEVKITARM)/base_rules
 TARGET 					:= Bootmenu
 BLVERSION_MAJOR := 0
 BLVERSION_MINOR := 3
+BUILD_VER := 68
+
+
+
 BUILD 					:= build
 OUTPUT 					:= output
 SOURCEDIR 			:= src
@@ -27,7 +31,7 @@ SOURCES		      := src \
 										src/utils
 
 INCLUDES				:= include
-VPATH = $(dir $(wildcard ./$(SOURCEDIR)/*/)) $(dir $(wildcard ./$(SOURCEDIR)/*/*/))
+VPATH = $(dir  ./$(SOURCEDIR)/) $(dir $(wildcard ./$(SOURCEDIR)/*/)) $(dir $(wildcard ./$(SOURCEDIR)/*/*/))
 CFILES			:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 SFILES			:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
 BINFILES		:=  $(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
@@ -43,8 +47,10 @@ INCLUDE				:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 										$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 										-I$(BUILD)/$(TARGET)
 
+CUSTOMDEFINES := -DLOAD_BUILD_VER=$(BUILD_VER)
+
 ARCH := -march=armv4t -mtune=arm7tdmi -mthumb -mthumb-interwork
-CFLAGS = $(INCLUDE) $(ARCH) -O2 -nostdlib -ffunction-sections -fdata-sections -fomit-frame-pointer -fno-inline -std=gnu11 -Wall
+CFLAGS = $(INCLUDE) $(ARCH) -O2 -nostdlib -ffunction-sections -fdata-sections -fomit-frame-pointer -fno-inline -std=gnu11 -Wall $(CUSTOMDEFINES)
 LDFLAGS = $(ARCH) -nostartfiles -lgcc -Wl,--nmagic,--gc-sections
 
 
@@ -84,6 +90,7 @@ $(BUILD)/$(TARGET)/%.o: %.c
 $(BUILD)/$(TARGET)/%.o: %.s
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(BUILDDIR)/$(TARGET):
 $(OFILES_SRC)	: $(HFILES_BIN)
 
 $(BUILD)/$(TARGET)/%.bmp.o %_bmp.h:	data/%.bmp
