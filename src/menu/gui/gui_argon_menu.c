@@ -163,20 +163,12 @@ if (!sd_mount()){BootStrapNX();}//check sd
 	f_unlink("auto.bak");
 
 	//set archive bit
-	 f_chmod("switch/mercury", AM_ARC, AM_ARC);
 	 f_chmod("switch/LinkUser", AM_ARC, AM_ARC);
-//	 f_chmod("switch/incognito", AM_ARC, AM_ARC);
 	 
 	//prepare use of sxos dongle 
 	if ((sd_file_size("boot.dat") != sd_file_size("StarDust/boot_forwarder.dat"))&(sd_file_exists ("StarDust/boot_forwarder.dat")))
-	{
-		//update boot.dat with the new one
-		//if ((sd_file_size("boot.dat") != sd_file_size("StarDust/boot.dat"))&(sd_file_exists ("StarDust/boot.dat")))
-		//copyfile("boot.dat","StarDust/boot.dat");//
-
-	copyfile("StarDust/boot_forwarder.dat","boot.dat");//
+	copyfile("StarDust/boot_forwarder.dat","boot.dat");
 		
-	}
 
 	//prevent accidental boot to ofw
 	if (sd_file_size("bootloader/hekate_ipl.ini") != sd_file_size("bootloader/hekate_ipl.conf"))
@@ -419,7 +411,8 @@ u64 low_icons = 645;
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),80, 500, 70, 70, tool_power_off, NULL));
 		
 		//call menu 2
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/file-browser.bmp"),250, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)2));
+//		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/file-browser.bmp"),250, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)2));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/file-browser.bmp"),250, low_icons, 70, 70,(int (*)(void *))launch_payload, (void*)"/StarDust/payback/TegraExplorer.bin"));
 
 		
 		
@@ -618,13 +611,15 @@ u64 low_icons = 645;
 
 					if(strstr(emuserial,"XAW0000000000") != NULL)
 					{emu_inc = 1;}
-						
-					if (emu_blk == 1){
-						gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),1000, 100, 200, 75, (int (*)(void *))Incognito, (void*)"DBE"));
-					}else{
-						gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),1000, 100, 200, 75, (int (*)(void *))Incognito, (void*)"BE"));
-					}
+					
+					if (sd_file_exists ("exosphere.ini")){
+						if (emu_blk == 1){
+							gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),1000, 100, 200, 75, (int (*)(void *))Incognito, (void*)"DBE"));
+						}else{
+							gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),1000, 100, 200, 75, (int (*)(void *))Incognito, (void*)"BE"));
+						}
 					gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Blank_Prodinfo", 1020,90, 150, 100, NULL, NULL));
+					}
 
 					gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("SysNand", 170,200, 150, 100, NULL, NULL));
 					gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuNand", 970,200, 150, 100, NULL, NULL));
@@ -650,8 +645,10 @@ u64 low_icons = 645;
 					gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/inc5.bmp"),rowinc, colinc, 200, 75,(int (*)(void *))Incognito, (void*)"4"));
 					else{
 					gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/inc2-off.bmp"),rowinc, colinc, 200, 75,NULL, NULL));
-					gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Missing", rowinc+30,colinc+100, 150, 100, NULL, NULL));						
-					gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("/prodinfo_emunand.bin", rowinc+30,colinc+120, 150, 100, NULL, NULL));						
+						if(emu_inc == 1){
+						gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Missing", rowinc+30,colinc+100, 150, 100, NULL, NULL));						
+						gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("/prodinfo_emunand.bin", rowinc+30,colinc+120, 150, 100, NULL, NULL));						
+						}
 					}
 
 			}else{
@@ -686,13 +683,16 @@ u64 low_icons = 645;
 
 				rowinc = rowinc + rowsepar;
 				colinc = colinc + colsepar;
-				if (sys_blk == 1)
-				{
-					gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),rowinc-8-rowsepar, 100, 200, 75, (int (*)(void *))Incognito, (void*)"DBS"));
-				}else{
-					gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),rowinc-8-rowsepar, 100, 200, 75, (int (*)(void *))Incognito, (void*)"BS"));
-				}
+				
+				if (sd_file_exists ("exosphere.ini")){
+					if (sys_blk == 1)
+					{
+						gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-on.bmp"),rowinc-8-rowsepar, 100, 200, 75, (int (*)(void *))Incognito, (void*)"DBS"));
+					}else{
+						gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/sw-off.bmp"),rowinc-8-rowsepar, 100, 200, 75, (int (*)(void *))Incognito, (void*)"BS"));
+					}
 				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Blank_Prodinfo", rowinc+10-rowsepar,90, 150, 100, NULL, NULL));
+				}
 				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(sysserial, rowinc+40,colinc-20, 150, 100, NULL, NULL));
 				if (!sd_file_exists("prodinfo_sysnand.bin"))
 				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/inc0.bmp"),rowinc, colinc, 200, 75,(int (*)(void *))Incognito, (void*)"5"));
@@ -708,12 +708,15 @@ u64 low_icons = 645;
 				
 				rowinc = rowinc + rowsepar;
 				colinc = colinc + colsepar;
+				
 				if (sd_file_exists("prodinfo_sysnand.bin"))
 				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/inc2.bmp"),rowinc, colinc, 200, 75,(int (*)(void *))Incognito, (void*)"7"));
 				else{
 				gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/inc2-off.bmp"),rowinc, colinc, 200, 75,NULL, NULL));
-				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Missing", rowinc+30,colinc+100, 150, 100, NULL, NULL));						
-				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("/prodinfo_sysnand.bin", rowinc+30,colinc+120, 150, 100, NULL, NULL));						
+					if(sys_inc == 1){
+					gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Missing", rowinc+30,colinc+100, 150, 100, NULL, NULL));						
+					gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("/prodinfo_sysnand.bin", rowinc+30,colinc+120, 150, 100, NULL, NULL));						
+					}
 				
 				}
 			

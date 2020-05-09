@@ -14,7 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+#include "utils/util.h"
+#include "utils/fs_utils.h"
+#include "utils/btn.h"
+#include "core/custom-gui.h"
 #include "utils/touch.h"
 
 touch_event_t last_event;
@@ -67,6 +70,16 @@ touch_event_t touch_wait()
     
 	do 
 	{
+		//some functions to buttons on touch wait
+		if (btn_read() & BTN_VOL_UP)
+			screenshot(NULL);
+		
+		if (btn_read() & BTN_VOL_DOWN)
+			BootStrapNX();
+		
+		if (btn_read() & BTN_POWER)
+			power_off();
+	
 		touch_poll(&event);
 	} while(event.type != STMFTS_EV_MULTI_TOUCH_ENTER);
     

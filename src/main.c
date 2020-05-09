@@ -166,10 +166,21 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	f_unlink("/StarDust/Icons/screenshot.bmp");
 	f_unlink("/StarDust/payback/Stock.bin");
 	f_unlink("/StarDust/payloads/zBackup.bin");
-	deleteall("/StarDust", "ReiNX.bmp","CleanUP");
-	
-	deleteall("/atmosphere/contents", "fsmitm.flag","");
-	deleteall("/atmosphere/contents", "romfs_metadata.bin","CleanUP");
+//	deleteall("/StarDust", "ReiNX.bmp","CleanUP");
+
+	f_unlink("/atmosphere/contents/0100000000001010/romfs_metadata.bin");
+	f_unlink("/atmosphere/contents/010000000000100B/romfs_metadata.bin");
+	f_unlink("/atmosphere/contents/010000000000100C/romfs_metadata.bin");
+	f_unlink("/atmosphere/contents/0100000000001000/romfs_metadata.bin");
+	f_unlink("/atmosphere/contents/0100000000000803/romfs_metadata.bin");
+	f_unlink("/atmosphere/contents/050000BADDAD0000/romfs_metadata.bin");
+
+	f_unlink("/atmosphere/contents/0100000000001010/fsmitm.flag");
+	f_unlink("/atmosphere/contents/010000000000100B/fsmitm.flag");
+	f_unlink("/atmosphere/contents/010000000000100C/fsmitm.flag");
+	f_unlink("/atmosphere/contents/0100000000000803/fsmitm.flag");
+	f_unlink("/atmosphere/contents/050000BADDAD0000/fsmitm.flag");
+
 	sd_save_to_file("",0,"atmosphere/contents/0100000000001000/fsmitm.flag");
 	
 	//old reverse
@@ -189,21 +200,80 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	f_unlink("/sxos/titles/0100000000001000/romfs/lyt/common.szs");
 	f_unlink("/sxos/titles/0100000000001013/fsmitm.flag");
 	deleteall("/sxos/titles/0100000000001013/romfs/", "*","");
-	
-	//old stuff
-	//f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Entrance.szs");//9.1.0 Theme suport
-	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/Set.szs");
-	f_unlink("/atmosphere/titles/0100000000001013/fsmitm.flag");
-	f_unlink("/atmosphere/titles/0100000000001000/romfs/lyt/common.szs");
+
+
+	//Fix Archive bit
+	f_chmod("/switch", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/config", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/automatic_backups", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/exefs_patches", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/exefs_patches/es_patches", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/exefs_patches/logo", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/kip_patches", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/kip_patches/default_nogc", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/kip_patches/fs_patches", AM_RDO, AM_RDO | AM_ARC);
+
+	f_chmod("/atmosphere/contents/0000000000534C56", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/00FF0000636C6BFF", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000008", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/010000000000000D", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/010000000000002B", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000032", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000034", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000036", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000037", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/010000000000003C", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000069", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000352", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000803", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000BEF", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000faf", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000001000", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/010000000000100B", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/010000000000100C", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000001010", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000001013", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0104444444441001", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/050000BADDAD0000", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/4200000000000000", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/420000000000000B", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/420000000000000E", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/4200000000000010", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/420000000007E51A", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/690000000000000D", AM_RDO, AM_RDO | AM_ARC);
+
+	f_chmod("/atmosphere/contents/0000000000534C56/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/00FF0000636C6BFF/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000008/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/010000000000000D/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/010000000000002B/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000032/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000034/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000036/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000037/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/010000000000003C/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000069/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000352/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000803/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000BEF/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000000faf/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/4200000000000000/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/420000000000000B/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/420000000000000E/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/4200000000000010/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/420000000007E51A/flags", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/690000000000000D/flags", AM_RDO, AM_RDO | AM_ARC);
+
+	f_chmod("/atmosphere/contents/0100000000001010/romfs", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/010000000000100B/romfs", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/010000000000100C/romfs", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000001000/romfs", AM_RDO, AM_RDO | AM_ARC);
+	f_chmod("/atmosphere/contents/0100000000001000/romfs/lyt", AM_RDO, AM_RDO | AM_ARC);
 
 	//not pegascape units
-	u32 burntFuses = 0;
-	for (u32 i = 0; i < 32; i++)
-	{
-		if ((fuse_read_odm(7) >> i) & 1)
-			burntFuses++;
-	}
-	if(burntFuses >= 5)
+	if(fusesB() >= 5)
 	{
 		deleteall("/pegascape", "*","");
 	}
@@ -266,14 +336,6 @@ void ipl_main()
     /* Mount Sd card and launch payload */
     if (sd_mount())
     {
-            // write self to payload.bin
-/*			FIL fp;
-            f_open(&fp, "payload.bik", FA_CREATE_NEW | FA_WRITE);
-            u32 payload_size = *(u32 *)(0x40003000 + 0x84) - 0x40003000;
-            f_write(&fp, (u8 *)0x40003000, payload_size, NULL);
-            f_close(&fp);
-			
-*/
 //some test verify payload 
 		if(sd_file_exists("StarDust/flags/ONE.flag"))
 		{

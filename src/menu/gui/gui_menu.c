@@ -192,10 +192,10 @@ int gui_menu_open2(gui_menu_t *menu)
 			Sversion[0] = str[0];
 		if(strstr(Sversion,"A") != NULL)
 		gfx_printf(&g_gfx_con, "-> Atmosphere\n");
-
-		if(strstr(Sversion,"R") != NULL)
+/*
+		if(strstr(Sversion,"C") != NULL)
 		gfx_printf(&g_gfx_con, "-> ReiNX\n");
-		
+*/		
 		if(strstr(Sversion,"S") != NULL)
 		gfx_printf(&g_gfx_con, "-> SXOS\n");
 
