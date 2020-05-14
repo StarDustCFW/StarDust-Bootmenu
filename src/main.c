@@ -135,7 +135,7 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	f_unlink("/sxos/template.txt");
 	f_unlink("/switch/Amiigo.nro");
 	f_unlink("/bootloader/hekate_ipl.bak");
-	deleteall("/switch/incognito", "*","");
+//	deleteall("/switch/incognito", "*","");
 	deleteall("/atmosphere/exefs_patches/NxThemesInstaller", "*","");
 	deleteall("/sxos/exefs_patches/NxThemesInstaller", "*","");
 	deleteall("/atmosphere/contents/010000000007E51A", "*","");//Tesla change
@@ -143,6 +143,10 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	deleteall("/atmosphere/kip_patches/loader_patches", "*","");
 	f_unlink("/bootloader/patches.ini");
 
+	//RR ovl
+	f_unlink("/atmosphere/contents/010000000000100C/exefs.nsp");
+	f_unlink("/sxos/titles/010000000000100C/exefs.nsp");
+	
 	//shop FS
 	f_unlink("/atmosphere/contents/010000000000100B/exefs.nsp");
 	f_unlink("/atmosphere/contents/010000000000100B/romfs.bin");

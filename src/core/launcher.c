@@ -61,7 +61,7 @@ void reloc_patcher(u32 payload_size)
 int launch_payload(char *path)
 {
 	if (!sd_mount()){BootStrapNX();}//check sd
-	
+display_backlight_brightness(0, 1000);	
 
     u32 boot = 0;
 
@@ -96,12 +96,12 @@ int launch_payload(char *path)
 
 	if(boot==3)
     {
+		display_backlight_brightness(50, 1000);
 	gfx_swap_buffer(&g_gfx_ctxt);
 	g_gfx_con.scale = 3;
     gfx_con_setpos(&g_gfx_con, 470, 350);
     gfx_printf(&g_gfx_con, "Loading Boot.dat\n");
     gfx_swap_buffer(&g_gfx_ctxt);
-//		display_backlight_brightness(0, 1000);
 		u32 bootR = sd_file_size("boot.dat");
 		u32 bootS = sd_file_size("StarDust/boot.dat");
 		if (bootR != bootS)
