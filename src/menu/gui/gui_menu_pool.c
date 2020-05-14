@@ -16,6 +16,7 @@
  */
 #include "menu/gui/gui_menu_pool.h"
 #include "mem/heap.h"
+gui_menu_pool_t* g_menu_pool;
 
 void gui_menu_pool_init()
 {

@@ -25,7 +25,7 @@ typedef struct {
     gui_menu_t** menus;
 } gui_menu_pool_t;
 
-gui_menu_pool_t* g_menu_pool;
+extern gui_menu_pool_t* g_menu_pool;
 
 /* Initializes the pool */
 void gui_menu_pool_init();

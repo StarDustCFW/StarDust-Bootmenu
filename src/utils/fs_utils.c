@@ -22,6 +22,10 @@
 #include "mem/heap.h"
 #include "gfx/gfx.h"
 #include <string.h>
+sdmmc_t g_sd_sdmmc;
+sdmmc_storage_t g_sd_storage;
+FATFS g_sd_fs;
+bool g_sd_mounted;
 bool sd_mount()
 {
 	if (g_sd_mounted)
