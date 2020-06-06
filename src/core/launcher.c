@@ -97,15 +97,26 @@ display_backlight_brightness(0, 1000);
 	if(boot==3)
     {
 		display_backlight_brightness(50, 1000);
-	gfx_swap_buffer(&g_gfx_ctxt);
-	g_gfx_con.scale = 3;
-    gfx_con_setpos(&g_gfx_con, 470, 350);
-    gfx_printf(&g_gfx_con, "Loading Boot.dat\n");
-    gfx_swap_buffer(&g_gfx_ctxt);
-		u32 bootR = sd_file_size("boot.dat");
+		gfx_swap_buffer(&g_gfx_ctxt);
+		g_gfx_con.scale = 3;
+
+//		u32 bootR = sd_file_size("boot.dat");
 		u32 bootS = sd_file_size("StarDust/boot.dat");
-		if (bootR != bootS)
-		copyfile("StarDust/boot.dat","boot.dat");//
+		u32 bootT = sd_file_size("StarDust/boot.temp");
+		
+
+		if (bootS != bootT){
+			gfx_con_setpos(&g_gfx_con, 370, 350);
+			gfx_printf(&g_gfx_con, "Loading Boot.dat\n",bootS,bootT);
+			gfx_swap_buffer(&g_gfx_ctxt);
+			copyfile("StarDust/boot.dat","StarDust/boot.temp");
+		}
+			
+		if (sd_file_exists ("StarDust/boot.temp")){
+			f_unlink("boot.dat");
+			f_rename("StarDust/boot.temp","boot.dat");
+		}
+	
 		if (sd_file_exists ("StarDust/autobootecho.txt"))
 		sd_save_to_file("SXOS", 4, "StarDust/autobootecho.txt");
 	}

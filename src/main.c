@@ -37,7 +37,6 @@
 #define PATH_ENABLE_TOUCH "StarDust/touch"
 
 extern void pivot_stack(u32 stack_top);
-
 static inline void setup_gfx()
 {
     u32 *fb = display_init_framebuffer();
@@ -47,18 +46,10 @@ static inline void setup_gfx()
     gfx_con_setcol(&g_gfx_con, 0xFFCCCCCC, 1, BLACK);
 }
 
-
-//first Delete After Update
+//Fix After Update STD
 void clean_up()
 {
-		g_gfx_con.scale = 3;
-		gfx_con_setpos(&g_gfx_con, 1070, 10);
-		gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
-		gfx_printf(&g_gfx_con, "CleanUP\n");
-		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
-gfx_swap_buffer(&g_gfx_ctxt);
-		g_gfx_con.scale = 2;
-
+	printerCU("Clean old files","CleanUP...",0);
 	//Delete Reinx d'not use any more
 	deleteall("/ReiNX", "*","");
 	deleteall("/sept/reinx.bin", "*","");
@@ -78,6 +69,7 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	f_unlink("Payload_de_arranque.bin");
 	f_rename("/Backup/prodinfo.bin", "/prodinfo_sysnand.bin");
 
+	printerCU("Clean Trash files","CleanUP...",0);
 	//borrar archivos inesesarios que se acumulan
 	deleteall("System Volume Information", "*","");
 	deleteall("/atmosphere/flags", "*","");
@@ -140,7 +132,7 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	deleteall("/sxos/exefs_patches/NxThemesInstaller", "*","");
 	deleteall("/atmosphere/contents/010000000007E51A", "*","");//Tesla change
 	//tinfoil clean
-	deleteall("/atmosphere/kip_patches/loader_patches", "*","");
+	//deleteall("/atmosphere/kip_patches/loader_patches", "*","");
 	f_unlink("/bootloader/patches.ini");
 
 	//RR ovl
@@ -152,6 +144,7 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	f_unlink("/atmosphere/contents/010000000000100B/romfs.bin");
 	f_unlink("/reboot.nro");
 	
+	printerCU("Correct some files for not crash Trash files","CleanUP...",0);
 	//changes for new menu
 	f_unlink("/StarDust/payback/Stock.bin");
 	f_unlink("/StarDust/payloads/zBackup.bin");
@@ -170,7 +163,7 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	f_unlink("/StarDust/Icons/screenshot.bmp");
 	f_unlink("/StarDust/payback/Stock.bin");
 	f_unlink("/StarDust/payloads/zBackup.bin");
-//	deleteall("/StarDust", "ReiNX.bmp","CleanUP");
+//	deleteall("/StarDust", "ReiNX.bmp","CleanUP...");
 
 	f_unlink("/atmosphere/contents/0100000000001010/romfs_metadata.bin");
 	f_unlink("/atmosphere/contents/010000000000100B/romfs_metadata.bin");
@@ -206,79 +199,17 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	deleteall("/sxos/titles/0100000000001013/romfs/", "*","");
 
 
-	//Fix Archive bit
-	f_chmod("/switch", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/config", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/automatic_backups", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/exefs_patches", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/exefs_patches/es_patches", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/exefs_patches/logo", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/kip_patches", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/kip_patches/default_nogc", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/kip_patches/fs_patches", AM_RDO, AM_RDO | AM_ARC);
-
-	f_chmod("/atmosphere/contents/0000000000534C56", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/00FF0000636C6BFF", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000008", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/010000000000000D", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/010000000000002B", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000032", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000034", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000036", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000037", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/010000000000003C", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000069", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000352", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000803", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000BEF", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000faf", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000001000", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/010000000000100B", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/010000000000100C", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000001010", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000001013", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0104444444441001", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/050000BADDAD0000", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/4200000000000000", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/420000000000000B", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/420000000000000E", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/4200000000000010", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/420000000007E51A", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/690000000000000D", AM_RDO, AM_RDO | AM_ARC);
-
-	f_chmod("/atmosphere/contents/0000000000534C56/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/00FF0000636C6BFF/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000008/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/010000000000000D/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/010000000000002B/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000032/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000034/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000036/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000037/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/010000000000003C/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000069/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000352/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000803/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000BEF/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000000faf/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/4200000000000000/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/420000000000000B/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/420000000000000E/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/4200000000000010/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/420000000007E51A/flags", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/690000000000000D/flags", AM_RDO, AM_RDO | AM_ARC);
-
-	f_chmod("/atmosphere/contents/0100000000001010/romfs", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/010000000000100B/romfs", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/010000000000100C/romfs", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000001000/romfs", AM_RDO, AM_RDO | AM_ARC);
-	f_chmod("/atmosphere/contents/0100000000001000/romfs/lyt", AM_RDO, AM_RDO | AM_ARC);
+//	Has Archive Bit
+	if(HasArchBit("atmosphere")||HasArchBit("atmosphere/contents"))
+	{
+		printerCU("Fix Archive bit in: /Atmosphere","CleanUP...",0);
+		Killflags("atmosphere");	
+	} 
 
 	//not pegascape units
 	if(fusesB() >= 5)
 	{
+		printerCU("Remove PegaScape Files","CleanUP...",0);
 		deleteall("/pegascape", "*","");
 	}
 
@@ -286,6 +217,7 @@ gfx_swap_buffer(&g_gfx_ctxt);
 	//fix old Emunand transfer
 	if (sd_file_exists ("sxos/eMMC/00")&sd_file_exists ("sxos/eMMC/boot0")&sd_file_exists ("sxos/eMMC/boot1"))
 	{
+		printerCU("Fix Emu Transfer","CleanUP...",0);
 		f_mkdir("emuMMC");
 		f_mkdir("emuMMC/EF00");
 		f_rename("/sxos/eMMC","/emuMMC/EF00/eMMC");
@@ -299,17 +231,16 @@ gfx_swap_buffer(&g_gfx_ctxt);
 				f_open(&fp, "emummc/emummc.ini", FA_WRITE | FA_CREATE_ALWAYS);
 				f_puts("[emummc]\n", &fp);
 				f_puts("enabled=1\n", &fp);
-				f_puts("sector=0x0\n", &fp);
 				f_puts("path=emuMMC/EF00\n", &fp);
-				f_puts("id=0x0000\n", &fp);
 				f_puts("nintendo_path=emuMMC/EF00/Nintendo\n", &fp);
 				f_close(&fp);
 				sd_save_to_file("", 0, "emuMMC/EF00/file_based");
 			}
 	}
 
-//deleteall("/////", "*","");	
+	//deleteall("/////", "*","");	
 	//close
+	printerCU("","",1);//flush print
 	f_unlink("/fixer.del");
 }
 

@@ -7,15 +7,15 @@ include $(DEVKITARM)/base_rules
 TARGET 					:= Bootmenu
 BLVERSION_MAJOR := 0
 BLVERSION_MINOR := 3
-BUILD_VER := 72
+BUILD_VER := 75
 
 
 
-BUILD 					:= build
-OUTPUT 					:= output
+BUILD 				:= build
+OUTPUT 				:= output
 SOURCEDIR 			:= src
-DATA						:= data
-SOURCES		      := src \
+DATA				:= data
+SOURCES		      	:= src \
 										src/core \
 										src/ianos \
 										src/gfx \

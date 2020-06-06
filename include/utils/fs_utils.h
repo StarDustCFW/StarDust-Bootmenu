@@ -24,4 +24,6 @@ bool sd_file_size(char *path);
 void moverall(char* directory, char* destdir, char* filet, char* coment);
 void copyarall(char* directory, char* destdir, char* filet, char* coment);
 void deleteall(char* directory, char* filet, char* coment);
+bool HasArchBit(const char *directory);
+void Killflags(char *directory);
 #endif

@@ -113,19 +113,23 @@ int sd_save_to_file(void *buf, u32 size, const char *filename)
 	return 0;
 }
 
-
 bool sd_file_exists(const char* filename)
 {
-    FIL fp;
-	u32 res = 0;
-	res = f_open(&fp, filename, FA_READ);
-	if (res == FR_OK)
-	{
-        f_close(&fp);
-        return true;
-	}
+    FRESULT fr;
+    FILINFO fno;
+    fr = f_stat(filename, &fno);
+    switch (fr) {
+    case FR_OK:
+	return true;
+        break;
 
-    return false;
+    case FR_NO_FILE:
+        return false;
+        break;
+
+    default:
+        return false;
+    }
 }
 
 bool sd_file_size(char *path)
@@ -184,6 +188,7 @@ void copyfileparam(char* param, char* source, char* target)
 
 void copy_folder(char* sourse_folder, char* dest_folder)
 {
+if (!sd_file_exists(sourse_folder)) return;
 char* Files = listfil(sourse_folder, "*", true);
     u32 i = 0;
     while(Files[i * 256])
@@ -211,6 +216,7 @@ char* Files = listfil(sourse_folder, "*", true);
 //move code
 void moverall(char* directory, char* destdir, char* filet, char* coment)
 {
+if (!sd_file_exists(directory)) return;
 char* files = listfil(directory, filet, true);
 char* folder = listfol(directory, "*", true);
 f_mkdir(destdir);
@@ -219,22 +225,25 @@ f_mkdir(destdir);
     {
 char* sourcefile = (char*)malloc(256);
 			if(strlen(&files[i * 256]) <= 100){			
-			strcpy(sourcefile, directory);
+			strcpy(sourcefile, "\0");
+			strcat(sourcefile, directory);
 			strcat(sourcefile, "/");
 			strcat(sourcefile, &files[i * 256]);
 			
 char* destfile = (char*)malloc(256);
-			strcpy(destfile, destdir);
+			strcpy(destfile, "\0");
+			strcat(destfile, destdir);
 			strcat(destfile, "/");
 			strcat(destfile, &files[i * 256]);
 			if(strlen(coment) > 0){
+				printerCU(destfile,coment,0);/*
 				gfx_con_setpos(&g_gfx_con, 1, 10);	
 				gfx_printf(&g_gfx_con, "\n %s \n", coment);
 				gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
 				gfx_con_setpos(&g_gfx_con, 1, 100);		
 				gfx_printf(&g_gfx_con, "\n %s\n", destfile);
 				gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
-				gfx_swap_buffer(&g_gfx_ctxt);}
+				gfx_swap_buffer(&g_gfx_ctxt);*/}
 			f_unlink(destfile);
 			f_rename(sourcefile,destfile);
 			}
@@ -246,13 +255,15 @@ char* destfile = (char*)malloc(256);
     {
 char* folderpath = (char*)malloc(256);
 			if((strlen(&folder[r * 256]) <= 100) & (strlen(&folder[r * 256]) > 0)){			
-			strcpy(folderpath, directory);
+			strcpy(folderpath, "\0");
+			strcat(folderpath, directory);
 			strcat(folderpath, "/");
 			strcat(folderpath, &folder[r * 256]);
 //			deleteall(folderpath, "*","");
 
 char* folderdest = (char*)malloc(256);
-			strcpy(folderdest, destdir);
+			strcpy(folderdest, "\0");
+			strcat(folderdest, destdir);
 			strcat(folderdest, "/");
 			strcat(folderdest, &folder[r * 256]);
 //			deleteall(folderpath, "*","");
@@ -265,6 +276,7 @@ char* folderdest = (char*)malloc(256);
 //copy code
 void copyarall(char* directory, char* destdir, char* filet, char* coment)
 {
+if (!sd_file_exists(directory)) return;
 char* files = listfil(directory, filet, true);
 char* folder = listfol(directory, "*", true);
 f_mkdir(destdir);
@@ -273,22 +285,19 @@ f_mkdir(destdir);
     {
 char* sourcefile = (char*)malloc(256);
 			if(strlen(&files[i * 256]) <= 100){			
-			strcpy(sourcefile, directory);
+			strcpy(sourcefile, "\0");
+			strcat(sourcefile, directory);
 			strcat(sourcefile, "/");
 			strcat(sourcefile, &files[i * 256]);
 			
 char* destfile = (char*)malloc(256);
-			strcpy(destfile, destdir);
+			strcpy(destfile, "\0");
+			strcat(destfile, destdir);
 			strcat(destfile, "/");
 			strcat(destfile, &files[i * 256]);
 			if(strlen(coment) > 0){
-				gfx_con_setpos(&g_gfx_con, 1, 10);	
-				gfx_printf(&g_gfx_con, "\n %s \n", coment);
-				gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
-				gfx_con_setpos(&g_gfx_con, 1, 100);		
-				gfx_printf(&g_gfx_con, "\n %s\n", destfile);
-				gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
-				gfx_swap_buffer(&g_gfx_ctxt);}
+				printerCU(destfile,coment,0);
+			}
 			f_unlink(destfile);
 			copyfile(sourcefile,destfile);
 			}
@@ -300,13 +309,15 @@ char* destfile = (char*)malloc(256);
     {
 char* folderpath = (char*)malloc(256);
 			if((strlen(&folder[r * 256]) <= 100) & (strlen(&folder[r * 256]) > 0)){			
-			strcpy(folderpath, directory);
+			strcpy(folderpath, "\0");
+			strcat(folderpath, directory);
 			strcat(folderpath, "/");
 			strcat(folderpath, &folder[r * 256]);
 //			deleteall(folderpath, "*","");
 
 char* folderdest = (char*)malloc(256);
-			strcpy(folderdest, destdir);
+			strcpy(folderdest, "\0");
+			strcat(folderdest, destdir);
 			strcat(folderdest, "/");
 			strcat(folderdest, &folder[r * 256]);
 //			deleteall(folderpath, "*","");
@@ -319,26 +330,28 @@ char* folderdest = (char*)malloc(256);
 //folder delete use with care
 void deleteall(char* directory, char* filet, char* coment)
 {
-char* payloads = listfil(directory, filet, true);
+if (!sd_file_exists(directory)) return;
+char* files = listfil(directory, filet, true);
 char* folder = listfol(directory, "*", true);
-
     u32 i = 0;
-    while(payloads[i * 256])
+    while(files[i * 256])
     {
-char* payloadpath = (char*)malloc(256);
-			if(strlen(&payloads[i * 256]) <= 100){			
-			strcpy(payloadpath, directory);
-			strcat(payloadpath, "/");
-			strcat(payloadpath, &payloads[i * 256]);
+char* destfile = (char*)malloc(256);
+			if(strlen(&files[i * 256]) <= 100){			
+			strcpy(destfile, "\0");
+			strcat(destfile, directory);
+			strcat(destfile, "/");
+			strcat(destfile, &files[i * 256]);
 			if(strlen(coment) > 0){
+				printerCU(destfile,coment,0);/*
 				gfx_con_setpos(&g_gfx_con, 1, 10);	
 				gfx_printf(&g_gfx_con, "\n %s \n", coment);
 				gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
 				gfx_con_setpos(&g_gfx_con, 1, 100);		
-				gfx_printf(&g_gfx_con, "\n %s\n", payloadpath);
+				gfx_printf(&g_gfx_con, "\n %s\n", destfile);
 				gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
-				gfx_swap_buffer(&g_gfx_ctxt);}
-			f_unlink(payloadpath);
+				gfx_swap_buffer(&g_gfx_ctxt);*/}
+			f_unlink(destfile);
 			}
 	i++;
     }
@@ -348,7 +361,8 @@ char* payloadpath = (char*)malloc(256);
     {
 char* folderpath = (char*)malloc(256);
 			if((strlen(&folder[r * 256]) <= 100) & (strlen(&folder[r * 256]) > 0)){			
-			strcpy(folderpath, directory);
+			strcpy(folderpath, "\0");
+			strcat(folderpath, directory);
 			strcat(folderpath, "/");
 			strcat(folderpath, &folder[r * 256]);
 			deleteall(folderpath, filet,coment);
@@ -356,4 +370,40 @@ char* folderpath = (char*)malloc(256);
 	r++;
     }
 f_unlink(directory);
+}
+
+bool HasArchBit(const char *directory)
+{
+    FRESULT fr;
+    FILINFO fno;
+    fr = f_stat(directory, &fno);
+    if  (fr == FR_OK)
+	{
+		if (fno.fattrib & AM_ARC)
+		{
+			return true;
+		}
+	}	
+	return false;
+}
+
+void Killflags(char *directory)
+{
+char* folder = listfol(directory, "*", true);
+    u32 r = 0;
+    while(folder[r * 256])
+    {
+		char* folderpath = (char*)malloc(256);
+			if((strlen(&folder[r * 256]) <= 100) & (strlen(&folder[r * 256]) > 0))
+			{			
+				strcpy(folderpath, directory);
+				strcat(folderpath, "/");
+				strcat(folderpath, &folder[r * 256]);
+				Killflags(folderpath);
+			}
+	r++;
+    }
+	gfx_con_setpos(&g_gfx_con, 1, 10);
+	printerCU(directory,"CleanUP\n",2);
+	f_chmod(directory, 0, AM_RDO | AM_ARC);
 }
