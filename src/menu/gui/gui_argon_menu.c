@@ -169,7 +169,14 @@ IswitchOFF = sd_file_read("/StarDust/Icons/sw-off.bmp");
 
 	//set archive bit
 	f_chmod("switch/LinkUser", AM_ARC, AM_ARC);
-	 
+	
+	//profile
+	if (sd_file_exists ("/atmosphere/contents/0100000000001013/exefs.on")){
+		f_move("/atmosphere/contents/0100000000001013/exefs.on","/atmosphere/contents/0100000000001013/exefs.nsp");
+		f_unlink("/atmosphere/contents/0100000000001013/exefs.off");
+	}
+
+	
 	//prepare use of sxos dongle 
 	if ((sd_file_size("boot.dat") == sd_file_size("StarDust/boot.dat"))&(sd_file_exists ("StarDust/boot_forwarder.dat")))
 	{
@@ -360,7 +367,6 @@ u64 low_icons = 645;
 		serv_display(menu,"420000000000000E","FTP");
 		serv_display(menu,"0100000000000352","Emuiio"); 
 		serv_display(menu,"4200000000000010","LanPlay");
-		serv_display(menu,"0100000000000BEF","Disk-USB");
 		serv_display(menu,"4200000000000000","SysTune"); 
 		serv_display(menu,"690000000000000D","Sys-Con");
 		serv_display(menu,"420000000007E51A","TeslaOVL");
@@ -368,6 +374,7 @@ u64 low_icons = 645;
 		serv_display(menu,"00FF0000636C6BFF","Sys-Clk");
 		serv_display(menu,"420000000000000B","SysPlay"); 
 		serv_display(menu,"0000000000534C56","ReverseNX");
+		serv_display(menu,"0100000000000BEF","Disk-USB");
 		serv_display(menu,"0100000000000069","ReiSpoof");
 		serv_display(menu,"0100000000000FAF","HDI");
 
@@ -1110,7 +1117,7 @@ char* path = (char*)malloc(256);
 		}
 		
 		if(strstr(cfw,"Profile") != NULL)
-		moverall("/atmosphere/contents/0100000000001013-OFF", "atmosphere/contents/0100000000001013", "*","");
+		f_move("/atmosphere/contents/0100000000001013-OFF/exefs.off", "atmosphere/contents/0100000000001013/exefs.nsp");
 		
 		if(strstr(cfw,"atmosphere") != NULL)
 		{
@@ -1135,7 +1142,7 @@ char* path = (char*)malloc(256);
 		}
 		
 		if(strstr(cfw,"Profile") != NULL)
-		moverall("/atmosphere/contents/0100000000001013", "atmosphere/contents/0100000000001013-OFF", "*","");
+		f_move("/atmosphere/contents/0100000000001013-OFF/exefs.nsp", "atmosphere/contents/0100000000001013/exefs.off");
 		
 		if(strstr(cfw,"atmosphere") != NULL)
 		{

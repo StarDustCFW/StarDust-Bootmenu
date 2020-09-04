@@ -144,7 +144,7 @@ void clean_up()
 	f_unlink("/atmosphere/contents/010000000000100B/romfs.bin");
 	f_unlink("/reboot.nro");
 	
-	printerCU("Correct some files for not crash Trash files","CleanUP...",0);
+	printerCU("Correct some Trash files for not crash","CleanUP...",0);
 	//changes for new menu
 	f_unlink("/StarDust/payback/Stock.bin");
 	f_unlink("/StarDust/payloads/zBackup.bin");
@@ -159,24 +159,18 @@ void clean_up()
 	deleteall("/StarDust/Atheme/4", "*","");
 	deleteall("/StarDust/Atheme/5", "*","");
 	deleteall("/StarDust/Atheme/6", "*","");
-	deleteall("/StarDust/Atheme/7", "*","");
+
+	deleteall("/atmosphere/contents/0100000000000BEF", "*","");
+	deleteall("/atmosphere/contents/010000000000100B", "*","");
+	deleteall("/atmosphere/contents/0100000000001010", "*","");
+	deleteall("/atmosphere/contents/0100000000000803", "*","");
+	deleteall("/atmosphere/contents/050000BADDAD0000", "*","");
+	
 	f_unlink("/StarDust/Icons/screenshot.bmp");
 	f_unlink("/StarDust/payback/Stock.bin");
 	f_unlink("/StarDust/payloads/zBackup.bin");
-//	deleteall("/StarDust", "ReiNX.bmp","CleanUP...");
-
-	f_unlink("/atmosphere/contents/0100000000001010/romfs_metadata.bin");
-	f_unlink("/atmosphere/contents/010000000000100B/romfs_metadata.bin");
-	f_unlink("/atmosphere/contents/010000000000100C/romfs_metadata.bin");
-	f_unlink("/atmosphere/contents/0100000000001000/romfs_metadata.bin");
-	f_unlink("/atmosphere/contents/0100000000000803/romfs_metadata.bin");
-	f_unlink("/atmosphere/contents/050000BADDAD0000/romfs_metadata.bin");
-
-	f_unlink("/atmosphere/contents/0100000000001010/fsmitm.flag");
-	f_unlink("/atmosphere/contents/010000000000100B/fsmitm.flag");
+	deleteall("/atmosphere/contents", "romfs_metadata.bin","Clean romfs_metadata");
 	f_unlink("/atmosphere/contents/010000000000100C/fsmitm.flag");
-	f_unlink("/atmosphere/contents/0100000000000803/fsmitm.flag");
-	f_unlink("/atmosphere/contents/050000BADDAD0000/fsmitm.flag");
 
 	sd_save_to_file("",0,"atmosphere/contents/0100000000001000/fsmitm.flag");
 	
@@ -286,7 +280,7 @@ void ipl_main()
 		{
 			moverall("/StarDust_update", "", "*","Updating");
 				gfx_con_setpos(&g_gfx_con, 1, 100);		
-				gfx_printf(&g_gfx_con, "\n Clean Update\n");
+				gfx_printf(&g_gfx_con, "Clean Update\n");
 				gfx_swap_buffer(&g_gfx_ctxt);
 			deleteall("/StarDust_update", "*","Clean Update");
 			f_rename("/StarDust_update", "/StarDust_corrupt_update");//just in case

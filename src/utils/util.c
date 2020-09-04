@@ -230,6 +230,8 @@ char *fusesM()
             case 11:mine = "9.0.0";break;
             case 12:mine = "9.2.0";break;
             case 13:mine = "10.0.0";break;
+            case 14:mine = "10.1.0";break;
+            case 15:mine = "10.2.0";break;
             default:mine = "Unknow";
 	}
 return mine;

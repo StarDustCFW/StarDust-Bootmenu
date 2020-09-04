@@ -273,6 +273,17 @@ char* folderdest = (char*)malloc(256);
     }
 }
 
+//move
+void f_move (char* file1, char* file2)
+{
+	if (sd_file_exists(file1)){
+		if (sd_file_exists(file2)){
+			f_unlink(file2);			
+		}
+		f_rename(file1,file2);
+	}
+}
+
 //copy code
 void copyarall(char* directory, char* destdir, char* filet, char* coment)
 {

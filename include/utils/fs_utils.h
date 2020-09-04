@@ -22,6 +22,7 @@ void copy_folder(char* sourse_folder, char* dest_folder);
 bool sd_file_size(char *path);
 
 void moverall(char* directory, char* destdir, char* filet, char* coment);
+void f_move (char* file1, char* file2);
 void copyarall(char* directory, char* destdir, char* filet, char* coment);
 void deleteall(char* directory, char* filet, char* coment);
 bool HasArchBit(const char *directory);
