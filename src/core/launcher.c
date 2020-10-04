@@ -27,6 +27,7 @@
 #include "soc/hw_init.h"
 #include "mem/heap.h"
 #include "menu/gui/gui_menu_pool.h"
+#include "utils/btn.h"
 
 // This is a safe and unused DRAM region for our payloads.
 #define IPL_LOAD_ADDR      0x40008000
@@ -90,7 +91,8 @@ display_backlight_brightness(0, 1000);
 		display_backlight_brightness(0, 1000);
 		if (sd_file_size("atmosphere/fusee-secondary.bin") != sd_file_size("sept/payload.bin"))
 		copyfile("atmosphere/fusee-secondary.bin","sept/payload.bin");
-		if (sd_file_exists ("StarDust/autobootecho.txt"))
+		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
+
 		sd_save_to_file("Atmosphere", 10, "StarDust/autobootecho.txt");
     }
 
@@ -117,7 +119,7 @@ display_backlight_brightness(0, 1000);
 			f_rename("StarDust/boot.temp","boot.dat");
 		}
 	
-		if (sd_file_exists ("StarDust/autobootecho.txt"))
+		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
 		sd_save_to_file("SXOS", 4, "StarDust/autobootecho.txt");
 	}
 

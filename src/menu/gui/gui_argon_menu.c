@@ -69,7 +69,7 @@ int Autoboot(u32 fil);
 int uLaunch(u32 fil);
 int AThemes_list(gui_menu_t* menu, u32 gridX, u32 gridY);
 void HBhide(char* folder);
-
+void serv_CFW(int cfw);
 
 int bat_show(u32 percent);
 void serv_display(gui_menu_t* menu,char* titleid,char* name);
@@ -110,7 +110,7 @@ u32 servX = 30;
 u32 servY = 80;
 u32 sepaserv = 70;
 u32 servstep = 0;
-
+u32 isAMS = 1;
 
 //dinamic directory
 char *directory = "";
@@ -246,7 +246,6 @@ gui_menu_t* menu = gui_menu_create("ArgonNX",main_menu);
 
 //low icons Y
 u64 low_icons = 645;
-
 //main menu 0-------------------------------------
 	if(main_menu == 0)
 	{
@@ -319,7 +318,7 @@ u64 low_icons = 645;
 			u64 iconrowXS = 250;
 			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Lockpick_RCM.bmp"),iconrowX, iconrowY, 200 , 75,(int (*)(void *))launch_payload, (void*)"/StarDust/payback/Lockpick_RCM.bin"));
 			iconrowX = iconrowX + iconrowXS;
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader.bmp"),iconrowX, iconrowY, 200 , 75,(int (*)(void *))tool_Menus, (void*)3));
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader.bmp"),iconrowX, iconrowY, 200 , 75,(int (*)(void *))launch_payload, (void*)"/StarDust/payback/TegraExplorer.bin"));
 			iconrowX = iconrowX + iconrowXS;
 			
 			if (Incac == 0)
@@ -359,21 +358,28 @@ u64 low_icons = 645;
 		else
 			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/uloff.bmp"),850, 600, 200 , 75,(int (*)(void *))uLaunch, (void*)1));
 
+		//draw CFW select
+		if (isAMS)
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/serv-ams.bmp"),350, 165, 200 , 75,(int (*)(void *))serv_CFW, (void*)0));
+		else
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/serv-sxos.bmp"),350, 165, 200 , 75,(int (*)(void *))serv_CFW, (void*)1));
+
 		//services
 		servY = servYF;
 		servX = servXF;
 		servstep = 0;
 //		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Services",servX+30, servY-10, 150, 100, NULL, NULL));
 		serv_display(menu,"420000000000000E","FTP");
+		serv_display(menu,"420000000007E51A","TeslaOVL");
+		serv_display(menu,"010000000000bd00","MissionCon");
+		serv_display(menu,"690000000000000D","Sys-Con");
 		serv_display(menu,"0100000000000352","Emuiio"); 
 		serv_display(menu,"4200000000000010","LanPlay");
 		serv_display(menu,"4200000000000000","SysTune"); 
-		serv_display(menu,"690000000000000D","Sys-Con");
-		serv_display(menu,"420000000007E51A","TeslaOVL");
 		serv_display(menu,"00FF0000A53BB665","SysDVR");
+		serv_display(menu,"0000000000534C56","ReverseNX");
 		serv_display(menu,"00FF0000636C6BFF","Sys-Clk");
 		serv_display(menu,"420000000000000B","SysPlay"); 
-		serv_display(menu,"0000000000534C56","ReverseNX");
 		serv_display(menu,"0100000000000BEF","Disk-USB");
 		serv_display(menu,"0100000000000069","ReiSpoof");
 		serv_display(menu,"0100000000000FAF","HDI");
@@ -396,10 +402,19 @@ u64 low_icons = 645;
 				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("SXOS",temX+30, temY+30, 150, 100, NULL, NULL));
 				temX = temX + temS;
 
-				if (!sd_file_exists ("atmosphere/contents/0100000000001013/exefs.nsp"))
-				gui_menu_append_entry(menu,gui_create_menu_entry("",IswitchOFF,temX, temY, 200, 75,(int (*)(void *))tool_Themes_on, (void*)"Profile"));
-				else
-				gui_menu_append_entry(menu,gui_create_menu_entry("",IswitchON,temX, temY, 200, 75,(int (*)(void *))tool_Themes_off, (void*)"Profile"));
+				if (isAMS){
+					if (!sd_file_exists ("atmosphere/contents/0100000000001013/exefs.nsp"))
+					gui_menu_append_entry(menu,gui_create_menu_entry("",IswitchOFF,temX, temY, 200, 75,(int (*)(void *))tool_Themes_on, (void*)"Profile"));
+					else
+					gui_menu_append_entry(menu,gui_create_menu_entry("",IswitchON,temX, temY, 200, 75,(int (*)(void *))tool_Themes_off, (void*)"Profile"));
+				} else {
+					if (!sd_file_exists ("sxos/titles/0100000000001013/exefs.nsp"))
+					gui_menu_append_entry(menu,gui_create_menu_entry("",IswitchOFF,temX, temY, 200, 75,(int (*)(void *))tool_Themes_on, (void*)"Profile"));
+					else
+					gui_menu_append_entry(menu,gui_create_menu_entry("",IswitchON,temX, temY, 200, 75,(int (*)(void *))tool_Themes_off, (void*)"Profile"));
+				}
+
+			
 				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Profile",temX+30, temY+30, 150, 100, NULL, NULL));
 				
 
@@ -429,8 +444,8 @@ u64 low_icons = 645;
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),80, 500, 70, 70, tool_power_off, NULL));
 		
 		//call menu 2
-//		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/file-browser.bmp"),250, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)2));
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/file-browser.bmp"),250, low_icons, 70, 70,(int (*)(void *))launch_payload, (void*)"/StarDust/payback/TegraExplorer.bin"));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/file-browser.bmp"),250, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)3));
+//		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/file-browser.bmp"),250, low_icons, 70, 70,(int (*)(void *))launch_payload, (void*)"/StarDust/payback/TegraExplorer.bin"));
 
 		
 		
@@ -568,6 +583,7 @@ u64 low_icons = 645;
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_emmc.bmp"),680, 300, 200 , 200,(int (*)(void *))memloader, (void*)2));
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_sd.bmp"),980, 300, 200 , 200,(int (*)(void *))memloader, (void*)3));
 		//call
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/gear.bmp"),1200, low_icons, 70, 70, (int (*)(void *))tool_Menus, (void*)1));
 		
 	}
 	
@@ -1070,18 +1086,22 @@ int tool_servises_on(char* title)
 if (!sd_mount()){BootStrapNX();}//check sd
 Ajbrillo(1);
 char* path = (char*)malloc(256);
+	if (isAMS) {
 		strcpy(path, "atmosphere/contents/");
 		strcat(path, title);
 		strcat(path, "/flags");
 		f_mkdir(path);
 		strcat(path, "/boot2.flag");
 		sd_save_to_file("",0,path);
+	} else {
 		strcpy(path, "sxos/titles/");
 		strcat(path, title);
 		strcat(path, "/flags");
 		f_mkdir(path);
 		strcat(path, "/boot2.flag");
 		sd_save_to_file("",0,path);
+	}
+		
 gui_init_argon_menu();
 return 0;
 }
@@ -1091,15 +1111,17 @@ int tool_servises_off(char* title)
 if (!sd_mount()){BootStrapNX();}//check sd
 Ajbrillo(1);
 char* path = (char*)malloc(256);
+	if (isAMS) {
 		strcpy(path, "atmosphere/contents/");
 		strcat(path, title);
 		strcat(path, "/flags/boot2.flag");
 		f_unlink(path);
+	} else {
 		strcpy(path, "sxos/titles/");
 		strcat(path, title);
 		strcat(path, "/flags/boot2.flag");
 		f_unlink(path);
-
+	}
 gui_init_argon_menu();
 return 0;
 }
@@ -1112,13 +1134,18 @@ char* path = (char*)malloc(256);
 		if(strstr(cfw,"sxos") != NULL)
 		{
 		strcpy(path, cfw);
+		moverall("/sxos/titles/0100000000001000/sfmor", "/sxos/titles/0100000000001000/romfs", "*","");
 		strcat(path, "/titles/0100000000001000/fsmitm.flag");
 		sd_save_to_file("",0,path);
 		}
 		
-		if(strstr(cfw,"Profile") != NULL)
-		f_move("/atmosphere/contents/0100000000001013-OFF/exefs.off", "atmosphere/contents/0100000000001013/exefs.nsp");
-		
+		if(strstr(cfw,"Profile") != NULL){
+			if (isAMS)
+				f_move("/atmosphere/contents/0100000000001013/exefs.off", "/atmosphere/contents/0100000000001013/exefs.nsp");
+			else
+				f_move("/sxos/titles/0100000000001013/exefs.off", "/sxos/titles/0100000000001013/exefs.nsp");
+		}
+				
 		if(strstr(cfw,"atmosphere") != NULL)
 		{
 		moverall("/atmosphere/contents/0100000000001000/sfmor", "/atmosphere/contents/0100000000001000/romfs", "*","");
@@ -1133,16 +1160,18 @@ return 0;
 int tool_Themes_off(char* cfw)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
-char* path = (char*)malloc(256);
 		if(strstr(cfw,"sxos") != NULL)
 		{
-			strcpy(path, cfw);
-			strcat(path, "/titles/0100000000001000/fsmitm.flag");
-			f_unlink(path);
+			moverall("/sxos/titles/0100000000001000/romfs", "/sxos/titles/0100000000001000/sfmor", "*","");
+			f_unlink("/sxos/titles/0100000000001000/fsmitm.flag");
 		}
 		
-		if(strstr(cfw,"Profile") != NULL)
-		f_move("/atmosphere/contents/0100000000001013-OFF/exefs.nsp", "atmosphere/contents/0100000000001013/exefs.off");
+		if(strstr(cfw,"Profile") != NULL){
+			if (isAMS)
+				f_move("/atmosphere/contents/0100000000001013/exefs.nsp", "/atmosphere/contents/0100000000001013/exefs.off");
+			else
+				f_move("/sxos/titles/0100000000001013/exefs.nsp", "/sxos/titles/0100000000001013/exefs.off");
+		}
 		
 		if(strstr(cfw,"atmosphere") != NULL)
 		{
@@ -1479,21 +1508,30 @@ int bat_show(u32 percent)
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0xFFCCCCCC, 0xFF191414);
 		gfx_con_setpos(&g_gfx_con, 1205, 15);
         gfx_printf(&g_gfx_con, "%k%d%%%k", 0xFF00FF22,percent,0xFFCCCCCC);
+		
 //      gfx_printf(&g_gfx_con, "%k%d%%%k", 0xFF00FF22,percent,0xFFCCCCCC);
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
+//		for (u32 i =10; i < 720; i = i +20){					gfx_con_setpos(&g_gfx_con, 10, i);	gfx_printf(&g_gfx_con, " %d -------------------------------------------------------------", i);		}
 		return 0;
+}
+void serv_CFW(int cfw){
+if (!sd_mount()){BootStrapNX();}//check sd
+Ajbrillo(1);
+
+	isAMS = cfw;
+gui_init_argon_menu();
 }
 
 void serv_display(gui_menu_t* menu,char* titleid,char* name) 
 {
 if (!sd_mount()){BootStrapNX();}//check sd
 		char* path = (char*)malloc(256);
-		strcpy(path, "atmosphere/contents/");
+		if (isAMS) strcpy(path, "atmosphere/contents/"); else strcpy(path, "sxos/titles/");
 		strcat(path, titleid);
 		strcat(path, "/exefs.nsp");
 
 		char* flagpath = (char*)malloc(256);
-		strcpy(flagpath, "atmosphere/contents/");
+		if (isAMS) strcpy(flagpath, "atmosphere/contents/"); else strcpy(flagpath, "sxos/titles/");
 		strcat(flagpath, titleid);
 		strcat(flagpath, "/flags/boot2.flag");
 

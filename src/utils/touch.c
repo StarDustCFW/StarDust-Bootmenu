@@ -71,9 +71,6 @@ touch_event_t touch_wait()
 	do 
 	{
 		//some functions to buttons on touch wait
-		if (btn_read() & BTN_VOL_UP)
-			screenshot(NULL);
-		
 		if (btn_read() & BTN_VOL_DOWN)
 			BootStrapNX();
 		
