@@ -1525,33 +1525,35 @@ gui_init_argon_menu();
 void serv_display(gui_menu_t* menu,char* titleid,char* name) 
 {
 if (!sd_mount()){BootStrapNX();}//check sd
-		char* path = (char*)malloc(256);
-		if (isAMS) strcpy(path, "atmosphere/contents/"); else strcpy(path, "sxos/titles/");
-		strcat(path, titleid);
-		strcat(path, "/exefs.nsp");
+	if (servstep <= 9){
+			char* path = (char*)malloc(256);
+			if (isAMS) strcpy(path, "atmosphere/contents/"); else strcpy(path, "sxos/titles/");
+			strcat(path, titleid);
+			strcat(path, "/exefs.nsp");
 
-		char* flagpath = (char*)malloc(256);
-		if (isAMS) strcpy(flagpath, "atmosphere/contents/"); else strcpy(flagpath, "sxos/titles/");
-		strcat(flagpath, titleid);
-		strcat(flagpath, "/flags/boot2.flag");
+			char* flagpath = (char*)malloc(256);
+			if (isAMS) strcpy(flagpath, "atmosphere/contents/"); else strcpy(flagpath, "sxos/titles/");
+			strcat(flagpath, titleid);
+			strcat(flagpath, "/flags/boot2.flag");
 
-	if (sd_file_exists(path) && servstep <= 9)
-	{
-		if (sd_file_exists(flagpath))
+		if (sd_file_exists(path))
 		{
-	gui_menu_append_entry(menu,gui_create_menu_entry("",IswitchON,servX, servY, 200, 75,(int (*)(void *))tool_servises_off, (void*)titleid));
-		}else{
-	gui_menu_append_entry(menu,gui_create_menu_entry("",IswitchOFF,servX, servY, 200, 75,(int (*)(void *))tool_servises_on, (void*)titleid));
-		}
-	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(name,servX+30, servY+30, 150, 100, NULL, NULL));
-		servstep++;
-		if(servstep == 2 || servstep == 4 || servstep == 6 || servstep == 8|| servstep == 10)
-		{
-			servY = servYF;
-			servX = servX + 205;
-//			servstep = 0;
-		}else{
-		servY = servY + sepaserv;		
+			if (sd_file_exists(flagpath))
+			{
+				gui_menu_append_entry(menu,gui_create_menu_entry("",IswitchON,servX, servY, 200, 75,(int (*)(void *))tool_servises_off, (void*)titleid));
+			}else{
+				gui_menu_append_entry(menu,gui_create_menu_entry("",IswitchOFF,servX, servY, 200, 75,(int (*)(void *))tool_servises_on, (void*)titleid));
+			}
+				gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(name,servX+30, servY+30, 150, 100, NULL, NULL));
+			servstep++;
+			if(servstep == 2 || servstep == 4 || servstep == 6 || servstep == 8|| servstep == 10)
+			{
+				servY = servYF;
+				servX = servX + 205;
+	//			servstep = 0;
+			}else{
+			servY = servY + sepaserv;		
+			}
 		}
 	}
 }
