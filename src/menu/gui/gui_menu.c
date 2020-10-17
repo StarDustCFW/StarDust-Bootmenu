@@ -29,7 +29,7 @@ static int gui_menu_update(gui_menu_t*);
 
 /* Handle input */
 static int handle_touch_input(gui_menu_t*);
-
+extern u32 isAMS;
 gui_menu_t *gui_menu_create(const char *title,u32 mem)
 {
 	gui_menu_t *menu = (gui_menu_t *)malloc(sizeof(gui_menu_t));
@@ -79,6 +79,8 @@ static void gui_menu_draw_background(gui_menu_t* menu)
 			}
 			
 		}
+		
+		
 		gfx_con_setcol(&g_gfx_con, 0xFFCCCCCC, 0xFFCCCCCC, 0xFF191414);
 		g_gfx_con.scale = 2;
 		gfx_con_setpos(&g_gfx_con, 1200, 50);
@@ -196,8 +198,8 @@ int gui_menu_open2(gui_menu_t *menu)
 		if(strstr(Sversion,"C") != NULL)
 		gfx_printf(&g_gfx_con, "-> ReiNX\n");
 */		
-		if(strstr(Sversion,"S") != NULL)
-		gfx_printf(&g_gfx_con, "-> SXOS\n");
+		if(strstr(Sversion,"S") != NULL) {gfx_printf(&g_gfx_con, "-> SXOS\n"); isAMS = 0;}
+		
 
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
 		}
