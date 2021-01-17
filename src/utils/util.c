@@ -232,7 +232,9 @@ char *fusesM()
             case 13:mine = "10.0.0";break;
             case 14:mine = "10.1.0";break;
             case 15:mine = "10.2.0";break;
-            default:mine = "Unknow";
+            case 16:mine = "11.0.0";break;
+            case 17:mine = "11.1.0";break;
+            default:mine = "-";
 	}
 return mine;
 }

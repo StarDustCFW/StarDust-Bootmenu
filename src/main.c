@@ -201,7 +201,7 @@ void clean_up()
 	} 
 
 	//not pegascape units
-	if(fusesB() >= 5)
+	if(fusesB() > 5)
 	{
 		printerCU("Remove PegaScape Files","CleanUP...",0);
 		deleteall("/pegascape", "*","");
