@@ -146,19 +146,10 @@ void clean_up()
 	
 	printerCU("Correct some Trash files for not crash","CleanUP...",0);
 	//changes for new menu
-	f_unlink("/StarDust/payback/Stock.bin");
 	f_unlink("/StarDust/payloads/zBackup.bin");
-	f_unlink("/StarDust/logos/zBackup.bmp");
-	f_unlink("/StarDust/logos/negative.bmp");
-	f_unlink("/StarDust/logos/biskeydump.bmp");
-	f_unlink("/StarDust/logos/Backup.bmp");
-	f_unlink("/StarDust/logos/Hekate.bmp");
-	deleteall("/StarDust/Atheme/1", "*","");
-	deleteall("/StarDust/Atheme/2", "*","");
-	deleteall("/StarDust/Atheme/3", "*","");
-	deleteall("/StarDust/Atheme/4", "*","");
-	deleteall("/StarDust/Atheme/5", "*","");
-	deleteall("/StarDust/Atheme/6", "*","");
+	deleteall("/StarDust/payback", "*","");
+	deleteall("/StarDust/logos", "*","");
+	deleteall("/StarDust/Atheme", "*","");
 
 	deleteall("/atmosphere/contents/0100000000000BEF", "*","");
 	deleteall("/atmosphere/contents/010000000000100B", "*","");
@@ -167,7 +158,6 @@ void clean_up()
 	deleteall("/atmosphere/contents/050000BADDAD0000", "*","");
 	
 	f_unlink("/StarDust/Icons/screenshot.bmp");
-	f_unlink("/StarDust/payback/Stock.bin");
 	f_unlink("/StarDust/payloads/zBackup.bin");
 	deleteall("/atmosphere/contents", "romfs_metadata.bin","Clean romfs_metadata");
 	f_unlink("/atmosphere/contents/010000000000100C/fsmitm.flag");

@@ -26,7 +26,7 @@
 
 #include <string.h>
 
-#define DEFAULT_LOGO "StarDust/logos/default.bmp"
+#define DEFAULT_LOGO "StarDust/icons/default.bmp"
 
 /* Creates a menu entry */
 gui_menu_entry_t *gui_create_menu_entry(const char *text,

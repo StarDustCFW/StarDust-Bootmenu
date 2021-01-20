@@ -240,18 +240,18 @@ if (!sd_mount()){BootStrapNX();}//check sd
 
 
 			
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Atmosphere.bmp"), main_iconX, main_iconY, 300 , 300,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/Atmosphere.bin"));
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Atmosphere.bmp"), main_iconX, main_iconY, 300 , 300,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/Atmosphere.bin"));
 			main_iconX = main_iconX + main_iconXS;
 
 //			if(retir <= 1)
 //			{
-//			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/ReiNX.bmp"), main_iconX, main_iconY, 300 , 300,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/ReiNX.bin"));
+//			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/ReiNX.bmp"), main_iconX, main_iconY, 300 , 300,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/ReiNX.bin"));
 			main_iconX = main_iconX + main_iconXS;
 //			}
 
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/SXOS.bmp"), main_iconX, main_iconY, 300 , 300,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/SXOS.bin"));
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/SXOS.bmp"), main_iconX, main_iconY, 300 , 300,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/SXOS.bin"));
 //				
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Stock.bmp"),540, main_iconY +100, 200 , 100,(int (*)(void *))hekateOFW, (void*)1));
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Stock.bmp"),540, main_iconY +100, 200 , 100,(int (*)(void *))hekateOFW, (void*)1));
 
 			if (sd_file_exists ("/switchroot_android/coreboot.rom")|| sd_file_exists ("/switchroot_android/coreboot.bin"))
 			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Android.bmp"),590, main_iconY-10, 100, 100, (int (*)(void *))launch_payload, (void*)"/switchroot_android/coreboot.bin"));
@@ -259,25 +259,25 @@ if (!sd_mount()){BootStrapNX();}//check sd
 			u64 iconrowY = 550;
 			u64 iconrowX = 170;
 			u64 iconrowXS = 250;
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Lockpick_RCM.bmp"),iconrowX, iconrowY, 200 , 75,(int (*)(void *))launch_payload, (void*)"/StarDust/payback/Lockpick_RCM.bin"));
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Lockpick_RCM.bmp"),iconrowX, iconrowY, 200 , 75,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/Lockpick_RCM.bin"));
 			iconrowX = iconrowX + iconrowXS;
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader.bmp"),iconrowX, iconrowY, 200 , 75,(int (*)(void *))launch_payload, (void*)"/StarDust/payback/TegraExplorer.bin"));
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/TegraEX.bmp"),iconrowX, iconrowY, 200 , 75,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/TegraExplorer.bin"));
 			iconrowX = iconrowX + iconrowXS;
 			
 			if (Incac == 0)
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Incognito.bmp"),iconrowX, iconrowY, 200 , 75,(int (*)(void *))Incognito, (void*)"1"));
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Incognito.bmp"),iconrowX, iconrowY, 200 , 75,(int (*)(void *))Incognito, (void*)"1"));
 			else
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Incognito.bmp"),iconrowX, iconrowY, 200 , 75,(int (*)(void *))tool_Menus, (void*)4));
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Incognito.bmp"),iconrowX, iconrowY, 200 , 75,(int (*)(void *))tool_Menus, (void*)4));
 		
 			iconrowX = iconrowX + iconrowXS;
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/zHekate.bmp"), iconrowX, iconrowY, 200 , 75,(int (*)(void *))hekateOFW, (void*)0));
-		//	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Incognito.bmp"),iconrowX+700, iconrowY, 200 , 200,(int (*)(void *))tool_Menus, (void*)6));
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/zHekate.bmp"), iconrowX, iconrowY, 200 , 75,(int (*)(void *))hekateOFW, (void*)0));
+		//	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Incognito.bmp"),iconrowX+700, iconrowY, 200 , 200,(int (*)(void *))tool_Menus, (void*)6));
 	
 
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/SD.bmp"),10, low_icons, 70, 70, tool_extr_rSD, NULL));
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/rcm.bmp"),750, low_icons, 70, 70, tool_reboot_rcm, NULL));
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/themes.bmp"),450, low_icons, 70, 70, tool_menu_rem, NULL));
-//			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/Reinx-off.bmp"),366, main_iconY, 300 , 300, NULL, NULL));
+//			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Reinx-off.bmp"),366, main_iconY, 300 , 300, NULL, NULL));
 		//call menu 1
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/gear.bmp"),1200, low_icons, 70, 70, (int (*)(void *))tool_Menus, (void*)1));
 	}
@@ -387,8 +387,8 @@ if (!sd_mount()){BootStrapNX();}//check sd
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),80, 500, 70, 70, tool_power_off, NULL));
 		
 		//call menu 2
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/file-browser.bmp"),250, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)3));
-//		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/file-browser.bmp"),250, low_icons, 70, 70,(int (*)(void *))launch_payload, (void*)"/StarDust/payback/TegraExplorer.bin"));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Memloader.bmp"),250, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)3));
+//		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Memloader.bmp"),250, low_icons, 70, 70,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/TegraExplorer.bin"));
 
 		
 		
@@ -397,10 +397,10 @@ if (!sd_mount()){BootStrapNX();}//check sd
 	//Menu 3 Memloader
 	if(main_menu == 3)
 	{
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_boot0.bmp"),80, 300, 200 , 200,(int (*)(void *))memloader, (void*)0));
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_boot1.bmp"),380, 300, 200 , 200,(int (*)(void *))memloader, (void*)1));
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_emmc.bmp"),680, 300, 200 , 200,(int (*)(void *))memloader, (void*)2));
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/logos/memloader_sd.bmp"),980, 300, 200 , 200,(int (*)(void *))memloader, (void*)3));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/memloader_boot0.bmp"),80, 300, 200 , 200,(int (*)(void *))memloader, (void*)0));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/memloader_boot1.bmp"),380, 300, 200 , 200,(int (*)(void *))memloader, (void*)1));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/memloader_emmc.bmp"),680, 300, 200 , 200,(int (*)(void *))memloader, (void*)2));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/memloader_sd.bmp"),980, 300, 200 , 200,(int (*)(void *))memloader, (void*)3));
 		//call
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/gear.bmp"),1200, low_icons, 70, 70, (int (*)(void *))tool_Menus, (void*)1));
 		
@@ -666,9 +666,9 @@ if (!sd_mount()){BootStrapNX();}//check sd
 	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/bat2.bmp"),batX, batY, 70, 35,(int (*)(void *))bat_show, (void*)battimgper));
 	if ((battimgper <= 50) & (battimgper >= 26))
 	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/bat3.bmp"),batX, batY, 70, 35,(int (*)(void *))bat_show, (void*)battimgper));
-	if ((battimgper <= 25) & (battimgper >= 3))
+	if ((battimgper <= 25) & (battimgper >= 5))
 	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/bat4.bmp"),batX, batY, 70, 35,(int (*)(void *))bat_show, (void*)battimgper));
-	if (battimgper <= 2)
+	if (battimgper <= 4)
 	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/bat5.bmp"),batX, batY, 70, 35,(int (*)(void *))bat_show, (void*)battimgper));
 
     /* Start menu */
@@ -1065,7 +1065,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
 			f_puts("pwroffHoldTime=4\n", &fp);
 			f_puts("\n", &fp);
 			f_close(&fp);
-			launch_payload("StarDust/payback/memloader.bin");
+			launch_payload("StarDust/payloads/memloader.bin");
 	}
 
 	//boot1
@@ -1089,7 +1089,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
 			f_puts("pwroffHoldTime=4\n", &fp);
 			f_puts("\n", &fp);
 			f_close(&fp);
-			launch_payload("StarDust/payback/memloader.bin");
+			launch_payload("StarDust/payloads/memloader.bin");
 	}
 
 	//emmc
@@ -1112,7 +1112,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
 			f_puts("pwroffHoldTime=4\n", &fp);
 			f_puts("\n", &fp);
 			f_close(&fp);
-			launch_payload("StarDust/payback/memloader.bin");
+			launch_payload("StarDust/payloads/memloader.bin");
 	}
 	
 	if(fil == 3)
@@ -1135,7 +1135,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
 			f_puts("pwroffHoldTime=4\n", &fp);
 			f_puts("\n", &fp);
 			f_close(&fp);
-			launch_payload("StarDust/payback/memloader.bin");
+			launch_payload("StarDust/payloads/memloader.bin");
 	}
 return 0;
 }
@@ -1226,7 +1226,7 @@ return 0;
 
 
 		sd_save_to_file(order, 1, "StarDust/autoboot.inc");
-		launch_payload("StarDust/payback/Incognito_RCM.bin");
+		launch_payload("StarDust/payloads/Incognito_RCM.bin");
 	return 0;
 }
 
@@ -1245,7 +1245,7 @@ return 0;
 int AThemes_list(gui_menu_t* menu, u32 gridX, u32 gridY){
 		//generate themes Dinamy
 	u32 tm_ajust = 90;
-	char* tm_directory = "StarDust/Atheme";
+	char* tm_directory = "StarDust/skins";
 	char* folder = listfol(tm_directory, "*", true);
 			u32 r = 0;
 			u32 w = 0;

@@ -7,7 +7,7 @@ include $(DEVKITARM)/base_rules
 TARGET 					:= Bootmenu
 BLVERSION_MAJOR := 0
 BLVERSION_MINOR := 3
-BUILD_VER := 88
+BUILD_VER := 89
 
 
 
@@ -30,7 +30,7 @@ SOURCES		      	:= src \
 										src/storage \
 										src/utils
 
-INCLUDES				:= include
+INCLUDES				:= include src
 VPATH = $(dir  ./$(SOURCEDIR)/) $(dir $(wildcard ./$(SOURCEDIR)/*/)) $(dir $(wildcard ./$(SOURCEDIR)/*/*/))
 CFILES			:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 SFILES			:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))

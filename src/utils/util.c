@@ -336,7 +336,7 @@ void printerCU(char *text,const char *title,int clean)
 		if (clean == 0)
 		{
 			count++;
-			if (count > 42)
+			if (count > 62)
 			{
 				count = 0;
 				strcpy(buff, "\0");
