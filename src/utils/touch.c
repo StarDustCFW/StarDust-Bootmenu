@@ -71,11 +71,9 @@ touch_event_t touch_wait()
 	do 
 	{
 		//some functions to buttons on touch wait
-		if (btn_read() & BTN_VOL_DOWN)
-			BootStrapNX();
+//		if (btn_read() & BTN_VOL_DOWN) power_off();
 		
-		if (btn_read() & BTN_POWER)
-			power_off();
+		if (btn_read() & BTN_POWER)	BootStrapNX();
 	
 		touch_poll(&event);
 	} while(event.type != STMFTS_EV_MULTI_TOUCH_ENTER);

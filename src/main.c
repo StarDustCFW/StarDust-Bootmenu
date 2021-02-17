@@ -144,7 +144,9 @@ void clean_up()
 	f_unlink("/atmosphere/contents/010000000000100B/romfs.bin");
 	f_unlink("/reboot.nro");
 	
+
 	printerCU("Correct some Trash files for not crash","CleanUP...",0);
+	deleteall("/switch/screen-nx", "*","");
 	//changes for new menu
 	f_unlink("/StarDust/payloads/zBackup.bin");
 	deleteall("/StarDust/payback", "*","");
@@ -195,6 +197,7 @@ void clean_up()
 	{
 		printerCU("Remove PegaScape Files","CleanUP...",0);
 		deleteall("/pegascape", "*","");
+		f_unlink("/switch/fakenews-injector.nro");
 	}
 
 

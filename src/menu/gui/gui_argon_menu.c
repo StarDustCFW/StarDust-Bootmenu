@@ -322,10 +322,10 @@ if (!sd_mount()){BootStrapNX();}//check sd
 		serv_display(menu,"00FF0000A53BB665","SysDVR");
 		serv_display(menu,"0000000000534C56","ReverseNX");
 		serv_display(menu,"00FF0000636C6BFF","Sys-Clk");
-		serv_display(menu,"420000000000000B","SysPlay"); 
-		serv_display(menu,"0100000000000BEF","Disk-USB");
-		serv_display(menu,"0100000000000069","ReiSpoof");
-		serv_display(menu,"0100000000000FAF","HDI");
+		//serv_display(menu,"420000000000000B","SysPlay"); 
+		//serv_display(menu,"0100000000000BEF","Disk-USB");
+		//serv_display(menu,"0100000000000069","ReiSpoof");
+		//serv_display(menu,"0100000000000FAF","HDI");
 
 		//themes for cfw
 			u32 temX = 310;
