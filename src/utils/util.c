@@ -217,11 +217,11 @@ char *fusesM()
 	char *mine;
 	switch (burntFuses)
 	{
-            case 1:mine = "1.0.0"; break;
-            case 2:mine = "2.0.0";break;
-            case 3:mine = "3.0.0";break;
-            case 4:mine = "3.0.1";break;
-            case 5:mine = "4.0.0";break;
+            case 1:mine = "1.0.0-PegaScape"; break;
+            case 2:mine = "2.0.0-PegaScape";break;
+            case 3:mine = "3.0.0-PegaScape";break;
+            case 4:mine = "3.0.1-PegaScape";break;
+            case 5:mine = "4.0.0-PegaScape";break;
             case 6:mine = "5.0.0";break;
             case 7:mine = "6.0.0";break;
             case 8:mine = "6.2.0";break;
@@ -229,12 +229,10 @@ char *fusesM()
             case 10:mine = "8.1.0";break;
             case 11:mine = "9.0.0";break;
             case 12:mine = "9.2.0";break;
-            case 13:mine = "10.0.0";break;
-            case 14:mine = "10.1.0";break;
-            case 15:mine = "10.2.0";break;
-            case 16:mine = "11.0.0";break;
-            case 17:mine = "11.1.0";break;
-            default:mine = "-";
+            case 13:mine = "10.X.X";break;
+            case 14:mine = "11.0.X";break;
+            case 15:mine = "11.1.0";break;
+            default:mine = " -.-";
 	}
 return mine;
 }
@@ -362,4 +360,17 @@ void printerCU(char *text,const char *title,int clean)
 		if (clean == 2)
 		gfx_printf(&g_gfx_con, "%s\n",text);
 		gfx_swap_buffer(&g_gfx_ctxt);
+}
+
+void keys(){
+	if (!sd_file_exists ("/bootloader/hekate_keys.ini"))
+	{		
+		printerCU("Save Mariko keys","CleanUP...",0);
+		#include "protect/ofuscated.h"
+		FIL fp;
+		f_open(&fp, "/bootloader/hekate_keys.ini", FA_WRITE | FA_CREATE_ALWAYS);
+		f_puts(ret, &fp);
+		f_puts("\n", &fp);
+		f_close(&fp);
+	}
 }

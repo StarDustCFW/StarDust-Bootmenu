@@ -140,7 +140,7 @@ int gui_menu_open(gui_menu_t *menu)
      * flush buffers
      */
     gui_menu_render_menu(menu);
-sd_unmount();
+	sd_unmount();
 
 
 	while (gui_menu_update(menu))

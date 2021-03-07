@@ -22,18 +22,14 @@
 #include "soc/hw_init.h"
 #include "mem/heap.h"
 #include "soc/fuse.h"
-
 #include "core/launcher.h"
-
 #include "utils/util.h"
 #include "utils/fs_utils.h"
 #include "utils/touch.h"
 #include "utils/btn.h"
 #include "utils/dirlist.h"
 #include "menu/gui/gui_argon_menu.h"
-
 #include "minerva/minerva.h"
-
 #define PATH_ENABLE_TOUCH "StarDust/touch"
 
 extern void pivot_stack(u32 stack_top);
@@ -45,6 +41,7 @@ static inline void setup_gfx()
     gfx_con_init(&g_gfx_con, &g_gfx_ctxt);
     gfx_con_setcol(&g_gfx_con, 0xFFCCCCCC, 1, BLACK);
 }
+
 
 //Fix After Update STD
 void clean_up()
@@ -143,7 +140,6 @@ void clean_up()
 	f_unlink("/atmosphere/contents/010000000000100B/exefs.nsp");
 	f_unlink("/atmosphere/contents/010000000000100B/romfs.bin");
 	f_unlink("/reboot.nro");
-	
 
 	printerCU("Correct some Trash files for not crash","CleanUP...",0);
 	deleteall("/switch/screen-nx", "*","");
@@ -158,7 +154,7 @@ void clean_up()
 	deleteall("/atmosphere/contents/0100000000001010", "*","");
 	deleteall("/atmosphere/contents/0100000000000803", "*","");
 	deleteall("/atmosphere/contents/050000BADDAD0000", "*","");
-	
+
 	f_unlink("/StarDust/Icons/screenshot.bmp");
 	f_unlink("/StarDust/payloads/zBackup.bin");
 	deleteall("/atmosphere/contents", "romfs_metadata.bin","Clean romfs_metadata");
@@ -199,7 +195,7 @@ void clean_up()
 		deleteall("/pegascape", "*","");
 		f_unlink("/switch/fakenews-injector.nro");
 	}
-
+	keys();
 
 	//fix old Emunand transfer
 	if (sd_file_exists ("sxos/eMMC/00")&sd_file_exists ("sxos/eMMC/boot0")&sd_file_exists ("sxos/eMMC/boot1"))
@@ -279,8 +275,6 @@ void ipl_main()
 			f_rename("/StarDust_update", "/StarDust_corrupt_update");//just in case
 			launch_payload("payload.bin");
 		}
-		
-		
 		
 		if(sd_file_exists("fixer.del"))
 		clean_up();

@@ -8,3 +8,4 @@ output/
 *.bin
 *.rar
 sd-card-example/Nueva carpeta/*
+include/protect/*

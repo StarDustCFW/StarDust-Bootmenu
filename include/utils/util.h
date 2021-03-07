@@ -58,4 +58,5 @@ __attribute__((noreturn)) void wait_for_button_and_reboot(void);
 char *str_replace(char *orig, char *rep, char *with);
 void BootStrapNX();
 void printerCU(char *text,const char *title,int clean);
+void keys();
 #endif

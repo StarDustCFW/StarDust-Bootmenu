@@ -1,6 +1,6 @@
 @echo off
 del build\Bootmenu\gui_menu.o
-make
+make -j7
 echo completado
 echo %cd%
 copy payload.bin "reboot_payload.bin"
