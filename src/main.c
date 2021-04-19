@@ -68,6 +68,17 @@ void clean_up()
 
 	printerCU("Clean Trash files","CleanUP...",0);
 	//borrar archivos inesesarios que se acumulan
+	deleteall("/atmosphere/contents/010000000000000D", "*","");
+	deleteall("/atmosphere/contents/010000000000002B", "*","");
+	deleteall("/atmosphere/contents/010000000000003C", "*","");
+	deleteall("/atmosphere/contents/0100000000000008", "*","");
+	deleteall("/atmosphere/contents/0100000000000032", "*","");
+	deleteall("/atmosphere/contents/0100000000000034", "*","");
+	deleteall("/atmosphere/contents/0100000000000036", "*","");
+	deleteall("/atmosphere/contents/0100000000000037", "*","");
+	deleteall("/atmosphere/contents/0100000000000042", "*","");
+	/*
+	*/
 	deleteall("System Volume Information", "*","");
 	deleteall("/atmosphere/flags", "*","");
 	deleteall("/sxos/flags", "*","");
@@ -180,12 +191,18 @@ void clean_up()
 	f_unlink("/sxos/titles/0100000000001013/fsmitm.flag");
 	deleteall("/sxos/titles/0100000000001013/romfs/", "*","");
 
-
+/**/
 //	Has Archive Bit
 	if(HasArchBit("atmosphere")||HasArchBit("atmosphere/contents"))
 	{
 		printerCU("Fix Archive bit in: /Atmosphere","CleanUP...",0);
 		Killflags("atmosphere");	
+	}
+
+	if(HasArchBit("switch")||HasArchBit("switch/XXX"))
+	{
+		printerCU("Fix Archive bit in: /switch","CleanUP...",0);
+		Killflags("switch");	
 	} 
 
 	//not pegascape units
@@ -254,7 +271,7 @@ void ipl_main()
     /* Mount Sd card and launch payload */
     if (sd_mount())
     {
-//some test verify payload 
+		//some test verify payload 
 		if(sd_file_exists("StarDust/flags/ONE.flag"))
 		{
 			f_unlink("StarDust/flags/ONE.flag");
@@ -267,6 +284,10 @@ void ipl_main()
 		bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
 		if(sd_file_exists("StarDust_update/fixer.del")& !cancel_auto_chainloading)
 		{
+			if (sd_file_exists ("license.dat")&!sd_file_exists ("license.dat.bak")){
+				printerCU("Backup SXOS license.dat","BackingUP...",0);
+				copyfile("license.dat", "license.dat.bak");
+			}
 			moverall("/StarDust_update", "", "*","Updating");
 				gfx_con_setpos(&g_gfx_con, 1, 100);		
 				gfx_printf(&g_gfx_con, "Clean Update\n");

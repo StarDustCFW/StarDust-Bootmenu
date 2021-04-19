@@ -82,6 +82,9 @@ display_backlight_brightness(0, 1000);
     if(strstr(path,"coreboot") != NULL)
 	{boot=4;}
 
+    if(strstr(path,"switchroot/android") != NULL)
+	{boot=5;}
+
 
 
 	if (!sd_file_exists (path)&( boot!=4)) BootStrapNX();
@@ -137,6 +140,22 @@ display_backlight_brightness(0, 1000);
 		//small correction
 		if (sd_file_size("switchroot_android/coreboot.rom") == sd_file_size("switchroot_android/coreboot.bin"))
 			copyfile("atmosphere/reboot_payload.bin","switchroot_android/coreboot.rom");
+		}
+    }
+	if(boot==5)
+    {
+	display_backlight_brightness(0, 1000);
+		if (sd_file_exists ("/boot_payload.bin"))
+		{
+			if (sd_file_size("/boot_payload.bin") != sd_file_size("switchroot/android/coreboot.rom"))
+			{
+				if (!sd_file_exists ("switchroot/android/coreboot.bin"))
+				copyfile("switchroot/android/coreboot.rom","switchroot/android/coreboot.bin");
+				copyfile("boot_payload.bin","switchroot/android/coreboot.rom");
+			}
+		//small correction
+		if (sd_file_size("switchroot/android/coreboot.rom") == sd_file_size("switchroot/android/coreboot.bin"))
+			copyfile("boot_payload.bin","switchroot/android/coreboot.rom");
 		}
     }
 	

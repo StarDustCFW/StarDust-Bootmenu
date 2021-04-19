@@ -145,7 +145,13 @@ IswitchOFF = sd_file_read("/StarDust/Icons/sw-off.bmp");
 		
 
 	//prevent accidental boot to ofw
-	if (sd_file_size("bootloader/hekate_ipl.ini") != sd_file_size("bootloader/hekate_ipl.conf")) copyfile("bootloader/hekate_ipl.conf","bootloader/hekate_ipl.ini");//
+		if (sd_file_exists ("bootloader/hekate_ipl.bkp")){
+			f_unlink("bootloader/hekate_ipl.ini");
+			f_rename("bootloader/hekate_ipl.bkp","bootloader/hekate_ipl.ini");
+		}else{
+			if (sd_file_size("bootloader/hekate_ipl.ini") == sd_file_size("bootloader/Stock"))
+			copyfile("bootloader/hekate_ipl.conf","bootloader/hekate_ipl.ini");
+		}
 	
 	//waith user input
 	if (sd_file_exists("StarDust/autobootecho.txt")& (Incac == 0)) btn_wait_timeout(3000, BTN_VOL_UP);
@@ -262,6 +268,9 @@ void pre_load_menus(int menus,bool StarUp){
 
 					if (sd_file_exists ("/switchroot_android/coreboot.rom")|| sd_file_exists ("/switchroot_android/coreboot.bin"))
 					gui_menu_append_entry(menu_0,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Android.bmp"),590, main_iconY-10, 100, 100, (int (*)(void *))launch_payload, (void*)"/switchroot_android/coreboot.bin"));
+		//
+					if (sd_file_exists ("/switchroot/android/coreboot.rom")|| sd_file_exists ("/switchroot/android/coreboot.bin"))
+					gui_menu_append_entry(menu_0,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Android.bmp"),590, main_iconY-10, 100, 100, (int (*)(void *))launch_payload, (void*)"/switchroot/android/coreboot.bin"));
 		//
 					u64 iconrowY = 550;
 					u64 iconrowX = 170;
@@ -1379,12 +1388,24 @@ return 0;
 
 void hekateOFW(u32 tipo){
 if (!sd_mount()){BootStrapNX();}//check sd
-	if(tipo == 0)
-		copyfile("bootloader/hekate_ipl.conf","bootloader/hekate_ipl.ini");
+	if(tipo == 0){
+		
+		if (sd_file_exists ("bootloader/hekate_ipl.bkp")){
+			f_unlink("bootloader/hekate_ipl.ini");
+			f_rename("bootloader/hekate_ipl.bkp","bootloader/hekate_ipl.ini");
+		}else{
+			copyfile("bootloader/hekate_ipl.conf","bootloader/hekate_ipl.ini");
+		}
+		
+		
+	}
 
-	if(tipo == 1)
+	if(tipo == 1){
+		if (sd_file_size("bootloader/stock") != sd_file_size("bootloader/hekate_ipl.ini")){
+			f_rename("bootloader/hekate_ipl.ini","bootloader/hekate_ipl.bkp");
+		}
 		copyfile("bootloader/stock","bootloader/hekate_ipl.ini");
-	
+	}
 launch_payload("/StarDust/payloads/zHekate.bin");
 }
 
