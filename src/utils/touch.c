@@ -19,6 +19,8 @@
 #include "utils/btn.h"
 #include "core/custom-gui.h"
 #include "utils/touch.h"
+#include "gfx/gfx.h"
+extern gfx_ctxt_t g_gfx_ctxt;
 
 touch_event_t last_event;
 
@@ -51,8 +53,9 @@ static void touch_parse_event(touch_event_t *event)
 	case STMFTS_EV_STATUS:
 		return;
 
-	case STMFTS_EV_MULTI_TOUCH_ENTER:
 	case STMFTS_EV_MULTI_TOUCH_MOTION:
+	case STMFTS_EV_MULTI_TOUCH_ENTER:
+	case STMFTS_EV_MULTI_TOUCH_LEAVE:
 		touch_process_contact_event(event);
 		break;
 	}
@@ -67,7 +70,7 @@ static void touch_poll(touch_event_t *event)
 touch_event_t touch_wait()
 {
 	touch_event_t event;
-    
+    static u32 maar =0;
 	do 
 	{
 		//some functions to buttons on touch wait
@@ -76,7 +79,24 @@ touch_event_t touch_wait()
 		if (btn_read() & BTN_POWER)	BootStrapNX();
 	
 		touch_poll(&event);
-	} while(event.type != STMFTS_EV_MULTI_TOUCH_ENTER);
+		if (event.type == STMFTS_EV_MULTI_TOUCH_ENTER || event.type == STMFTS_EV_MULTI_TOUCH_MOTION){
+			//draw pointier o enter
+			maar=1;
+			g_gfx_con.scale = 5;
+			gfx_con_setpos(&g_gfx_con, event.y-25, event.x-25);
+			gfx_printf(&g_gfx_con, "O");
+		} else if(maar==1) {
+			//if not touching screen, then leave just once per touch
+			maar=0;
+			event.type = STMFTS_EV_MULTI_TOUCH_LEAVE;
+		} else {
+			//this evoid the repeated event
+			event.type = STMFTS_EV_NO_EVENT;
+		}
+
+		if (event.type == STMFTS_EV_MULTI_TOUCH_LEAVE || event.type == STMFTS_EV_MULTI_TOUCH_ENTER ||  event.type == STMFTS_EV_MULTI_TOUCH_MOTION ) break;
+
+	} while(true);
     
 	return event;
 }

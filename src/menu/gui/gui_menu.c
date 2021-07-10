@@ -92,7 +92,7 @@ static void gui_menu_draw_background(gui_menu_t* menu)
 
 		gfx_con_setpos(&g_gfx_con, 1, 1);
 //		gfx_con_setpos(&g_gfx_con, 1145+jump, 60);
-		gfx_printf(&g_gfx_con,"%k%d%k-%k%d%k-%k%s%k\n\n",0xFF00FF22, REVI_VERSION ,0xFFCCCCCC, 0xFFea2f1e, burntFuses ,0xFFCCCCCC ,0xFF331ad8 ,mindowngrade ,0xFFCCCCCC);
+		gfx_printf(&g_gfx_con,"%k%d%k%k%d%k%k%s%k\n\n",0xFF00FF22, REVI_VERSION ,0xFFCCCCCC, 0xFFea2f1e, burntFuses ,0xFFCCCCCC ,0xFF331ad8 ,mindowngrade ,0xFFCCCCCC);
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
 /* 
 Rojo  0xFFea2f1e
@@ -176,12 +176,13 @@ int gui_menu_open2(gui_menu_t *menu)
     if(!render_custom_background(menu->custom_gui))
     gfx_clear_color(&g_gfx_ctxt, 0xFF191414);
 //    gui_menu_draw_entries(menu);
-		if (sd_file_exists("StarDust/autobootecho.txt"))
+		if (sd_file_exists("StarDust/autobootecho.txt")&& !sd_file_exists("StarDust/autoboot.inc"))
 		{
 
 		g_gfx_con.scale = 3;
 		gfx_con_setpos(&g_gfx_con, 1070, 10);
-		gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
+		//gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
+		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0xFFFFFFFF, 0xFF191414);
 		gfx_printf(&g_gfx_con, "AutoBoot\n");
 		gfx_con_setpos(&g_gfx_con, 500, 10);
 		gfx_printf(&g_gfx_con, "Vol +: BootMenu\n");
@@ -194,11 +195,13 @@ int gui_menu_open2(gui_menu_t *menu)
 			Sversion[0] = str[0];
 		if(strstr(Sversion,"A") != NULL)
 		gfx_printf(&g_gfx_con, "-> Atmosphere\n");
+
+		if(strstr(Sversion,"T") != NULL)
+		gfx_printf(&g_gfx_con, "-> Android\n");
 /*
-		if(strstr(Sversion,"C") != NULL)
-		gfx_printf(&g_gfx_con, "-> ReiNX\n");
 */		
-		if(strstr(Sversion,"S") != NULL) {gfx_printf(&g_gfx_con, "-> SXOS\n"); isAMS = 0;}
+		if(strstr(Sversion,"S") != NULL)
+		{gfx_printf(&g_gfx_con, "-> SXOS\n"); isAMS = 0;}
 		
 
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
@@ -221,19 +224,23 @@ static int handle_touch_input(gui_menu_t *menu)
 {
     gui_menu_entry_t *entry = NULL;
     touch_event_t event = touch_wait();
-    
-    /* After touch input check if any entry has ben tapped */
-    for(u32 i = 0; i < menu->next_entry; i++)
-    {
-        entry = menu->entries[i];
 
-        if (entry->handler != NULL 
-            && is_rect_touched(&event, entry->x, entry->y, entry->width, entry->height))
-        {
-            if (entry->handler(entry->param) != 0)
-                return 0;
-        }
-    }
+		if (event.type == STMFTS_EV_MULTI_TOUCH_LEAVE){
+			/* After touch input check if any entry has ben tapped */
+			for(u32 i = 0; i < menu->next_entry; i++)
+			{
+				entry = menu->entries[i];
+
+				if (entry->handler != NULL 
+					&& is_rect_touched(&event, entry->x, entry->y, entry->width, entry->height))
+				{
+					if (entry->handler(entry->param) != 0)
+						return 0;
+				}
+			}
+		}
+
+	
 
     return 1;
 }
