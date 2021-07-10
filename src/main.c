@@ -77,8 +77,7 @@ void clean_up()
 	deleteall("/atmosphere/contents/0100000000000036", "*","");
 	deleteall("/atmosphere/contents/0100000000000037", "*","");
 	deleteall("/atmosphere/contents/0100000000000042", "*","");
-	/*
-	*/
+	deleteall("/switch/sys-clk-Editor", "*","");
 	deleteall("System Volume Information", "*","");
 	deleteall("/atmosphere/flags", "*","");
 	deleteall("/sxos/flags", "*","");
@@ -190,6 +189,7 @@ void clean_up()
 	f_unlink("/sxos/titles/0100000000001000/romfs/lyt/common.szs");
 	f_unlink("/sxos/titles/0100000000001013/fsmitm.flag");
 	deleteall("/sxos/titles/0100000000001013/romfs/", "*","");
+	f_unlink("StarDust/boot.temp");
 
 /**/
 //	Has Archive Bit

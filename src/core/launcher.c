@@ -82,9 +82,9 @@ display_backlight_brightness(0, 1000);
     if(strstr(path,"coreboot") != NULL)
 	{boot=4;}
 
-    if(strstr(path,"switchroot/android") != NULL)
-	{boot=5;}
+//    if(strstr(path,"switchroot/android") != NULL){boot=5;}
 
+	
 
 
 	if (!sd_file_exists (path)&( boot!=4)) BootStrapNX();
@@ -95,7 +95,6 @@ display_backlight_brightness(0, 1000);
 		if (sd_file_size("atmosphere/fusee-secondary.bin") != sd_file_size("sept/payload.bin"))
 		copyfile("atmosphere/fusee-secondary.bin","sept/payload.bin");
 		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
-
 		sd_save_to_file("Atmosphere", 10, "StarDust/autobootecho.txt");
     }
 
@@ -128,6 +127,9 @@ display_backlight_brightness(0, 1000);
 
 	if(boot==4)
     {
+		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
+		sd_save_to_file("TWRP", 4, "StarDust/autobootecho.txt");		
+		/*
 	display_backlight_brightness(0, 1000);
 		if (sd_file_exists ("/atmosphere/reboot_payload.bin"))
 		{
@@ -141,10 +143,13 @@ display_backlight_brightness(0, 1000);
 		if (sd_file_size("switchroot_android/coreboot.rom") == sd_file_size("switchroot_android/coreboot.bin"))
 			copyfile("atmosphere/reboot_payload.bin","switchroot_android/coreboot.rom");
 		}
+		*/
     }
 	if(boot==5)
     {
+	/*
 	display_backlight_brightness(0, 1000);
+	
 		if (sd_file_exists ("/boot_payload.bin"))
 		{
 			if (sd_file_size("/boot_payload.bin") != sd_file_size("switchroot/android/coreboot.rom"))
@@ -157,6 +162,7 @@ display_backlight_brightness(0, 1000);
 		if (sd_file_size("switchroot/android/coreboot.rom") == sd_file_size("switchroot/android/coreboot.bin"))
 			copyfile("boot_payload.bin","switchroot/android/coreboot.rom");
 		}
+	*/
     }
 	
 	

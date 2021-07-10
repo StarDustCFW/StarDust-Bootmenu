@@ -174,6 +174,11 @@ IswitchOFF = sd_file_read("/StarDust/Icons/sw-off.bmp");
 
 		if(strstr(Aversion,"S") != NULL)
 		launch_payload("StarDust/payloads/SXOS.bin");
+		
+		if (sd_file_exists ("/switchroot/android/coreboot.rom")){
+			if(strstr(Aversion,"T") != NULL)
+			launch_payload("switchroot/android/coreboot.rom");
+		}
 	}
 	f_unlink("StarDust/payload.bin");
 	
@@ -266,11 +271,11 @@ void pre_load_menus(int menus,bool StarUp){
 		//				
 					gui_menu_append_entry(menu_0,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Stock.bmp"),540, main_iconY +100, 200 , 100,(int (*)(void *))hekateOFW, (void*)1));
 
-					if (sd_file_exists ("/switchroot_android/coreboot.rom")|| sd_file_exists ("/switchroot_android/coreboot.bin"))
-					gui_menu_append_entry(menu_0,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Android.bmp"),590, main_iconY-10, 100, 100, (int (*)(void *))launch_payload, (void*)"/switchroot_android/coreboot.bin"));
-		//
-					if (sd_file_exists ("/switchroot/android/coreboot.rom")|| sd_file_exists ("/switchroot/android/coreboot.bin"))
-					gui_menu_append_entry(menu_0,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Android.bmp"),590, main_iconY-10, 100, 100, (int (*)(void *))launch_payload, (void*)"/switchroot/android/coreboot.bin"));
+					if (sd_file_exists ("/switchroot/android/coreboot.rom"))
+					gui_menu_append_entry(menu_0,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Android.bmp"),590, main_iconY-10, 100, 100, (int (*)(void *))launch_payload, (void*)"/switchroot/android/coreboot.rom"));
+					else if (sd_file_exists ("/switchroot_android/coreboot.rom"))
+					gui_menu_append_entry(menu_0,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Android.bmp"),590, main_iconY-10, 100, 100, (int (*)(void *))launch_payload, (void*)"/switchroot_android/coreboot.rom"));
+
 		//
 					u64 iconrowY = 550;
 					u64 iconrowX = 170;
@@ -362,14 +367,16 @@ void pre_load_menus(int menus,bool StarUp){
 				serv_display(menu_1,"420000000000000E","FTP");
 				serv_display(menu_1,"420000000007E51A","TeslaOVL");
 				serv_display(menu_1,"010000000000bd00","MissionCon");
+				serv_display(menu_1,"0100000000000081","nx-btred");
 				serv_display(menu_1,"690000000000000D","Sys-Con");
 				serv_display(menu_1,"0100000000000352","Emuiio"); 
 				serv_display(menu_1,"4200000000000010","LanPlay");
-				serv_display(menu_1,"4200000000000000","SysTune"); 
 				serv_display(menu_1,"00FF0000A53BB665","SysDVR");
 				serv_display(menu_1,"0000000000534C56","ReverseNX");
 				serv_display(menu_1,"00FF0000636C6BFF","Sys-Clk");
-				//serv_display(menu_1,"420000000000000B","SysPlay"); 
+				serv_display(menu_1,"430000000000000B","sys-botbase"); 
+				serv_display(menu_1,"4200000000000000","SysTune"); 
+				serv_display(menu_1,"420000000000000B","SysPlay"); 
 				//serv_display(menu_1,"0100000000000BEF","Disk-USB");
 				//serv_display(menu_1,"0100000000000069","ReiSpoof");
 				//serv_display(menu_1,"0100000000000FAF","HDI");
@@ -1086,9 +1093,6 @@ Ajbrillo(1);
 		e++;
 		}
 
-	//reactivate ams critical serv
-	sd_save_to_file("", 0, "/atmosphere/contents/0100000000000032/flags/boot2.flag");
-	sd_save_to_file("", 0, "/atmosphere/contents/0100000000000037/flags/boot2.flag");
     sd_save_to_file("", 0, "fixer.del");
 launch_payload("payload.bin");
 return 0;
