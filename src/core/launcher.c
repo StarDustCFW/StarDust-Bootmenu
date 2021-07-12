@@ -79,10 +79,11 @@ display_backlight_brightness(0, 1000);
 //    	boot=2;
     if(strstr(path,"SXOS") != NULL)
     	boot=3;
-    if(strstr(path,"coreboot") != NULL)
+    if(strstr(path,"android") != NULL)
 	{boot=4;}
 
-//    if(strstr(path,"switchroot/android") != NULL){boot=5;}
+    if(strstr(path,"ubuntu") != NULL)
+	{boot=5;}
 
 	
 
@@ -129,40 +130,11 @@ display_backlight_brightness(0, 1000);
     {
 		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
 		sd_save_to_file("TWRP", 4, "StarDust/autobootecho.txt");		
-		/*
-	display_backlight_brightness(0, 1000);
-		if (sd_file_exists ("/atmosphere/reboot_payload.bin"))
-		{
-			if (sd_file_size("/atmosphere/reboot_payload.bin") != sd_file_size("switchroot_android/coreboot.rom"))
-			{
-				if (!sd_file_exists ("switchroot_android/coreboot.bin"))
-				copyfile("switchroot_android/coreboot.rom","switchroot_android/coreboot.bin");
-				copyfile("atmosphere/reboot_payload.bin","switchroot_android/coreboot.rom");
-			}
-		//small correction
-		if (sd_file_size("switchroot_android/coreboot.rom") == sd_file_size("switchroot_android/coreboot.bin"))
-			copyfile("atmosphere/reboot_payload.bin","switchroot_android/coreboot.rom");
-		}
-		*/
     }
 	if(boot==5)
     {
-	/*
-	display_backlight_brightness(0, 1000);
-	
-		if (sd_file_exists ("/boot_payload.bin"))
-		{
-			if (sd_file_size("/boot_payload.bin") != sd_file_size("switchroot/android/coreboot.rom"))
-			{
-				if (!sd_file_exists ("switchroot/android/coreboot.bin"))
-				copyfile("switchroot/android/coreboot.rom","switchroot/android/coreboot.bin");
-				copyfile("boot_payload.bin","switchroot/android/coreboot.rom");
-			}
-		//small correction
-		if (sd_file_size("switchroot/android/coreboot.rom") == sd_file_size("switchroot/android/coreboot.bin"))
-			copyfile("boot_payload.bin","switchroot/android/coreboot.rom");
-		}
-	*/
+		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
+		sd_save_to_file("Ubuntu", 6, "StarDust/autobootecho.txt");		
     }
 	
 	

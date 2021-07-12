@@ -179,6 +179,11 @@ IswitchOFF = sd_file_read("/StarDust/Icons/sw-off.bmp");
 			if(strstr(Aversion,"T") != NULL)
 			launch_payload("switchroot/android/coreboot.rom");
 		}
+
+		if (sd_file_exists ("/switchroot/ubuntu/coreboot.rom")){
+			if(strstr(Aversion,"U") != NULL)
+			launch_payload("switchroot/ubuntu/coreboot.rom");
+		}
 	}
 	f_unlink("StarDust/payload.bin");
 	
@@ -270,12 +275,14 @@ void pre_load_menus(int menus,bool StarUp){
 					gui_menu_append_entry(menu_0,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/SXOS.bmp"), main_iconX, main_iconY, 300 , 300,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/SXOS.bin"));
 		//				
 					gui_menu_append_entry(menu_0,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Stock.bmp"),540, main_iconY +100, 200 , 100,(int (*)(void *))hekateOFW, (void*)1));
-
 					if (sd_file_exists ("/switchroot/android/coreboot.rom"))
 					gui_menu_append_entry(menu_0,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Android.bmp"),590, main_iconY-10, 100, 100, (int (*)(void *))launch_payload, (void*)"/switchroot/android/coreboot.rom"));
 					else if (sd_file_exists ("/switchroot_android/coreboot.rom"))
 					gui_menu_append_entry(menu_0,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Android.bmp"),590, main_iconY-10, 100, 100, (int (*)(void *))launch_payload, (void*)"/switchroot_android/coreboot.rom"));
 
+
+					if (sd_file_exists ("/switchroot/ubuntu/coreboot.rom"))
+					gui_menu_append_entry(menu_0,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Ubuntu.bmp"),590, main_iconY+210, 100, 100, (int (*)(void *))launch_payload, (void*)"/switchroot/ubuntu/coreboot.rom"));
 		//
 					u64 iconrowY = 550;
 					u64 iconrowX = 170;
@@ -329,7 +336,7 @@ void pre_load_menus(int menus,bool StarUp){
 				gui_menu_append_entry(menu_1,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/power.bmp"),80, 500, 70, 70, tool_power_off, NULL));
 				
 				//call menu 2
-				gui_menu_append_entry(menu_1,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Memloader.bmp"),250, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)3));
+				//gui_menu_append_entry(menu_1,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Memloader.bmp"),250, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)3));
 		//		gui_menu_append_entry(menu_1,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Memloader.bmp"),250, low_icons, 70, 70,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/TegraExplorer.bin"));
 				start_point=menu->next_entry;
 			} else {
@@ -425,11 +432,12 @@ void pre_load_menus(int menus,bool StarUp){
 		
 		if (menus == 3){
 			menu_3 = gui_menu_create("ArgonNX",3);
-
+/*
 			gui_menu_append_entry(menu_3,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/memloader_boot0.bmp"),80, 300, 200 , 200,(int (*)(void *))memloader, (void*)0));
 			gui_menu_append_entry(menu_3,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/memloader_boot1.bmp"),380, 300, 200 , 200,(int (*)(void *))memloader, (void*)1));
 			gui_menu_append_entry(menu_3,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/memloader_emmc.bmp"),680, 300, 200 , 200,(int (*)(void *))memloader, (void*)2));
 			gui_menu_append_entry(menu_3,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/memloader_sd.bmp"),980, 300, 200 , 200,(int (*)(void *))memloader, (void*)3));
+			*/
 			//call
 			gui_menu_append_entry(menu_3,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/gear.bmp"),1200, low_icons, 70, 70, (int (*)(void *))tool_Menus, (void*)1));
 			menu=menu_3;

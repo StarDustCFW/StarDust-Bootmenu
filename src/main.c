@@ -158,6 +158,7 @@ void clean_up()
 	deleteall("/StarDust/payback", "*","");
 	deleteall("/StarDust/logos", "*","");
 	deleteall("/StarDust/Atheme", "*","");
+	deleteall("/StarDust/uboot", "*","");
 
 	deleteall("/atmosphere/contents/0100000000000BEF", "*","");
 	deleteall("/atmosphere/contents/010000000000100B", "*","");

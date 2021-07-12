@@ -178,10 +178,8 @@ int gui_menu_open2(gui_menu_t *menu)
 //    gui_menu_draw_entries(menu);
 		if (sd_file_exists("StarDust/autobootecho.txt")&& !sd_file_exists("StarDust/autoboot.inc"))
 		{
-
 		g_gfx_con.scale = 3;
 		gfx_con_setpos(&g_gfx_con, 1070, 10);
-		//gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0xFFFFFFFF, 0xFF191414);
 		gfx_printf(&g_gfx_con, "AutoBoot\n");
 		gfx_con_setpos(&g_gfx_con, 500, 10);
@@ -198,11 +196,12 @@ int gui_menu_open2(gui_menu_t *menu)
 
 		if(strstr(Sversion,"T") != NULL)
 		gfx_printf(&g_gfx_con, "-> Android\n");
-/*
-*/		
+
+		if(strstr(Sversion,"U") != NULL)
+		gfx_printf(&g_gfx_con, "-> Ubuntu\n");
+
 		if(strstr(Sversion,"S") != NULL)
 		{gfx_printf(&g_gfx_con, "-> SXOS\n"); isAMS = 0;}
-		
 
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
 		}
