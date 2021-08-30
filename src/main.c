@@ -276,9 +276,10 @@ void ipl_main()
 			f_unlink("StarDust/flags/ONE.flag");
 			launch_payload("payload.bin");
 		}
-		/*		bool cancel_auto_chainloading = btn_read() & BTN_VOL_DOWN;
+		/*
+		bool cancel_auto_chainloading = btn_read() & BTN_VOL_DOWN;
 		bool load_menu = cancel_auto_chainloading || launch_payload("StarDust/payload.bin");
-*/
+		*/
 		//update stardust
 		bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
 		if (sd_file_exists("StarDust_update/fixer.del") & !cancel_auto_chainloading)
@@ -300,14 +301,16 @@ void ipl_main()
 		if (sd_file_exists("fixer.del"))
 			clean_up();
 
-		//        gfx_printf(&g_gfx_con, "Autochainload canceled. Loading menu...\n");
-		//      gfx_swap_buffer(&g_gfx_ctxt);
-		//		msleep(2000);
-		//		BootStrapNX();
-
-		//        if (load_menu)
+		/*
+		gfx_printf(&g_gfx_con, "Autochainload canceled. Loading menu...\n");
+		gfx_swap_buffer(&g_gfx_ctxt);
+		msleep(2000);
+		BootStrapNX();
+		
+		if (load_menu)
+		*/
 		gui_init_argon_boot();
-		//		gui_init_argon_menu();
+		//gui_init_argon_menu();
 	}
 	else
 	{
