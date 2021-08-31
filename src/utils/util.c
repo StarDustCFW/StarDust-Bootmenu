@@ -362,7 +362,7 @@ void printerCU(char *text,const char *title,int clean)
 		gfx_printf(&g_gfx_con, "%s\n",text);
 		gfx_swap_buffer(&g_gfx_ctxt);
 }
-
+/*
 void keys(){
 	if (!sd_file_exists ("/bootloader/hekate_keys.ini"))
 	{		
@@ -375,3 +375,4 @@ void keys(){
 		f_close(&fp);
 	}
 }
+*/

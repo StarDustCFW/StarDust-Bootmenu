@@ -35,10 +35,10 @@ void clean_up()
 	printerCU("Clean old files", "CleanUP...", 0);
 
 	FIL delet;
-	f_open(&delet, "StarDust/delete.list", FA_READ);
+	f_open(&delet, "fixer.del", FA_READ);
 	FILINFO stats;
 
-	f_stat("StarDust/delete.list", &stats);
+	f_stat("fixer.del", &stats);
 	__off_t size = stats.fsize;
 
 	char buff[size];
@@ -52,10 +52,11 @@ void clean_up()
 		lineHandler(p);
 		p = strtok(NULL, "\n");
 	}
-
-	sd_save_to_file("", 0, "atmosphere/contents/0100000000001000/fsmitm.flag");
+	deleteall("/atmosphere/contents", "romfs_metadata.bin", "Clean romfs_metadata");
+	
+	//sd_save_to_file("", 0, "atmosphere/contents/0100000000001000/fsmitm.flag");
+	//f_rename("Payload_de_arranque.bin", "boot_payload.bin");
 	//Pequeña correccion
-	f_rename("Payload_de_arranque.bin", "boot_payload.bin");
 	f_rename("/Backup/prodinfo.bin", "/prodinfo_sysnand.bin");
 	//	Has Archive Bit
 	if (HasArchBit("atmosphere") || HasArchBit("atmosphere/contents"))
@@ -77,7 +78,7 @@ void clean_up()
 		deleteall("/pegascape", "*", "");
 		f_unlink("/switch/fakenews-injector.nro");
 	}
-	keys();
+	//keys();
 
 	//fix old Emunand transfer
 	if (sd_file_exists("sxos/eMMC/00") & sd_file_exists("sxos/eMMC/boot0") & sd_file_exists("sxos/eMMC/boot1"))
