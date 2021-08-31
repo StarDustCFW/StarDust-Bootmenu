@@ -31,7 +31,6 @@
 #include "menu/gui/gui_argon_menu.h"
 #include "minerva/minerva.h"
 #include "utils/clean.h"
-#define PATH_ENABLE_TOUCH "StarDust/touch"
 
 extern void pivot_stack(u32 stack_top);
 static inline void setup_gfx()
