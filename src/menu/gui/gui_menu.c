@@ -17,7 +17,8 @@
 #define MINOR_VERSION 3
 #define MAJOR_VERSION 0
 #define REVI_VERSION LOAD_BUILD_VER
-	char Sversion[4];
+
+char Sversion[4];
 
 /* Render the menu */
 static void gui_menu_render_menu(gui_menu_t*);
@@ -183,14 +184,19 @@ int gui_menu_open2(gui_menu_t *menu)
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0xFFFFFFFF, 0xFF191414);
 		gfx_printf(&g_gfx_con, "AutoBoot\n");
 		gfx_con_setpos(&g_gfx_con, 500, 10);
-		gfx_printf(&g_gfx_con, "Vol +: BootMenu\n");
+		gfx_printf(&g_gfx_con, "Vol +: StarDustMenu\n");
 		
 		gfx_con_setpos(&g_gfx_con, 50, 10);
-			char *str;
+		char *str;
+		if (g_sd_mounted){
 			void *buf;
 			buf = sd_file_read("StarDust/autobootecho.txt");
 			str = buf;
 			Sversion[0] = str[0];
+			Sversion[1] = str[1];
+			Sversion[2] = str[2];
+			Sversion[3] =  0;
+		}
 		if(strstr(Sversion,"A") != NULL)
 		gfx_printf(&g_gfx_con, "-> Atmosphere\n");
 
@@ -214,7 +220,7 @@ void gui_menu_destroy(gui_menu_t *menu)
 	for (int i = 0; i < menu->next_entry; i++)
 		gui_menu_entry_destroy(menu->entries[i]);
     custom_gui_end(menu->custom_gui);
-	free(menu->entries);
+	//free(menu->entries);
 	free(menu);
 }
 

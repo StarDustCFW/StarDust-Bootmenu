@@ -84,7 +84,7 @@ touch_event_t touch_wait()
 			maar=1;
 			g_gfx_con.scale = 5;
 			gfx_con_setpos(&g_gfx_con, event.y-25, event.x-25);
-			gfx_printf(&g_gfx_con, "O");
+			gfx_printf(&g_gfx_con, "X");
 		} else if(maar==1) {
 			//if not touching screen, then leave just once per touch
 			maar=0;

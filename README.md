@@ -36,10 +36,10 @@ This payload will launch any CFW or payload.
 2. Change to prettier font
 
 ## Credits
-
 * __devkitPro__ for the [devkitA64](https://devkitpro.org/) toolchain.
 * __naehrwert__ and __st4rk__ for the original [hekate](https://github.com/nwert/hekate) project and its hwinit code base.
 * __CTCaer__ for the continued [hekate](https://github.com/CTCaer/hekate) and his **minerva** project.
 * __xalgovia__ and __Retrogamer 74__ for the splash and logos. Also thanks them to use ArgonNX.
 * __langerhans__ and  __stuck-pixel__ for their implementation of touch support.
 * __D3fau4__ for touch support testing.
+* [pwall2222] (https://github.com/pwall2222) Code Support

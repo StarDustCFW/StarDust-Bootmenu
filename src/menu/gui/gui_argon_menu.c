@@ -41,6 +41,8 @@
 #define MARGIN_LEFT 46
 #define MAX_CHAR 100 typedef char string[MAX_CHAR+1];
 
+extern char Sversion[4];
+
 int AThemes_list(gui_menu_t* menu, u32 gridX, u32 gridY);
 void serv_display(gui_menu_t* menu,char* titleid,char* name);
 static int tool_extr_rSD(void* param);
@@ -152,52 +154,42 @@ IswitchOFF = sd_file_read("/StarDust/Icons/sw-off.bmp");
 			if (sd_file_size("bootloader/hekate_ipl.ini") == sd_file_size("bootloader/Stock"))
 			copyfile("bootloader/hekate_ipl.conf","bootloader/hekate_ipl.ini");
 		}
+/*
+						g_gfx_con.scale = 3;
+						gfx_con_setpos(&g_gfx_con, 470, 250);
+						gfx_printf(&g_gfx_con, "\n-%s-\n",Sversion);
+						gfx_swap_buffer(&g_gfx_ctxt);
+						msleep(15000);
+						tool_power_off(NULL);
+						return;
+*/
 	
 	//waith user input
 	if (sd_file_exists("StarDust/autobootecho.txt")& (Incac == 0)) btn_wait_timeout(3000, BTN_VOL_UP);
 
     bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
-    if ((!cancel_auto_chainloading) & (Incac == 0))
+    if (sd_file_exists("StarDust/autobootecho.txt")&&(!cancel_auto_chainloading) & (Incac == 0))
 	{
 		//autoboot
-		char *str;
-		char Aversion[1];
-
-		if (g_sd_mounted){
-			void *buf;
-			buf = sd_file_read("StarDust/autobootecho.txt");
-			str = buf;
-			Aversion[0] = str[0];
-		}
-		if(strstr(Aversion,"A") != NULL)
+		if(strstr(Sversion,"A") != NULL)
 		launch_payload("StarDust/payloads/Atmosphere.bin");
 
-		if(strstr(Aversion,"S") != NULL)
+		if(strstr(Sversion,"S") != NULL)
 		launch_payload("StarDust/payloads/SXOS.bin");
 		
-		if (sd_file_exists ("/switchroot/android/coreboot.rom")){
-			if(strstr(Aversion,"T") != NULL)
-			launch_payload("switchroot/android/coreboot.rom");
+		if (sd_file_exists ("/switchroot/ubuntu/coreboot.rom")&&(strstr(Sversion,"Ub") != NULL)){
+			launch_payload("switchroot/ubuntu/coreboot.rom");
 		}
 
-		if (sd_file_exists ("/switchroot/ubuntu/coreboot.rom")){
-			if(strstr(Aversion,"U") != NULL)
-			launch_payload("switchroot/ubuntu/coreboot.rom");
+		if (sd_file_exists ("/switchroot/android/coreboot.rom")&&(strstr(Sversion,"TW") != NULL)){
+			launch_payload("switchroot/android/coreboot.rom");
 		}
 	}
 	f_unlink("StarDust/payload.bin");
 	
 	if (btn_read() & BTN_VOL_DOWN) f_unlink("StarDust/autobootecho.txt");
-/*	
-	//dinamic correction for ams folder
-	sd_save_to_file("", 0, "atmosphere/titles/killme.flag");
-	if (sd_file_exists("atmosphere/titles/killme.flag"))
-	{
-		f_rename("/atmosphere/titles","/atmosphere/contents");
-		copyarall("/atmosphere/titles/0100000000001000", "/atmosphere/contents/0100000000001000", "*","");
-		deleteall("/atmosphere/titles", "*","");
-	}
-*/
+
+
 gui_menu_pool_cleanup();
 pre_load_menus(0,1);
 gui_init_argon_menu();
@@ -279,7 +271,6 @@ void pre_load_menus(int menus,bool StarUp){
 					gui_menu_append_entry(menu_0,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Android.bmp"),590, main_iconY-10, 100, 100, (int (*)(void *))launch_payload, (void*)"/switchroot/android/coreboot.rom"));
 					else if (sd_file_exists ("/switchroot_android/coreboot.rom"))
 					gui_menu_append_entry(menu_0,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Android.bmp"),590, main_iconY-10, 100, 100, (int (*)(void *))launch_payload, (void*)"/switchroot_android/coreboot.rom"));
-
 
 					if (sd_file_exists ("/switchroot/ubuntu/coreboot.rom"))
 					gui_menu_append_entry(menu_0,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/Ubuntu.bmp"),590, main_iconY+210, 100, 100, (int (*)(void *))launch_payload, (void*)"/switchroot/ubuntu/coreboot.rom"));
@@ -380,6 +371,7 @@ void pre_load_menus(int menus,bool StarUp){
 				serv_display(menu_1,"4200000000000010","LanPlay");
 				serv_display(menu_1,"00FF0000A53BB665","SysDVR");
 				serv_display(menu_1,"0000000000534C56","ReverseNX");
+				serv_display(menu_1,"00FF747765616BFF","sys-tweak");
 				serv_display(menu_1,"00FF0000636C6BFF","Sys-Clk");
 				serv_display(menu_1,"430000000000000B","sys-botbase"); 
 				serv_display(menu_1,"4200000000000000","SysTune"); 
