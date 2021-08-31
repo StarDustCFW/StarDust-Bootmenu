@@ -42,4 +42,4 @@ This payload will launch any CFW or payload.
 * __xalgovia__ and __Retrogamer 74__ for the splash and logos. Also thanks them to use ArgonNX.
 * __langerhans__ and  __stuck-pixel__ for their implementation of touch support.
 * __D3fau4__ for touch support testing.
-* [pwall2222] (https://github.com/pwall2222) Code Support
+* [pwall2222](https://github.com/pwall2222) Code Support
