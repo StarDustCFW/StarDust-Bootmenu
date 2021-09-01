@@ -1349,7 +1349,7 @@ void serv_display(gui_menu_t *menu, char *titleid, char *name)
 			}
 			gui_menu_append_entry(menu, gui_create_menu_entry_no_bitmap(name, servX + 30, servY + 30, 150, 100, NULL, NULL));
 			servstep++;
-			if (servstep == 2 || servstep == 4 || servstep == 6 || servstep == 8 || servstep == 10)
+			if (servstep % 2 == 0)
 			{
 				servY = servYF;
 				servX = servX + 205;
