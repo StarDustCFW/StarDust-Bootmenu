@@ -1571,20 +1571,13 @@ void Ajbrillo(u32 tipo)
 	{
 		BootStrapNX();
 	} //check sd
+	int brillo = 100;
 	if (sd_file_exists("StarDust/flags/b50.flag"))
-	{
 		brillo = 10;
-		brilloM = brillo / 2;
-	}
-	else
-	{
-		brillo = 100;
-		brilloM = brillo / 2;
-	}
 
 	if (tipo == 0)
 		display_backlight_brightness(brillo, 1000);
 
 	if (tipo == 1)
-		display_backlight_brightness(brilloM, 1000);
+		display_backlight_brightness(brillo / 2, 1000);
 }
