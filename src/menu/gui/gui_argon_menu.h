@@ -43,7 +43,7 @@ int uLaunch(u32 fil);
 void HBhide(char *folder);
 void serv_CFW(int cfw);
 int bat_show(u32 percent);
-void Ajbrillo(u32 tipo);
+void change_brightness(u32 tipo);
 void hekateOFW(u32 tipo);
 void medislay(char *flags);
 int static_menu_elements(gui_menu_t *menu);

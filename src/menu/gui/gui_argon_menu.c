@@ -94,7 +94,7 @@ void gui_init_argon_boot(void)
 	}
 	gui_menu_pool_init();
 	gui_menu_t *menu = gui_menu_create("ArgonNX", main_menu);
-	Ajbrillo(0);
+	change_brightness(0);
 
 	//show display without icons
 	gui_menu_open2(menu);
@@ -698,7 +698,7 @@ void gui_init_argon_menu(void)
 		BootStrapNX();
 	} //check sd
 	/* Init pool for menu */
-	//	Ajbrillo(1);
+	//	change_brightness(1);
 	gui_menu_pool_init();
 	//	menu = gui_menu_create("ArgonNX",main_menu);
 	//main menu 0-------------------------------------
@@ -757,7 +757,7 @@ void gui_init_argon_menu(void)
 
 	static_menu_elements(menu);
 	/* Start menu_1 */
-	Ajbrillo(0);
+	change_brightness(0);
 	gui_menu_open(menu);
 	/* Clear all entries and menus */
 	gui_menu_pool_cleanup();
@@ -812,7 +812,7 @@ static int tool_extr_rSD(void *param)
 		BootStrapNX();
 	} //check sd
 	gfx_swap_buffer(&g_gfx_ctxt);
-	Ajbrillo(0);
+	change_brightness(0);
 	g_gfx_con.scale = 3;
 	gfx_con_setpos(&g_gfx_con, 160, 100);
 	gfx_printf(&g_gfx_con, "Ya puedes extraer la SD, Al terminar\n");
@@ -841,7 +841,7 @@ static int tool_emu(u32 status)
 	if (status == 33)
 	{
 		f_unlink("sxos/eMMC");
-		Ajbrillo(1);
+		change_brightness(1);
 		f_mkdir("emuMMC");
 		f_mkdir("emuMMC/EF00");
 		f_rename("/sxos/emunand", "/emuMMC/EF00/eMMC");
@@ -890,7 +890,7 @@ static int tool_emu(u32 status)
 	if (status == 66)
 	{
 		f_unlink("sxos/emunand");
-		Ajbrillo(1);
+		change_brightness(1);
 		f_rename("/emuMMC/EF00/eMMC", "/sxos/emunand");
 
 		f_rename("sxos/emunand/boot0", "sxos/emunand/boot0.bin");
@@ -929,7 +929,7 @@ static int tool_emu(u32 status)
 	//link sxos hide partition to ams
 	if (status == 99)
 	{
-		Ajbrillo(1);
+		change_brightness(1);
 		f_mkdir("emummc");
 		FIL fp;
 		f_open(&fp, "emummc/emummc.ini", FA_WRITE | FA_CREATE_ALWAYS);
@@ -994,7 +994,7 @@ void tool_servises_on(char *title)
 	{
 		BootStrapNX();
 	} //check sd
-	Ajbrillo(1);
+	change_brightness(1);
 	char *path = (char *)malloc(256);
 	if (isAMS)
 	{
@@ -1024,7 +1024,7 @@ void tool_servises_off(char *title)
 	{
 		BootStrapNX();
 	} //check sd
-	Ajbrillo(1);
+	change_brightness(1);
 	char *path = (char *)malloc(256);
 	if (isAMS)
 	{
@@ -1116,7 +1116,7 @@ static int tool_menu_rem(void *param)
 	{
 		BootStrapNX();
 	} //check sd
-	Ajbrillo(1);
+	change_brightness(1);
 	f_unlink("/atmosphere/contents/0100000000001000/fsmitm.flag");
 	f_unlink("/atmosphere/contents/0100000000001000/romfs_metadata.bin");
 	deleteall("/atmosphere/contents/0100000000001000/romfs", "*", "Delete 0100000000001000");
@@ -1183,7 +1183,7 @@ int tool_theme(char *param)
 	{
 		BootStrapNX();
 	} //check sd
-	Ajbrillo(1);
+	change_brightness(1);
 	gfx_swap_buffer(&g_gfx_ctxt);
 	copyarall(param, "/StarDust", "*", "Applying Theme");
 	IswitchON = sd_file_read("/StarDust/Icons/sw-on.bmp");
@@ -1315,7 +1315,7 @@ void serv_CFW(int cfw)
 	{
 		BootStrapNX();
 	} //check sd
-	Ajbrillo(1);
+	change_brightness(1);
 	isAMS = cfw;
 	pre_load_menus(1, 0);
 	gui_init_argon_menu();
@@ -1467,7 +1467,7 @@ void medislay(char *flags)
 	{
 		BootStrapNX();
 	} //check sd
-	Ajbrillo(0);
+	change_brightness(0);
 	if (sd_file_exists("StarDust/flags/b50.flag"))
 		f_unlink("StarDust/flags/b50.flag");
 	else
@@ -1565,19 +1565,19 @@ void HBhide(char *folder)
 	gui_init_argon_menu();
 }
 
-void Ajbrillo(u32 tipo)
+void change_brightness(u32 type)
 {
 	if (!sd_mount())
 	{
 		BootStrapNX();
 	} //check sd
-	int brillo = 100;
+	int bright = 100;
 	if (sd_file_exists("StarDust/flags/b50.flag"))
-		brillo = 10;
+		bright = 10;
 
-	if (tipo == 0)
-		display_backlight_brightness(brillo, 1000);
+	if (type == 0)
+		display_backlight_brightness(bright, 1000);
 
-	if (tipo == 1)
-		display_backlight_brightness(brillo / 2, 1000);
+	if (type == 1)
+		display_backlight_brightness(bright / 2, 1000);
 }
