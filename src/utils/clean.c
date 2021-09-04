@@ -7,6 +7,8 @@
 #include "utils/util.h"
 #include "utils/fs_utils.h"
 
+#include "utils/clean.h"
+
 char *type = "*";
 
 void lineHandler(char line[])
