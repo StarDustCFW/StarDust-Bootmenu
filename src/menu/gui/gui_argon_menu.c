@@ -755,7 +755,8 @@ void gui_init_argon_menu(void)
 int static_menu_elements(gui_menu_t *menu)
 {
 	if (main_menu != 0)
-		gui_menu_append_entry(menu, gui_create_menu_entry("", theme("Icons/home.bmp"), 10, low_icons, 70, 70, (int (*)(void *))tool_Menus, (void *)0));
+		//gui_menu_append_entry(menu, gui_create_menu_entry("", theme("Icons/home.bmp"), 10, low_icons, 70, 70, (int (*)(void *))tool_Menus, (void *)0));
+		create(menu, "/StarDust/skins/xbox/Icons/home.bmp", 10, low_icons, (int (*)(void *))tool_Menus, (void *)0);
 
 	if (main_menu != 1)
 		gui_menu_append_entry(menu, gui_create_menu_entry("", theme("Icons/power.bmp"), 605, low_icons, 70, 70, tool_power_off, NULL));
@@ -780,13 +781,13 @@ int static_menu_elements(gui_menu_t *menu)
 	return 0;
 }
 
-static int tool_reboot_rcm(void *param)
+int tool_reboot_rcm(void *param)
 {
 	reboot_rcm();
 	return 0;
 }
 
-static int tool_power_off(void *param)
+int tool_power_off(void *param)
 {
 	gui_menu_pool_cleanup();
 	power_off();
@@ -794,7 +795,7 @@ static int tool_power_off(void *param)
 }
 
 //eject sd card
-static int tool_extr_rSD(void *param)
+int tool_extr_rSD(void *param)
 {
 	SDStrap();
 	gfx_swap_buffer(&g_gfx_ctxt);
@@ -816,7 +817,7 @@ static int tool_extr_rSD(void *param)
 }
 
 //Emu tool
-static int tool_emu(u32 status)
+int tool_emu(u32 status)
 {
 	SDStrap();
 
@@ -957,7 +958,7 @@ f_rename("emummc/emummc.ini.bak","emummc/emummc.ini");
 	return 0;
 }
 
-static int tool_Menus(u32 param)
+int tool_Menus(u32 param)
 {
 	SDStrap();
 	//set menu number
@@ -1078,7 +1079,7 @@ void tool_Themes_off(char *cfw)
 }
 
 //safe boot
-static int tool_menu_rem(void *param)
+int tool_menu_rem(void *param)
 {
 	SDStrap();
 	change_brightness(1);
