@@ -7,7 +7,8 @@
 #include "utils/util.h"
 #include "utils/fs_utils.h"
 
-char* type="*";
+char *type = "*";
+
 void lineHandler(char line[])
 {
 	/* If line is a comment return */
@@ -21,6 +22,7 @@ void lineHandler(char line[])
 		printerCU(line, "", 0);
 		return;
 	}
+
 	/* If line is a Title print it */
 	if (line[0] == '-')
 	{
@@ -33,21 +35,22 @@ void lineHandler(char line[])
 	if (line[0] == '+')
 	{
 		memmove(line, line + 1, strlen(line));
-		if (HasArchBit(line)){
+		if (HasArchBit(line))
+		{
 			printerCU(line, "", 0);
 			Killflags(line);
 		}
 		return;
 	}
-	
-	/* If line is a type */
+
+	/* If line is a type set type for next directory */
 	if (line[0] == '*')
 	{
 		memmove(line, line + 1, strlen(line));
-		type=line;
+		type = line;
 		return;
 	}
- 
+
 	printerCU(line,"",2);
 	
 	/* If line is a directory delete it all*/
@@ -58,13 +61,6 @@ void lineHandler(char line[])
 		return;
 	}
 
-	/* If line is a directory delete it all Windows just in case*/
-	if (line[strlen(line) - 2] == '/')
-	{
-		line[strlen(line) - 2] = 0;
-		deleteall(line, type, "");
-		return;
-	}
 	f_unlink(line);
 }
 
@@ -84,13 +80,14 @@ void clean_up()
 
 	f_close(&delet);
 
+	strrep(buff, "\r", "");
 	char *p = strtok(buff, "\n");
 	while (p != NULL)
 	{
 		lineHandler(p);
 		p = strtok(NULL, "\n");
 	}
-	
+
 	//Pequeña correccion
 	f_rename("/Backup/prodinfo.bin", "/prodinfo_sysnand.bin");
 
