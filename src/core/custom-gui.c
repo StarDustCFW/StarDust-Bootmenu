@@ -111,7 +111,6 @@ SDStrap();
     //copy to buffer instead of BITMAPFILEHEADER and BITMAPINFOHEADER
     //to avoid problems with structure packing
     unsigned char header[54] = { 0 };
-	char* namef = "StarDust/screenshot.bmp";
     memcpy(header, "BM", 2);
     memcpy(header + 2 , &filesize, 4);
     memcpy(header + 10, &buf_offset_bits, 4);
@@ -122,16 +121,27 @@ SDStrap();
     memcpy(header + 28, &bitcount, 2);
     memcpy(header + 34, &imagesize, 4);
 	
-	for (int i=0;i < 30;i++){
-		if (sd_file_exists(namef)){
-			char charValue=i+'0';
-			char tmp[256];
-			strcpy(tmp, "StarDust/screenshot-");
-			strcat(tmp, charValue);
-			strcat(tmp, ".bmp");
-		}
-	}
 
+	char namef[512];
+	strcpy(namef, "StarDust/screenshot.bmp");
+	char tmp[512];
+	strcpy(tmp,namef);
+	for (int i=1;i < 10;i++){
+		if (sd_file_exists(tmp)){
+			char charValue=i+'0';
+			char tmp2[2];
+			tmp2[0]=charValue;
+			tmp2[1]=NULL;
+			
+			strcpy(tmp, "\0");
+			strcpy(tmp, "StarDust/screenshot_");
+			strcat(tmp, tmp2);
+			strcat(tmp, ".bmp");
+			if (!sd_file_exists(tmp)){
+				strcpy(namef, tmp);
+			}
+		} else break;
+	}
     u8* buff = (u8*)malloc(imagesize + 54);
     memcpy(buff, header, 54);
     memcpy(buff + 54, g_gfx_ctxt.fb, imagesize);
