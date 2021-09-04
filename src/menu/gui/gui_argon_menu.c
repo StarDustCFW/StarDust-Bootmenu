@@ -60,7 +60,7 @@ u64 low_icons = 645;
 //some indicators
 u32 retir = 0;
 u32 Incac = 0;
-
+u32 servstep = 0;
 u32 isAMS = 1;
 
 /* Init Boot screen */
@@ -331,6 +331,7 @@ void pre_load_menus(int menus, bool StarUp)
 
 		//services
 		//		gui_menu_append_entry(menu_1,gui_create_menu_entry_no_bitmap("Services",servX+30, servY-10, 150, 100, NULL, NULL));
+		servstep = 0;
 		serv_display(menu_1, "420000000000000E", "FTP");
 		serv_display(menu_1, "420000000007E51A", "TeslaOVL");
 		serv_display(menu_1, "010000000000bd00", "MissionCon");
@@ -1265,15 +1266,19 @@ void serv_CFW(int cfw)
 void serv_display(gui_menu_t *menu, char *titleid, char *name)
 {
 	SDStrap();
-	u32 servYF = 250;
+	static u32 servYF = 250;
+	static u32 servXF = 160;
 
 	static u32 servX = 160;
 	static u32 servY = 250;
 
-	u32 sepaserv = 70;
-	static u32 servstep = 0;
-
-	if (servstep > 10)
+	static u32 sepaserv = 70;
+	if (servstep == 0){
+		servY = servYF;
+		servX = servXF;
+	}
+		
+	if (servstep > 9)
 		return;
 
 	char *path = (char *)malloc(256);
@@ -1309,19 +1314,11 @@ void serv_display(gui_menu_t *menu, char *titleid, char *name)
 	{
 		servY = servYF;
 		servX = servX + 205;
-		//			servstep = 0;
+		//servstep = 0;
 	}
 	else
 	{
 		servY = servY + sepaserv;
-	}
-
-	if (servstep == 10)
-	{
-		servX = 160;
-		servY = 250;
-		servstep = 0;
-		return;
 	}
 }
 
