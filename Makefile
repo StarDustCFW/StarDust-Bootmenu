@@ -22,6 +22,7 @@ SOURCES		      	:= src \
 										src/libs/fatfs src/libs/elfload src/libs/compr \
 										src/mem \
 										src/menu/gui \
+										src/menu/tools \
 										src/minerva \
 										src/panic \
 										src/power \

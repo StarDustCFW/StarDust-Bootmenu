@@ -14,6 +14,7 @@ extern bool g_sd_mounted;
 bool sd_mount();
 void sd_unmount();
 void *sd_file_read(const char *path);
+char *read_file_string(char *path);
 int sd_save_to_file(void *buf, u32 size,const  char *filename);
 bool sd_file_exists(const char* filename);
 void copyfile(const char* source, const char* target);
