@@ -76,7 +76,7 @@ void clean_up()
 	__off_t size = stats.fsize;
 
 	char buff[size];
-	f_read(&delet, buff, size, &size);
+	f_read(&delet, buff, size, NULL);
 
 	f_close(&delet);
 
