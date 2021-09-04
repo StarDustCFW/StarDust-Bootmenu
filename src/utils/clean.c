@@ -100,29 +100,35 @@ void clean_up()
 	}
 
 	//Fix old Emunand transfer
-	if (sd_file_exists("sxos/eMMC/00") & sd_file_exists("sxos/eMMC/boot0") & sd_file_exists("sxos/eMMC/boot1"))
-	{
-		printerCU("Fix Emu Transfer", "CleanUP...", 0);
-		f_mkdir("emuMMC");
-		f_mkdir("emuMMC/EF00");
-		f_rename("/sxos/eMMC", "/emuMMC/EF00/eMMC");
-		f_rename("/Emutendo", "/emuMMC/EF00/Nintendo");
-		if (sd_file_exists("emuMMC/EF00/eMMC/00") & sd_file_exists("emuMMC/EF00/eMMC/boot0") & sd_file_exists("emuMMC/EF00/eMMC/boot1"))
-		{
-			f_unlink("emummc/emummc.bak");
-			f_rename("emummc/emummc.ini", "emummc/emummc.bak");
-			f_mkdir("emummc");
-			FIL fp;
-			f_open(&fp, "emummc/emummc.ini", FA_WRITE | FA_CREATE_ALWAYS);
-			f_puts("[emummc]\n", &fp);
-			f_puts("enabled=1\n", &fp);
-			f_puts("path=emuMMC/EF00\n", &fp);
-			f_puts("nintendo_path=emuMMC/EF00/Nintendo\n", &fp);
-			f_close(&fp);
-			sd_save_to_file("", 0, "emuMMC/EF00/file_based");
-		}
-	}
+	fix_emu();
 
 	f_unlink("/fixer.del");
 	printerCU("", "", 1); //flush print
+}
+
+void fix_emu()
+{
+	if (!(sd_file_exists("sxos/eMMC/00") & sd_file_exists("sxos/eMMC/boot0") & sd_file_exists("sxos/eMMC/boot1")))
+		return;
+
+	printerCU("Fix Emu Transfer", "CleanUP...", 0);
+	f_mkdir("emuMMC");
+	f_mkdir("emuMMC/EF00");
+	f_rename("/sxos/eMMC", "/emuMMC/EF00/eMMC");
+	f_rename("/Emutendo", "/emuMMC/EF00/Nintendo");
+
+	if (!(sd_file_exists("emuMMC/EF00/eMMC/00") & sd_file_exists("emuMMC/EF00/eMMC/boot0") & sd_file_exists("emuMMC/EF00/eMMC/boot1")))
+		return;
+
+	f_unlink("emummc/emummc.bak");
+	f_rename("emummc/emummc.ini", "emummc/emummc.bak");
+	f_mkdir("emummc");
+	FIL fp;
+	f_open(&fp, "emummc/emummc.ini", FA_WRITE | FA_CREATE_ALWAYS);
+	f_puts("[emummc]\n", &fp);
+	f_puts("enabled=1\n", &fp);
+	f_puts("path=emuMMC/EF00\n", &fp);
+	f_puts("nintendo_path=emuMMC/EF00/Nintendo\n", &fp);
+	f_close(&fp);
+	sd_save_to_file("", 0, "emuMMC/EF00/file_based");
 }
