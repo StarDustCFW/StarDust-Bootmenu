@@ -61,15 +61,6 @@ u64 low_icons = 645;
 u32 retir = 0;
 u32 Incac = 0;
 
-//services
-u32 servYF = 250;
-u32 servXF = 160;
-
-//serv2
-u32 servX = 30;
-u32 servY = 80;
-u32 sepaserv = 70;
-u32 servstep = 0;
 u32 isAMS = 1;
 
 /* Init Boot screen */
@@ -339,9 +330,6 @@ void pre_load_menus(int menus, bool StarUp)
 			gui_menu_append_entry(menu_1, gui_create_menu_entry("", theme("Icons/serv-sxos.bmp"), 350, 165, 200, 75, (int (*)(void *))serv_CFW, (void *)1));
 
 		//services
-		servY = servYF;
-		servX = servXF;
-		servstep = 0;
 		//		gui_menu_append_entry(menu_1,gui_create_menu_entry_no_bitmap("Services",servX+30, servY-10, 150, 100, NULL, NULL));
 		serv_display(menu_1, "420000000000000E", "FTP");
 		serv_display(menu_1, "420000000007E51A", "TeslaOVL");
@@ -1276,47 +1264,55 @@ void serv_CFW(int cfw)
 void serv_display(gui_menu_t *menu, char *titleid, char *name)
 {
 	SDStrap();
-	if (servstep <= 9)
+	static u32 servYF = 250;
+
+	static u32 servX = 160;
+	static u32 servY = 250;
+
+	static u32 sepaserv = 70;
+	static u32 servstep = 0;
+
+	if (servstep > 9)
+		return;
+
+	char *path = (char *)malloc(256);
+	if (isAMS)
+		strcpy(path, "atmosphere/contents/");
+	else
+		strcpy(path, "sxos/titles/");
+	strcat(path, titleid);
+	strcat(path, "/exefs.nsp");
+
+	char *flagpath = (char *)malloc(256);
+	if (isAMS)
+		strcpy(flagpath, "atmosphere/contents/");
+	else
+		strcpy(flagpath, "sxos/titles/");
+	strcat(flagpath, titleid);
+	strcat(flagpath, "/flags/boot2.flag");
+
+	if (!sd_file_exists(path))
+		return;
+
+	if (sd_file_exists(flagpath))
 	{
-		char *path = (char *)malloc(256);
-		if (isAMS)
-			strcpy(path, "atmosphere/contents/");
-		else
-			strcpy(path, "sxos/titles/");
-		strcat(path, titleid);
-		strcat(path, "/exefs.nsp");
-
-		char *flagpath = (char *)malloc(256);
-		if (isAMS)
-			strcpy(flagpath, "atmosphere/contents/");
-		else
-			strcpy(flagpath, "sxos/titles/");
-		strcat(flagpath, titleid);
-		strcat(flagpath, "/flags/boot2.flag");
-
-		if (sd_file_exists(path))
-		{
-			if (sd_file_exists(flagpath))
-			{
-				gui_menu_append_entry(menu, gui_create_menu_entry("", theme("Icons/sw-on.bmp"), servX, servY, 200, 75, (int (*)(void *))tool_servises_off, (void *)titleid));
-			}
-			else
-			{
-				gui_menu_append_entry(menu, gui_create_menu_entry("", theme("Icons/sw-off.bmp"), servX, servY, 200, 75, (int (*)(void *))tool_servises_on, (void *)titleid));
-			}
-			gui_menu_append_entry(menu, gui_create_menu_entry_no_bitmap(name, servX + 30, servY + 30, 150, 100, NULL, NULL));
-			servstep++;
-			if (servstep % 2 == 0)
-			{
-				servY = servYF;
-				servX = servX + 205;
-				//			servstep = 0;
-			}
-			else
-			{
-				servY = servY + sepaserv;
-			}
-		}
+		gui_menu_append_entry(menu, gui_create_menu_entry("", theme("Icons/sw-on.bmp"), servX, servY, 200, 75, (int (*)(void *))tool_servises_off, (void *)titleid));
+	}
+	else
+	{
+		gui_menu_append_entry(menu, gui_create_menu_entry("", theme("Icons/sw-off.bmp"), servX, servY, 200, 75, (int (*)(void *))tool_servises_on, (void *)titleid));
+	}
+	gui_menu_append_entry(menu, gui_create_menu_entry_no_bitmap(name, servX + 30, servY + 30, 150, 100, NULL, NULL));
+	servstep++;
+	if (servstep % 2 == 0)
+	{
+		servY = servYF;
+		servX = servX + 205;
+		//			servstep = 0;
+	}
+	else
+	{
+		servY = servY + sepaserv;
 	}
 }
 
