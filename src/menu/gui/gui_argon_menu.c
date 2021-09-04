@@ -743,8 +743,8 @@ void gui_init_argon_menu(void)
 int static_menu_elements(gui_menu_t *menu)
 {
 	if (main_menu != 0)
-		//gui_menu_append_entry(menu, gui_create_menu_entry("", theme("Icons/home.bmp"), 10, low_icons, 70, 70, (int (*)(void *))tool_Menus, (void *)0));
-		create(menu, "/StarDust/skins/xbox/Icons/home.bmp", 10, low_icons, (int (*)(void *))tool_Menus, (void *)0);
+		gui_menu_append_entry(menu, gui_create_menu_entry("", theme("Icons/home.bmp"), 10, low_icons, 70, 70, (int (*)(void *))tool_Menus, (void *)0));
+		//create(menu, "/StarDust/skins/xbox/Icons/home.bmp", 10, low_icons, (int (*)(void *))tool_Menus, (void *)0);
 
 	if (main_menu != 1)
 		gui_menu_append_entry(menu, gui_create_menu_entry("", theme("Icons/power.bmp"), 605, low_icons, 70, 70, tool_power_off, NULL));
