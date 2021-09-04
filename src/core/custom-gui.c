@@ -123,7 +123,7 @@ SDStrap();
     memcpy(header + 34, &imagesize, 4);
 	
 	for (int i=0;i < 30;i++){
-		if (!sd_file_exists(namef)){
+		if (sd_file_exists(namef)){
 			char charValue=i+'0';
 			char tmp[256];
 			strcpy(tmp, "StarDust/screenshot-");
