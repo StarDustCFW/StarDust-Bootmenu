@@ -95,6 +95,24 @@ void *sd_file_read(const char *path)
 	return buf;
 }
 
+char *read_file_string(char *path)
+{
+	FIL file;
+	f_open(&file, path, FA_READ);
+	FILINFO stats;
+
+	f_stat(path, &stats);
+	unsigned int size = stats.fsize;
+
+	char *buff = malloc(size + 1);
+	buff[size] = '\0';
+	f_read(&file, buff, size, &size);
+
+	f_close(&file);
+	return buff;
+}
+
+
 int sd_save_to_file(void *buf, u32 size, const char *filename)
 {
 	FIL fp;
