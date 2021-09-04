@@ -780,13 +780,13 @@ int static_menu_elements(gui_menu_t *menu)
 	return 0;
 }
 
-static int tool_reboot_rcm(void *param)
+int tool_reboot_rcm(void *param)
 {
 	reboot_rcm();
 	return 0;
 }
 
-static int tool_power_off(void *param)
+int tool_power_off(void *param)
 {
 	gui_menu_pool_cleanup();
 	power_off();
@@ -794,7 +794,7 @@ static int tool_power_off(void *param)
 }
 
 //eject sd card
-static int tool_extr_rSD(void *param)
+int tool_extr_rSD(void *param)
 {
 	SDStrap();
 	gfx_swap_buffer(&g_gfx_ctxt);
@@ -816,7 +816,7 @@ static int tool_extr_rSD(void *param)
 }
 
 //Emu tool
-static int tool_emu(u32 status)
+int tool_emu(u32 status)
 {
 	SDStrap();
 
@@ -957,7 +957,7 @@ f_rename("emummc/emummc.ini.bak","emummc/emummc.ini");
 	return 0;
 }
 
-static int tool_Menus(u32 param)
+int tool_Menus(u32 param)
 {
 	SDStrap();
 	//set menu number
@@ -1078,7 +1078,7 @@ void tool_Themes_off(char *cfw)
 }
 
 //safe boot
-static int tool_menu_rem(void *param)
+int tool_menu_rem(void *param)
 {
 	SDStrap();
 	change_brightness(1);
