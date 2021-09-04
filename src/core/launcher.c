@@ -61,8 +61,8 @@ void reloc_patcher(u32 payload_size)
 
 int launch_payload(char *path)
 {
-	if (!sd_mount()){BootStrapNX();}//check sd
-display_backlight_brightness(0, 1000);	
+	SDStrap();
+	display_backlight_brightness(0, 1000);	
 
     u32 boot = 0;
 
@@ -88,7 +88,7 @@ display_backlight_brightness(0, 1000);
 	
 
 
-	if (!sd_file_exists (path)&( boot!=4)) BootStrapNX();
+	if (!sd_file_exists (path)&( boot!=4)) SDStrap();
 
     if(boot==1)
     {

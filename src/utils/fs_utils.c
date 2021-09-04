@@ -112,7 +112,6 @@ char *read_file_string(char *path)
 	return buff;
 }
 
-
 int sd_save_to_file(void *buf, u32 size, const char *filename)
 {
 	FIL fp;
@@ -254,14 +253,8 @@ char* destfile = (char*)malloc(256);
 			strcat(destfile, "/");
 			strcat(destfile, &files[i * 256]);
 			if(strlen(coment) > 0){
-				printerCU(destfile,coment,0);/*
-				gfx_con_setpos(&g_gfx_con, 1, 10);	
-				gfx_printf(&g_gfx_con, "\n %s \n", coment);
-				gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
-				gfx_con_setpos(&g_gfx_con, 1, 100);		
-				gfx_printf(&g_gfx_con, "\n %s\n", destfile);
-				gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
-				gfx_swap_buffer(&g_gfx_ctxt);*/}
+				printerCU(destfile,coment,0);
+			}
 			f_unlink(destfile);
 			f_rename(sourcefile,destfile);
 			}
@@ -372,14 +365,8 @@ char* destfile = (char*)malloc(256);
 			strcat(destfile, "/");
 			strcat(destfile, &files[i * 256]);
 			if(strlen(coment) > 0){
-				printerCU(destfile,coment,0);/*
-				gfx_con_setpos(&g_gfx_con, 1, 10);	
-				gfx_printf(&g_gfx_con, "\n %s \n", coment);
-				gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
-				gfx_con_setpos(&g_gfx_con, 1, 100);		
-				gfx_printf(&g_gfx_con, "\n %s\n", destfile);
-				gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
-				gfx_swap_buffer(&g_gfx_ctxt);*/}
+				printerCU(destfile,coment,0);
+			}
 			f_unlink(destfile);
 			}
 	i++;
@@ -433,6 +420,6 @@ char* folder = listfol(directory, "*", true);
 	r++;
     }
 	gfx_con_setpos(&g_gfx_con, 1, 10);
-	printerCU(directory,"CleanUP\n",2);
+	printerCU(directory,"",2);
 	f_chmod(directory, 0, AM_RDO | AM_ARC);
 }

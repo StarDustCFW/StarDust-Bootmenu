@@ -1,11 +1,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include "gfx/di.h"
+#include "gfx/gfx.h"
 
 #include "utils/util.h"
 #include "utils/fs_utils.h"
 
-char *type="*";
+char* type="*";
 void lineHandler(char line[])
 {
 	/* If line is a comment return */
@@ -16,7 +18,25 @@ void lineHandler(char line[])
 	if (line[0] == '>')
 	{
 		memmove(line, line + 1, strlen(line));
-		printerCU(line, "CleanUP...", 0);
+		printerCU(line, "", 0);
+		return;
+	}
+	/* If line is a Title print it */
+	if (line[0] == '-')
+	{
+		memmove(line, line + 1, strlen(line));
+		printerCU("", line, 0);
+		return;
+	}
+
+	/* If line is a ArchBit */
+	if (line[0] == '+')
+	{
+		memmove(line, line + 1, strlen(line));
+		if (HasArchBit(line)){
+			printerCU(line, "", 0);
+			Killflags(line);
+		}
 		return;
 	}
 	
@@ -27,16 +47,16 @@ void lineHandler(char line[])
 		type=line;
 		return;
 	}
-
+ 
+	printerCU(line,"",2);
+	
 	/* If line is a directory delete it all */
-	if (line[strlen(line) - 1] == '/')
+	if (line[strlen(line) - 2] == '/')
 	{
-		line[strlen(line) - 1] = 0;
+		line[strlen(line) - 2] = 0;
 		deleteall(line, type, "");
-		type="*";//reset type
 		return;
 	}
-
 	f_unlink(line);
 }
 
@@ -63,23 +83,8 @@ void clean_up()
 		p = strtok(NULL, "\n");
 	}
 	
-	
-	//sd_save_to_file("", 0, "atmosphere/contents/0100000000001000/fsmitm.flag");
-	//f_rename("Payload_de_arranque.bin", "boot_payload.bin");
 	//Pequeña correccion
 	f_rename("/Backup/prodinfo.bin", "/prodinfo_sysnand.bin");
-	//	Has Archive Bit
-	if (HasArchBit("atmosphere") || HasArchBit("atmosphere/contents"))
-	{
-		printerCU("Fix Archive bit in: /Atmosphere", "CleanUP...", 0);
-		Killflags("atmosphere");
-	}
-
-	if (HasArchBit("switch") || HasArchBit("switch/XXX"))
-	{
-		printerCU("Fix Archive bit in: /switch", "CleanUP...", 0);
-		Killflags("switch");
-	}
 
 	//not pegascape units
 	if (fusesB() > 5)
@@ -88,9 +93,8 @@ void clean_up()
 		deleteall("/pegascape", "*", "");
 		f_unlink("/switch/fakenews-injector.nro");
 	}
-	//keys();
 
-	//fix old Emunand transfer
+	//Fix old Emunand transfer
 	if (sd_file_exists("sxos/eMMC/00") & sd_file_exists("sxos/eMMC/boot0") & sd_file_exists("sxos/eMMC/boot1"))
 	{
 		printerCU("Fix Emu Transfer", "CleanUP...", 0);
@@ -114,6 +118,17 @@ void clean_up()
 		}
 	}
 
-	printerCU("", "", 1); //flush print
 	f_unlink("/fixer.del");
+	printerCU("", "", 1); //flush print
 }
+
+/*
+						g_gfx_con.scale = 3;
+						gfx_con_setpos(&g_gfx_con, 470, 250);
+						gfx_printf(&g_gfx_con, "\n---%s---\n",line);
+						gfx_printf(&g_gfx_con, "\n---%c---\n",line[strlen(line) - 2]);
+						gfx_printf(&g_gfx_con, "\n---%s---\n",line);
+						gfx_swap_buffer(&g_gfx_ctxt);
+						msleep(25000);
+
+*/

@@ -75,10 +75,7 @@ u32 isAMS = 1;
 /* Init Boot screen */
 void gui_init_argon_boot(void)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	loadTheme();
 	/* Init pool for menu */
 	if (sd_file_exists("StarDust/autoboot.inc"))
@@ -688,10 +685,7 @@ void pre_load_menus(int menus, bool StarUp)
 /* Init needed menus for ArgonNX */
 void gui_init_argon_menu(void)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	/* Init pool for menu */
 	//	change_brightness(1);
 	gui_menu_pool_init();
@@ -802,10 +796,7 @@ static int tool_power_off(void *param)
 //eject sd card
 static int tool_extr_rSD(void *param)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	gfx_swap_buffer(&g_gfx_ctxt);
 	change_brightness(0);
 	g_gfx_con.scale = 3;
@@ -827,10 +818,7 @@ static int tool_extr_rSD(void *param)
 //Emu tool
 static int tool_emu(u32 status)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 
 	//give sxos emu to ams
 	if (status == 33)
@@ -971,10 +959,7 @@ f_rename("emummc/emummc.ini.bak","emummc/emummc.ini");
 
 static int tool_Menus(u32 param)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	//set menu number
 	main_menu = param;
 
@@ -985,10 +970,7 @@ static int tool_Menus(u32 param)
 
 void tool_servises_on(char *title)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	change_brightness(1);
 	char *path = (char *)malloc(256);
 	if (isAMS)
@@ -1015,10 +997,7 @@ void tool_servises_on(char *title)
 
 void tool_servises_off(char *title)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	change_brightness(1);
 	char *path = (char *)malloc(256);
 	if (isAMS)
@@ -1042,10 +1021,7 @@ void tool_servises_off(char *title)
 //Themes ON
 void tool_Themes_on(char *cfw)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	char *path = (char *)malloc(256);
 	if (strstr(cfw, "sxos") != NULL)
 	{
@@ -1076,10 +1052,7 @@ void tool_Themes_on(char *cfw)
 //Themes OFF
 void tool_Themes_off(char *cfw)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	if (strstr(cfw, "sxos") != NULL)
 	{
 		moverall("/sxos/titles/0100000000001000/romfs", "/sxos/titles/0100000000001000/sfmor", "*", "");
@@ -1107,10 +1080,7 @@ void tool_Themes_off(char *cfw)
 //safe boot
 static int tool_menu_rem(void *param)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	change_brightness(1);
 	f_unlink("/atmosphere/contents/0100000000001000/fsmitm.flag");
 	f_unlink("/atmosphere/contents/0100000000001000/romfs_metadata.bin");
@@ -1174,14 +1144,9 @@ static int tool_menu_rem(void *param)
 //Themes///// copy
 int tool_theme(char *param)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	change_brightness(1);
-	gfx_swap_buffer(&g_gfx_ctxt);
 	saveTheme(param);
-	printerCU("", "", 1); //flush print
 	pre_load_menus(1, 1);
 	gui_init_argon_menu();
 	return 0;
@@ -1190,10 +1155,7 @@ int tool_theme(char *param)
 //Memloader
 int memloader(u32 fil)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	//boot0
 	if (fil == 0)
 	{
@@ -1304,10 +1266,7 @@ int bat_show(u32 percent)
 
 void serv_CFW(int cfw)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	change_brightness(1);
 	isAMS = cfw;
 	pre_load_menus(1, 0);
@@ -1316,10 +1275,7 @@ void serv_CFW(int cfw)
 
 void serv_display(gui_menu_t *menu, char *titleid, char *name)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	if (servstep <= 9)
 	{
 		char *path = (char *)malloc(256);
@@ -1366,10 +1322,7 @@ void serv_display(gui_menu_t *menu, char *titleid, char *name)
 
 int Incognito(char *order)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	if (strstr(order, "B") != NULL)
 	{
 
@@ -1407,10 +1360,7 @@ int Incognito(char *order)
 
 int Autoboot(u32 fil)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	if (fil == 0)
 		f_unlink("StarDust/autobootecho.txt");
 
@@ -1456,10 +1406,7 @@ int AThemes_list(gui_menu_t *menu, u32 gridX, u32 gridY)
 
 void medislay(char *flags)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	change_brightness(0);
 	if (sd_file_exists("StarDust/flags/b50.flag"))
 		f_unlink("StarDust/flags/b50.flag");
@@ -1471,10 +1418,7 @@ void medislay(char *flags)
 
 int uLaunch(u32 fil)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	if (fil == 0)
 	{
 		f_unlink("/atmosphere/contents/01008BB00013C000/exefs.nsp");
@@ -1510,10 +1454,7 @@ int uLaunch(u32 fil)
 
 void hekateOFW(u32 tipo)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	if (tipo == 0)
 	{
 
@@ -1541,10 +1482,7 @@ void hekateOFW(u32 tipo)
 
 void HBhide(char *folder)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	char *source_fol = (char *)malloc(256);
 	strcpy(source_fol, "/switch");
 	strcat(source_fol, "/");
@@ -1560,10 +1498,7 @@ void HBhide(char *folder)
 
 void change_brightness(u32 type)
 {
-	if (!sd_mount())
-	{
-		BootStrapNX();
-	} //check sd
+	SDStrap();
 	int bright = 100;
 	if (sd_file_exists("StarDust/flags/b50.flag"))
 		bright = 10;

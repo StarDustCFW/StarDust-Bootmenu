@@ -82,7 +82,7 @@ bool render_custom_title(custom_gui_t* cg)
 
 int screenshot(void* params)
 {
-if (!sd_mount()){BootStrapNX();}//check sd
+SDStrap();
     //width, height, and bitcount are the key factors:
     s32 width = 720;
     s32 height = 1280;
@@ -111,7 +111,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
     //copy to buffer instead of BITMAPFILEHEADER and BITMAPINFOHEADER
     //to avoid problems with structure packing
     unsigned char header[54] = { 0 };
-	char* namef = "";
+	char* namef = "StarDust/screenshot.bmp";
     memcpy(header, "BM", 2);
     memcpy(header + 2 , &filesize, 4);
     memcpy(header + 10, &buf_offset_bits, 4);
@@ -121,38 +121,25 @@ if (!sd_mount()){BootStrapNX();}//check sd
     memcpy(header + 26, &bi_planes, 2);
     memcpy(header + 28, &bitcount, 2);
     memcpy(header + 34, &imagesize, 4);
-		if (!sd_file_exists("StarDust/screenshot-1.bmp")){namef = "-1";
-			}else{
-			if (!sd_file_exists("StarDust/screenshot-2.bmp")){namef = "-2";
-				}else{
-				if (!sd_file_exists("StarDust/screenshot-3.bmp")){namef = "-3";
-					}else{
-					if (!sd_file_exists("StarDust/screenshot-4.bmp")){namef = "-4";
-						}else{
-						if (!sd_file_exists("StarDust/screenshot-5.bmp")){namef = "-5";
-							}else{
-							if (!sd_file_exists("StarDust/screenshot-6.bmp")){namef = "-6";
-								}else{
-								if (!sd_file_exists("StarDust/screenshot-7.bmp")){namef = "-7";
-									}else{gfx_printf(&g_gfx_con, " Screenshot limit");}
-								}
-							}
-						}
-					}
-				}
-			}
-	char tmp[256];
-    strcpy(tmp, "StarDust/screenshot");
-    strcat(tmp, namef);
-    strcat(tmp, ".bmp");
+	
+	for (int i=0;i < 30;i++){
+		if (!sd_file_exists(namef)){
+			char charValue=i+'0';
+			char tmp[256];
+			strcpy(tmp, "StarDust/screenshot-");
+			strcat(tmp, charValue);
+			strcat(tmp, ".bmp");
+		}
+	}
+
     u8* buff = (u8*)malloc(imagesize + 54);
     memcpy(buff, header, 54);
     memcpy(buff + 54, g_gfx_ctxt.fb, imagesize);
-    sd_save_to_file(buff, imagesize + 54, tmp);
+    sd_save_to_file(buff, imagesize + 54, namef);
     free(buff);
 
     g_gfx_con.scale = 2;
     gfx_con_setpos(&g_gfx_con, 0, 605);
-    gfx_printf(&g_gfx_con, " Screenshot saved!\n Find it at %s",tmp);
+    gfx_printf(&g_gfx_con, " Screenshot saved!\n Find it at %s",namef);
     return 0;
 }

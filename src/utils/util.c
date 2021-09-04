@@ -238,6 +238,14 @@ char *fusesM()
 return mine;
 }
 
+void SDStrap(){
+//check sd
+	if (!sd_mount())
+	{
+		BootStrapNX();
+	} 
+}
+
 void BootStrapNX()
 {
 gfx_clear_buffer(&g_gfx_ctxt);
@@ -330,36 +338,44 @@ display_backlight_brightness(b, 1000);
 
 void printerCU(char *text,const char *title,int clean)
 {
-		static char buff[856] = "\0";
+		static char titw[999] = "-.-";
+		static char buff[999] = "\0";
 		static int count = 0;
+		if(strlen(title) > 0){
+			strcpy(titw, "\0");
+			strcpy(titw, title);
+		}
 		if (clean == 0)
 		{
 			count++;
-			if (count > 62)
+			if (count > 65)
 			{
 				count = 0;
 				strcpy(buff, "\0");
 			}
-			strcat(buff, text);
-			strcat(buff, "\n");
+			if(strlen(text) > 0){
+				strcat(buff, text);
+				strcat(buff, "\n");
+			}
 		}
 		
 		if (clean == 1){
 			count = 0;
 			strcpy(buff, "\0");
+			strcpy(titw, "\0");
 			return;
 		}
-		if (clean != 2)
-		gfx_swap_buffer(&g_gfx_ctxt);
+		//if (clean != 2) gfx_swap_buffer(&g_gfx_ctxt);
+		
 		g_gfx_con.scale = 3;
 		gfx_con_setpos(&g_gfx_con, 10, 5);
 		gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
-		gfx_printf(&g_gfx_con, "%s\n",title);
+		gfx_printf(&g_gfx_con, "%s\n",titw);
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
 		g_gfx_con.scale = 2;
 		gfx_printf(&g_gfx_con, "%s\n",buff);
 		if (clean == 2)
-		gfx_printf(&g_gfx_con, "%s\n",text);
+		gfx_printf(&g_gfx_con, "\n\n%s\n",text);
 		gfx_swap_buffer(&g_gfx_ctxt);
 }
 /*
