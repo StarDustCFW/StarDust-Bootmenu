@@ -82,7 +82,7 @@ void minerva()
         return;
     }
 
-	if (increase_freq(&mtc_cfg, current_freq, 800000, OP_TRAIN_SWITCH) != 0)
+	if (increase_freq(&mtc_cfg, current_freq, 1600000, OP_TRAIN_SWITCH) != 0)
     {
         gfx_printf(&g_gfx_con, "Abort Minerva Training Cell\n");
         return;
