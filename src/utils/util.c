@@ -198,6 +198,12 @@ char *str_replace(char *orig, char *rep, char *with) {
     return result;
 }
 
+void strrep(char *orig, char *rep, char *with)
+{
+	char *result = str_replace(orig, rep, with);
+	memset(orig,0,strlen(orig));
+	strcat(orig,result);
+}
 
 u32 fusesB()
 {
