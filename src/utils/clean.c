@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "gfx/di.h"
 #include "gfx/gfx.h"
+#include "utils/clean.h"
 
 #include "utils/util.h"
 #include "utils/fs_utils.h"
