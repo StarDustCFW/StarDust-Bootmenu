@@ -126,14 +126,3 @@ void clean_up()
 	f_unlink("/fixer.del");
 	printerCU("", "", 1); //flush print
 }
-
-/*
-						g_gfx_con.scale = 3;
-						gfx_con_setpos(&g_gfx_con, 470, 250);
-						gfx_printf(&g_gfx_con, "\n---%s---\n",line);
-						gfx_printf(&g_gfx_con, "\n---%c---\n",line[strlen(line) - 2]);
-						gfx_printf(&g_gfx_con, "\n---%s---\n",line);
-						gfx_swap_buffer(&g_gfx_ctxt);
-						msleep(25000);
-
-*/
