@@ -1264,15 +1264,15 @@ void serv_CFW(int cfw)
 void serv_display(gui_menu_t *menu, char *titleid, char *name)
 {
 	SDStrap();
-	static u32 servYF = 250;
+	u32 servYF = 250;
 
 	static u32 servX = 160;
 	static u32 servY = 250;
 
-	static u32 sepaserv = 70;
+	u32 sepaserv = 70;
 	static u32 servstep = 0;
 
-	if (servstep > 9)
+	if (servstep > 10)
 		return;
 
 	char *path = (char *)malloc(256);
@@ -1313,6 +1313,14 @@ void serv_display(gui_menu_t *menu, char *titleid, char *name)
 	else
 	{
 		servY = servY + sepaserv;
+	}
+
+	if (servstep == 10)
+	{
+		servX = 160;
+		servY = 250;
+		servstep = 0;
+		return;
 	}
 }
 
