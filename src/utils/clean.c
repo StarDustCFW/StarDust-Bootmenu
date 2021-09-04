@@ -50,7 +50,15 @@ void lineHandler(char line[])
  
 	printerCU(line,"",2);
 	
-	/* If line is a directory delete it all */
+	/* If line is a directory delete it all*/
+	if (line[strlen(line) - 1] == '/')
+	{
+		line[strlen(line) - 1] = 0;
+		deleteall(line, type, "");
+		return;
+	}
+
+	/* If line is a directory delete it all Windows just in case*/
 	if (line[strlen(line) - 2] == '/')
 	{
 		line[strlen(line) - 2] = 0;
