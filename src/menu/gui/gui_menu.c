@@ -174,44 +174,44 @@ int gui_menu_open2(gui_menu_t *menu)
      * Render and flush at first render because blocking input won't allow us 
      * flush buffers
      */
-    if(!render_custom_background(menu->custom_gui))
-    gfx_clear_color(&g_gfx_ctxt, 0xFF191414);
 //    gui_menu_draw_entries(menu);
 		if (sd_file_exists("StarDust/autobootecho.txt")&& !sd_file_exists("StarDust/autoboot.inc"))
 		{
-		g_gfx_con.scale = 3;
-		gfx_con_setpos(&g_gfx_con, 1070, 10);
-		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0xFFFFFFFF, 0xFF191414);
-		gfx_printf(&g_gfx_con, "AutoBoot\n");
-		gfx_con_setpos(&g_gfx_con, 500, 10);
-		gfx_printf(&g_gfx_con, "Vol +: StarDustMenu\n");
-		
-		gfx_con_setpos(&g_gfx_con, 50, 10);
-		char *str;
-		if (g_sd_mounted){
-			void *buf;
-			buf = sd_file_read("StarDust/autobootecho.txt");
-			str = buf;
-			Sversion[0] = str[0];
-			Sversion[1] = str[1];
-			Sversion[2] = str[2];
-			Sversion[3] =  0;
+			if(!render_custom_background(menu->custom_gui))
+				gfx_clear_color(&g_gfx_ctxt, 0xFF191414);
+			g_gfx_con.scale = 3;
+			gfx_con_setpos(&g_gfx_con, 1070, 10);
+			gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0xFFFFFFFF, 0xFF191414);
+			gfx_printf(&g_gfx_con, "AutoBoot\n");
+			gfx_con_setpos(&g_gfx_con, 500, 10);
+			gfx_printf(&g_gfx_con, "Vol +: StarDustMenu\n");
+			
+			gfx_con_setpos(&g_gfx_con, 50, 10);
+			char *str;
+			if (g_sd_mounted){
+				void *buf;
+				buf = sd_file_read("StarDust/autobootecho.txt");
+				str = buf;
+				Sversion[0] = str[0];
+				Sversion[1] = str[1];
+				Sversion[2] = str[2];
+				Sversion[3] =  0;
+			}
+			if(strstr(Sversion,"A") != NULL)
+			gfx_printf(&g_gfx_con, "-> Atmosphere\n");
+
+			if(strstr(Sversion,"T") != NULL)
+			gfx_printf(&g_gfx_con, "-> Android\n");
+
+			if(strstr(Sversion,"U") != NULL)
+			gfx_printf(&g_gfx_con, "-> Ubuntu\n");
+
+			if(strstr(Sversion,"S") != NULL)
+			{gfx_printf(&g_gfx_con, "-> SXOS\n"); isAMS = 0;}
+
+			gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
+			gfx_swap_buffer(&g_gfx_ctxt);
 		}
-		if(strstr(Sversion,"A") != NULL)
-		gfx_printf(&g_gfx_con, "-> Atmosphere\n");
-
-		if(strstr(Sversion,"T") != NULL)
-		gfx_printf(&g_gfx_con, "-> Android\n");
-
-		if(strstr(Sversion,"U") != NULL)
-		gfx_printf(&g_gfx_con, "-> Ubuntu\n");
-
-		if(strstr(Sversion,"S") != NULL)
-		{gfx_printf(&g_gfx_con, "-> SXOS\n"); isAMS = 0;}
-
-		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
-		}
-    gfx_swap_buffer(&g_gfx_ctxt);
 	return 0;
 }
 
