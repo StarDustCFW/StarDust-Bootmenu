@@ -5,6 +5,7 @@
 #include "utils/util.h"
 #include "utils/fs_utils.h"
 
+char *type="*";
 void lineHandler(char line[])
 {
 	/* If line is a comment return */
@@ -18,12 +19,21 @@ void lineHandler(char line[])
 		printerCU(line, "CleanUP...", 0);
 		return;
 	}
+	
+	/* If line is a type */
+	if (line[0] == '*')
+	{
+		memmove(line, line + 1, strlen(line));
+		type=line;
+		return;
+	}
 
 	/* If line is a directory delete it all */
 	if (line[strlen(line) - 1] == '/')
 	{
 		line[strlen(line) - 1] = 0;
-		deleteall(line, "*", "");
+		deleteall(line, type, "");
+		type="*";//reset type
 		return;
 	}
 
@@ -52,7 +62,7 @@ void clean_up()
 		lineHandler(p);
 		p = strtok(NULL, "\n");
 	}
-	deleteall("/atmosphere/contents", "romfs_metadata.bin", "Clean romfs_metadata");
+	
 	
 	//sd_save_to_file("", 0, "atmosphere/contents/0100000000001000/fsmitm.flag");
 	//f_rename("Payload_de_arranque.bin", "boot_payload.bin");

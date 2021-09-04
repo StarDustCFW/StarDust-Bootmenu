@@ -30,6 +30,7 @@ void *theme(char *path)
 		return sd_file_read(buff);
 	memset(buff, 0, sizeof buff);
 	strcpy(buff, root);
+	strcat(buff, "skins/xbox/");
 	strcat(buff, path);
 	return sd_file_read(buff);
 }
