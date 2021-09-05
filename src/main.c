@@ -29,9 +29,10 @@
 #include "utils/btn.h"
 #include "utils/dirlist.h"
 #include "menu/gui/gui_argon_menu.h"
+#include "menu/gui/gui_menu_pool.h"
 #include "minerva/minerva.h"
 #include "utils/clean.h"
-
+bool quit = false;
 extern void pivot_stack(u32 stack_top);
 static inline void setup_gfx()
 {
@@ -61,7 +62,6 @@ void ipl_main()
 	g_gfx_con.mute = 1; /* Silence minerva, comment for debug */
 	minerva();
 	g_gfx_con.mute = 0;
-
 	/* Cofigure touch input */
 	touch_power_on();
 
@@ -74,19 +74,11 @@ void ipl_main()
 			f_unlink("StarDust/flags/ONE.flag");
 			launch_payload("payload.bin");
 		}
-		/*
-		bool cancel_auto_chainloading = btn_read() & BTN_VOL_DOWN;
-		bool load_menu = cancel_auto_chainloading || launch_payload("StarDust/payload.bin");
-		*/
+
 		//update stardust
 		bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
 		if (sd_file_exists("StarDust_update/fixer.del") & !cancel_auto_chainloading)
 		{
-			if (sd_file_exists("license.dat") & !sd_file_exists("license.dat.bak"))
-			{
-				printerCU("Backup SXOS license.dat", "BackingUP...", 0);
-				copyfile("license.dat", "license.dat.bak");
-			}
 			moverall("/StarDust_update", "", "*", "Updating");
 			gfx_con_setpos(&g_gfx_con, 1, 100);
 			gfx_printf(&g_gfx_con, "Clean Update\n");
@@ -98,17 +90,15 @@ void ipl_main()
 
 		if (sd_file_exists("fixer.del"))
 			clean_up();
-
-		/*
-		gfx_printf(&g_gfx_con, "Autochainload canceled. Loading menu...\n");
-		gfx_swap_buffer(&g_gfx_ctxt);
-		msleep(2000);
-		BootStrapNX();
-		
-		if (load_menu)
-		*/
+			
 		gui_init_argon_boot();
-		//gui_init_argon_menu();
+		//
+		while (!quit){
+			gui_init_argon_menu();
+		}
+		/* Clear all entries and menus */
+		gui_menu_pool_cleanup();
+		
 	}
 	else
 	{
