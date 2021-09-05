@@ -166,17 +166,15 @@ int gui_menu_open3(gui_menu_t *menu)
 	return 0;
 }
 
-int gui_menu_open2(gui_menu_t *menu)
-{   
-//	sd_unmount();
-    gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
+int gui_menu_boot(gui_menu_t *menu)
+{
     /* 
      * Render and flush at first render because blocking input won't allow us 
      * flush buffers
      */
-//    gui_menu_draw_entries(menu);
 		if (sd_file_exists("StarDust/autobootecho.txt")&& !sd_file_exists("StarDust/autoboot.inc"))
 		{
+		gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
 			if(!render_custom_background(menu->custom_gui))
 				gfx_clear_color(&g_gfx_ctxt, 0xFF191414);
 			g_gfx_con.scale = 3;
@@ -210,7 +208,7 @@ int gui_menu_open2(gui_menu_t *menu)
 			{gfx_printf(&g_gfx_con, "-> SXOS\n"); isAMS = 0;}
 
 			gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
-			gfx_swap_buffer(&g_gfx_ctxt);
+			return 1;
 		}
 	return 0;
 }
