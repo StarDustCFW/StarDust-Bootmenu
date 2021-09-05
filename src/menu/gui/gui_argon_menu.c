@@ -63,6 +63,7 @@ u32 retir = 0;
 u32 Incac = 0;
 u32 servstep = 0;
 u32 isAMS = 1;
+u32 iamsafe=0;
 
 /* Init Boot screen */
 void gui_init_argon_boot(void)
@@ -76,6 +77,12 @@ void gui_init_argon_boot(void)
 		f_unlink("StarDust/autoboot.inc");
 		Incac = 1;
 	}
+	if (sd_file_exists("StarDust/flags/IamSafe.flag"))
+	{
+		f_unlink("StarDust/flags/IamSafe.flag");
+		iamsafe = 1;
+	}
+	
 	gui_menu_pool_init();
 	gui_menu_t *menu = gui_menu_create("ArgonNX", main_menu);
 	change_brightness(0);
@@ -244,7 +251,8 @@ void pre_load_menus(int menus, bool StarUp)
 
 		gui_menu_append_entry(menu_0, gui_create_menu_entry("", theme("Icons/SD.bmp"), 10, low_icons, 70, 70, tool_extr_rSD, NULL));
 		//gui_menu_append_entry(menu_0, gui_create_menu_entry("", theme("Icons/rcm.bmp"), 700, low_icons, 70, 70, (int (*)(void *))launch_payload, (void *)"payload.bin"));
-		gui_menu_append_entry(menu_0, gui_create_menu_entry("", theme("Icons/themes.bmp"), 605, low_icons, 70, 70, tool_menu_rem, NULL));
+		if (iamsafe == 0)
+			gui_menu_append_entry(menu_0, gui_create_menu_entry("", theme("Icons/themes.bmp"), 605, low_icons, 70, 70, tool_menu_rem, NULL));
 		//			gui_menu_append_entry(menu_0,gui_create_menu_entry("",theme("Icons/Reinx-off.bmp"),366, main_iconY, 300 , 300, NULL, NULL));
 		//call menu 1
 		gui_menu_append_entry(menu_0, gui_create_menu_entry("", theme("Icons/gear.bmp"), 1200, low_icons, 70, 70, (int (*)(void *))tool_Menus, (void *)1));
@@ -1104,8 +1112,8 @@ int tool_menu_rem(void *param)
 		}
 		e++;
 	}
-
-	sd_save_to_file("", 0, "fixer.del");
+	copyfile("StarDust/fixer.del", "fixer.del");
+	sd_save_to_file("", 0, "StarDust/flags/IamSafe.flag");
 	launch_payload("payload.bin");
 	return 0;
 }
