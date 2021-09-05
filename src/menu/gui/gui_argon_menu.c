@@ -846,8 +846,8 @@ int tool_emu(u32 status)
 			f_puts("nintendo_path=emuMMC/EF00/Nintendo\n", &fp);
 			f_close(&fp);
 			sd_save_to_file("", 0, "emuMMC/EF00/file_based");
+			pre_load_menus(1, 1);
 		}
-		return 0;
 	}
 
 	//return emunand to sxos
@@ -884,9 +884,9 @@ int tool_emu(u32 status)
 			f_unlink("/emuMMC/EF00");
 			f_unlink("emummc");
 			retir = 0;
+			pre_load_menus(1, 1);
 		}
 
-		return 0;
 	}
 
 	//link sxos hide partition to ams
@@ -901,7 +901,7 @@ int tool_emu(u32 status)
 		f_puts("sector=0x2\n", &fp);
 		f_puts("nintendo_path=Emutendo\n", &fp);
 		f_close(&fp);
-		return 0;
+		pre_load_menus(1, 1);
 	}
 
 	if (status == 1)
@@ -915,7 +915,6 @@ int tool_emu(u32 status)
 		sd_save_to_file(payload_wo_bin, size, "emummc/emummc.ini");
 		retir = 2;
 		pre_load_menus(0, 0);
-
 	}
 
 	if (status == 0)
