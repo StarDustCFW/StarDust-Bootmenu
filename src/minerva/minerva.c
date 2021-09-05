@@ -91,7 +91,7 @@ void minerva()
     // The following frequency needs periodic training every 100ms.
 	msleep(200);
 	
-	if (increase_freq(&mtc_cfg, 0,1600000, OP_PERIODIC_TRAIN) != 0)
+	if (increase_freq(&mtc_cfg, 0, 1600000, OP_PERIODIC_TRAIN) != 0)
     {
         gfx_printf(&g_gfx_con, "Abort Minerva Training Cell at periodic training\n");
         return;

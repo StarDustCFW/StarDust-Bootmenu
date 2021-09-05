@@ -68,20 +68,33 @@ int launch_payload(char *path)
 
     if(strstr(path,"atmos") != NULL)
     	boot=1;
+//    if(strstr(path,"reinx") != NULL)
+//    	boot=2;
     if(strstr(path,"sxos") != NULL)
     	boot=3;
+		
     if(strstr(path,"Atmos") != NULL)
     	boot=1;
+//    if(strstr(path,"ReiNX") != NULL)
+//    	boot=2;
     if(strstr(path,"SXOS") != NULL)
     	boot=3;
     if(strstr(path,"android") != NULL)
-		boot=4;
+	{boot=4;}
+
     if(strstr(path,"ubuntu") != NULL)
-		boot=5;
+	{boot=5;}
+
+	
+
+
+	if (!sd_file_exists (path)&( boot!=4)) SDStrap();
 
     if(boot==1)
     {
 		display_backlight_brightness(0, 1000);
+		if (sd_file_size("atmosphere/fusee-secondary.bin") != sd_file_size("sept/payload.bin"))
+		copyfile("atmosphere/fusee-secondary.bin","sept/payload.bin");
 		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
 		sd_save_to_file("Atmosphere", 10, "StarDust/autobootecho.txt");
     }
@@ -92,16 +105,23 @@ int launch_payload(char *path)
 		gfx_swap_buffer(&g_gfx_ctxt);
 		g_gfx_con.scale = 3;
 
+//		u32 bootR = sd_file_size("boot.dat");
 		u32 bootS = sd_file_size("StarDust/boot.dat");
-		u32 bootR = sd_file_size("boot.dat");
+		u32 bootT = sd_file_size("StarDust/boot.temp");
+		
 
-		if (bootS != bootR){
+		if (bootS != bootT){
 			gfx_con_setpos(&g_gfx_con, 370, 350);
-			gfx_printf(&g_gfx_con, "Loading Boot.dat\n",bootS,bootR);
+			gfx_printf(&g_gfx_con, "Loading Boot.dat\n",bootS,bootT);
 			gfx_swap_buffer(&g_gfx_ctxt);
-			copyfile("StarDust/boot.dat","boot.dat");
+			copyfile("StarDust/boot.dat","StarDust/boot.temp");
 		}
 			
+		if (sd_file_exists ("StarDust/boot.temp")){
+			f_unlink("boot.dat");
+			f_rename("StarDust/boot.temp","boot.dat");
+		}
+	
 		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
 		sd_save_to_file("SXOS", 4, "StarDust/autobootecho.txt");
 	}
@@ -116,12 +136,13 @@ int launch_payload(char *path)
 		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
 		sd_save_to_file("Ubuntu", 6, "StarDust/autobootecho.txt");		
     }
-
+	
+	
+	
     FIL fp;
     if (f_open(&fp, path, FA_READ))
     {
-		display_backlight_brightness(50, 1000);
-        gfx_printf(&g_gfx_con, "Cannot find %s\n", path);
+        //gfx_printf(&g_gfx_con, "Cannot find %s\n", path);
         return 1;
     }
 
