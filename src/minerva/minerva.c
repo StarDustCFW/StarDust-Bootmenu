@@ -16,7 +16,14 @@
 
 #include "../modules/minerva/mtc.h"
 
+#define MTC_INIT_MAGIC 0x3043544D
+#define MTC_NEW_MAGIC  0x5243544D
 
+char *path="StarDust/sys/minerva.bso";
+/*
+
+StarDust/sys/libsys_minerva.bso
+*/
 static u32 get_current_freq(mtc_config_t mtc_cfg)
 {
     // Get current frequency and improve it to 800000
@@ -47,7 +54,7 @@ static u32 increase_freq(mtc_config_t* mtc_cfg, u32 from, u32 to, enum train_mod
     mtc_cfg->train_mode = train_mode;
 
     gfx_printf(&g_gfx_con, "Training and switching %7d -> %7d\n", mtc_cfg->rate_from, mtc_cfg->rate_to);
-	return ianos_loader(false, "StarDust/sys/minerva.bso", DRAM_LIB, (void *)mtc_cfg);
+	return ianos_loader(false, path, DRAM_LIB, (void *)mtc_cfg);
 }
 
 void minerva()
@@ -66,7 +73,9 @@ void minerva()
     // Set table to ram.
 	mtc_cfg.mtc_table = NULL;
 	mtc_cfg.sdram_id = get_sdram_id();
-	if (ianos_loader(false, "StarDust/sys/minerva.bso", DRAM_LIB, (void *)&mtc_cfg) != 0)
+	mtc_cfg.init_done = MTC_NEW_MAGIC;
+	gfx_printf(&g_gfx_con, "RamID %d..\n",mtc_cfg.sdram_id);
+	if (ianos_loader(false, path, DRAM_LIB, (void *)&mtc_cfg) != 0)
     {
         gfx_printf(&g_gfx_con, "Abort Minerva Training Cell\n");
         return;
@@ -78,11 +87,11 @@ void minerva()
 	u32 current_freq = get_current_freq(mtc_cfg);
     if (current_freq == 0)
     {
-        gfx_printf(&g_gfx_con, "Error while getting current frequenciy..\n");
+        gfx_printf(&g_gfx_con, "Error while getting current frequenciy %d..\n",mtc_cfg.sdram_id);
         return;
     }
 
-	if (increase_freq(&mtc_cfg, current_freq, 1600000, OP_TRAIN_SWITCH) != 0)
+	if (increase_freq(&mtc_cfg, current_freq, FREQ_800, OP_TRAIN_SWITCH) != 0)
     {
         gfx_printf(&g_gfx_con, "Abort Minerva Training Cell\n");
         return;
@@ -91,7 +100,7 @@ void minerva()
     // The following frequency needs periodic training every 100ms.
 	msleep(200);
 	
-	if (increase_freq(&mtc_cfg, 0, 1600000, OP_PERIODIC_TRAIN) != 0)
+	if (increase_freq(&mtc_cfg, 0, FREQ_1600, OP_PERIODIC_TRAIN) != 0)
     {
         gfx_printf(&g_gfx_con, "Abort Minerva Training Cell at periodic training\n");
         return;

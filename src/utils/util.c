@@ -267,7 +267,7 @@ u32 burntFuses = fusesB();
 char* mindowngrade = fusesM();
 display_backlight_brightness(b, 1000);
 g_gfx_con.mute = 0;
-msleep(1500);
+btn_wait_timeout(1500, BTN_POWER);
 	while (true)
 	{
 		max17050_get_property(MAX17050_RepSOC, (int *)&battPercent);

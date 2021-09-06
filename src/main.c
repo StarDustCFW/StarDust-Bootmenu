@@ -52,22 +52,24 @@ void ipl_main()
 	pivot_stack(0x90010000);
 	heap_init(0x90020000);
 
+	g_gfx_con.mute = 1; /* Silence minerva, comment for debug */
+	minerva();
+	g_gfx_con.mute = 0;
+	
+
 	/* Init display and gfx module */
 	display_init();
 	setup_gfx();
 	display_backlight_pwm_init();
-	display_backlight_brightness(20, 1000);
-
-	/* Train DRAM */
-	g_gfx_con.mute = 1; /* Silence minerva, comment for debug */
-	minerva();
-	g_gfx_con.mute = 0;
-	/* Cofigure touch input */
-	touch_power_on();
+	display_backlight_brightness(10, 1000);
 
 	/* Mount Sd card and launch payload */
 	if (sd_mount())
 	{
+		/* Train DRAM */
+		/* Cofigure touch input */
+		touch_power_on();
+		
 		//some test verify payload
 		if (sd_file_exists("StarDust/flags/ONE.flag"))
 		{
