@@ -11,6 +11,7 @@
 #include "utils/clean.h"
 
 char *type = "*";
+char *clip = "";
 
 void lineHandler(char line[])
 {
@@ -19,15 +20,31 @@ void lineHandler(char line[])
 		return;
 
 	/* If line is a message print it */
-	if (line[0] == '>')
+	if (line[0] == '|')
 	{
 		memmove(line, line + 1, strlen(line));
 		printerCU(line, "", 0);
 		return;
 	}
+	
+	/* If line is copy */
+	if (line[0] == '<')
+	{
+		memmove(line, line + 1, strlen(line));
+		clip=line;
+		return;
+	}
+
+	/* If line is paste */
+	if (line[0] == '>')
+	{
+		memmove(line, line + 1, strlen(line));
+		copyfile(clip, line);
+		return;
+	}
 
 	/* If line is a Title print it */
-	if (line[0] == '-')
+	if (line[0] == '}')
 	{
 		memmove(line, line + 1, strlen(line));
 		printerCU("", line, 0);
@@ -35,7 +52,7 @@ void lineHandler(char line[])
 	}
 
 	/* If line is a ArchBit */
-	if (line[0] == '+')
+	if (line[0] == ':')
 	{
 		memmove(line, line + 1, strlen(line));
 		if (HasArchBit(line))
@@ -43,6 +60,14 @@ void lineHandler(char line[])
 			printerCU(line, "", 0);
 			Killflags(line);
 		}
+		return;
+	}
+
+	/* If line is make folder */
+	if (line[0] == '+')
+	{
+		memmove(line, line + 1, strlen(line));
+		f_mkdir(line);
 		return;
 	}
 
