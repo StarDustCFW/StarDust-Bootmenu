@@ -36,7 +36,6 @@ void tool_servises_on(char *title);
 void tool_servises_off(char *title);
 void tool_Themes_on(char *cfw);
 void tool_Themes_off(char *cfw);
-int memloader(u32 fil);
 int Incognito(char *order);
 int Autoboot(u32 fil);
 int uLaunch(u32 fil);

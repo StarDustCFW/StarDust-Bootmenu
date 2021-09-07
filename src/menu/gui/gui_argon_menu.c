@@ -130,7 +130,7 @@ void gui_init_argon_boot(void)
 	{
 		//autoboot
 		if (strstr(Sversion, "A") != NULL)
-			launch_payload("StarDust/payloads/Atmosphere.bin");
+			launch_payload("StarDust/payloads/fusee.bin");
 
 		if (strstr(Sversion, "S") != NULL)
 			launch_payload("StarDust/payloads/SXOS.bin");
@@ -212,7 +212,7 @@ void pre_load_menus(int menus, bool StarUp)
 			}
 		}
 
-		gui_menu_append_entry(menu_0, gui_create_menu_entry("", theme("Icons/Atmosphere.bmp"), main_iconX, main_iconY, 300, 300, (int (*)(void *))launch_payload, (void *)"/StarDust/payloads/Atmosphere.bin"));
+		gui_menu_append_entry(menu_0, gui_create_menu_entry("", theme("Icons/Atmosphere.bmp"), main_iconX, main_iconY, 300, 300, (int (*)(void *))launch_payload, (void *)"/StarDust/payloads/fusee.bin"));
 		main_iconX = main_iconX + main_iconXS;
 
 		//			if(retir <= 1)
@@ -277,9 +277,7 @@ void pre_load_menus(int menus, bool StarUp)
 			if (!sd_file_exists("emummc/emummc.ini"))
 				gui_menu_append_entry(menu_1, gui_create_menu_entry("", theme("Icons/link_hide.bmp"), 580, 600, 200, 75, (int (*)(void *))tool_emu, (void *)99));
 
-			//call menu 5
-			gui_menu_append_entry(menu_1, gui_create_menu_entry("", theme("Icons/HB.bmp"), 790, 600, 70, 70, (int (*)(void *))tool_Menus, (void *)5));
-
+			//call menu 5 gui_menu_append_entry(menu_1, gui_create_menu_entry("", theme("Icons/HB.bmp"), 790, 600, 70, 70, (int (*)(void *))tool_Menus, (void *)5));
 
 			start_point = menu_1->next_entry;
 		}
@@ -291,9 +289,6 @@ void pre_load_menus(int menus, bool StarUp)
 			//draw power
 			gui_menu_append_entry(menu_1, gui_create_menu_entry("", theme("Icons/power.bmp"), 80, 500, 70, 70, tool_power_off, NULL));
 
-			//call menu 2
-			//gui_menu_append_entry(menu_1,gui_create_menu_entry("",theme("Icons/Memloader.bmp"),250, low_icons, 70, 70,(int (*)(void *))tool_Menus, (void*)3));
-			//		gui_menu_append_entry(menu_1,gui_create_menu_entry("",theme("Icons/Memloader.bmp"),250, low_icons, 70, 70,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/TegraExplorer.bin"));
 		//dinamic
 		/*
 			menu->entries[menu->next_entry] = menu_entry;
@@ -306,10 +301,12 @@ void pre_load_menus(int menus, bool StarUp)
 			gui_menu_append_entry(menu_1, gui_create_menu_entry("", theme("Icons/Autoff.bmp"), 1050, 600, 200, 75, (int (*)(void *))Autoboot, (void *)1));
 
 		//draw Ulaunch
+		/*
 		if (sd_file_exists("StarDust/flags/ulaunch.flag"))
 			gui_menu_append_entry(menu_1, gui_create_menu_entry("", theme("Icons/ulon.bmp"), 850, 600, 200, 75, (int (*)(void *))uLaunch, (void *)0));
 		else
 			gui_menu_append_entry(menu_1, gui_create_menu_entry("", theme("Icons/uloff.bmp"), 850, 600, 200, 75, (int (*)(void *))uLaunch, (void *)1));
+		*/
 
 		//draw CFW select
 		if (isAMS)
@@ -384,12 +381,7 @@ void pre_load_menus(int menus, bool StarUp)
 	if (menus == 3)
 	{
 		menu_3 = gui_menu_create("ArgonNX", 3);
-		/*
-			gui_menu_append_entry(menu_3,gui_create_menu_entry("",theme("Icons/memloader_boot0.bmp"),80, 300, 200 , 200,(int (*)(void *))memloader, (void*)0));
-			gui_menu_append_entry(menu_3,gui_create_menu_entry("",theme("Icons/memloader_boot1.bmp"),380, 300, 200 , 200,(int (*)(void *))memloader, (void*)1));
-			gui_menu_append_entry(menu_3,gui_create_menu_entry("",theme("Icons/memloader_emmc.bmp"),680, 300, 200 , 200,(int (*)(void *))memloader, (void*)2));
-			gui_menu_append_entry(menu_3,gui_create_menu_entry("",theme("Icons/memloader_sd.bmp"),980, 300, 200 , 200,(int (*)(void *))memloader, (void*)3));
-			*/
+		//Menu Here
 		//call
 		gui_menu_append_entry(menu_3, gui_create_menu_entry("", theme("Icons/gear.bmp"), 1200, low_icons, 70, 70, (int (*)(void *))tool_Menus, (void *)1));
 		menu = menu_3;
@@ -416,9 +408,9 @@ void pre_load_menus(int menus, bool StarUp)
 
 		if (sd_mount())
 		{
-			if (sd_file_exists("exosphere.ini"))
+			if (sd_file_exists("atmosphere/config/exosphere.ini"))
 			{
-				void *buf = sd_file_read("exosphere.ini");
+				void *buf = sd_file_read("atmosphere/config/exosphere.ini");
 				buffer_blk = buf;
 			}
 			if (strstr(buffer_blk, "blank_prodinfo_emummc=1") != NULL)
@@ -447,7 +439,7 @@ void pre_load_menus(int menus, bool StarUp)
 					emu_inc = 1;
 				}
 
-				if (sd_file_exists("exosphere.ini"))
+				if (sd_file_exists("atmosphere/config/exosphere.ini"))
 				{
 					if (emu_blk == 1)
 					{
@@ -527,7 +519,7 @@ void pre_load_menus(int menus, bool StarUp)
 				rowinc = rowinc + rowsepar;
 				colinc = colinc + colsepar;
 
-				if (sd_file_exists("exosphere.ini"))
+				if (sd_file_exists("atmosphere/config/exosphere.ini"))
 				{
 					if (sys_blk == 1)
 					{
@@ -578,10 +570,10 @@ void pre_load_menus(int menus, bool StarUp)
 		menu = menu_4;
 	}
 
-	if (menus == 5)
+	if (menus == 5)//disabled
 	{
 		menu_5 = gui_menu_create("ArgonNX", 5);
-
+/*
 		//List Files And folders
 		char *HBpath = "/switch";
 		char *folder = listfol(HBpath, "*", true);
@@ -652,7 +644,7 @@ void pre_load_menus(int menus, bool StarUp)
 			}
 			r++;
 		}
-
+*/
 		//call menu 1
 		gui_menu_append_entry(menu_5, gui_create_menu_entry("", theme("Icons/gear.bmp"), 1200, low_icons, 70, 70, (int (*)(void *))tool_Menus, (void *)1));
 		menu = menu_5;
@@ -1082,21 +1074,7 @@ int tool_menu_rem(void *param)
 		}
 		r++;
 	}
-	/*
-	char* folder_rei = listfol("/ReiNX/titles", "*", true);
-			u32 w = 0;
-		while(folder_rei[w * 256])
-		{
-			if(strlen(&folder_rei[w * 256]) <= 100){			
-			char* source_rei = (char*)malloc(256);
-			strcpy(source_rei, "/ReiNX/titles/");
-			strcat(source_rei, &folder_rei[w * 256]);
-			strcat(source_rei, "/boot2.flag");
-			f_unlink(source_rei);
-			}
-		w++;
-		}
-*/
+
 	char *folder_sxos = listfol("/sxos/titles", "*", true);
 	u32 e = 0;
 	while (folder_sxos[e * 256])
@@ -1111,8 +1089,8 @@ int tool_menu_rem(void *param)
 		}
 		e++;
 	}
-	copyfile("StarDust/fixer.del", "fixer.del");
 	sd_save_to_file("", 0, "StarDust/flags/IamSafe.flag");
+	sd_save_to_file("#Safeboot flag", 13, "fixer.del");
 	launch_payload("payload.bin");
 	return 0;
 }
@@ -1125,106 +1103,6 @@ int tool_theme(char *param)
 	saveTheme(param);
 	pre_load_menus(1, 1);
 	gui_init_argon_menu();
-	return 0;
-}
-
-//Memloader
-int memloader(u32 fil)
-{
-	SDStrap();
-	//boot0
-	if (fil == 0)
-	{
-		FIL fp;
-		f_open(&fp, "auto.bak", FA_WRITE | FA_CREATE_ALWAYS);
-		f_puts("[load:PH_0]\n", &fp);
-		f_puts("if=StarDust/uboot/u-boot.elf\n", &fp);
-		f_puts("skip=0x00010000\n", &fp);
-		f_puts("count=0x0006e13f\n", &fp);
-		f_puts("dst=0x80110000\n", &fp);
-		f_puts("\n", &fp);
-		f_puts("[load:script]\n", &fp);
-		f_puts("if=StarDust/uboot/ums_emmc_boot0.scr.img\n", &fp);
-		f_puts("dst=0x80100000\n", &fp);
-		f_puts("\n", &fp);
-		f_puts("[boot:ENTRY]\n", &fp);
-		f_puts("pc=0x80110000\n", &fp);
-		f_puts("maxMemoryFreq=200\n", &fp);
-		f_puts("pwroffHoldTime=4\n", &fp);
-		f_puts("\n", &fp);
-		f_close(&fp);
-		launch_payload("StarDust/payloads/memloader.bin");
-	}
-
-	//boot1
-	if (fil == 1)
-	{
-		FIL fp;
-		f_open(&fp, "auto.bak", FA_WRITE | FA_CREATE_ALWAYS);
-		f_puts("[load:PH_0]\n", &fp);
-		f_puts("if=StarDust/uboot/u-boot.elf\n", &fp);
-		f_puts("skip=0x00010000\n", &fp);
-		f_puts("count=0x0006e13f\n", &fp);
-		f_puts("dst=0x80110000\n", &fp);
-		f_puts("\n", &fp);
-		f_puts("[load:script]\n", &fp);
-		f_puts("if=StarDust/uboot/ums_emmc_boot1.scr.img\n", &fp);
-		f_puts("dst=0x80100000\n", &fp);
-		f_puts("\n", &fp);
-		f_puts("[boot:ENTRY]\n", &fp);
-		f_puts("pc=0x80110000\n", &fp);
-		f_puts("maxMemoryFreq=-1600\n", &fp);
-		f_puts("pwroffHoldTime=4\n", &fp);
-		f_puts("\n", &fp);
-		f_close(&fp);
-		launch_payload("StarDust/payloads/memloader.bin");
-	}
-
-	//emmc
-	if (fil == 2)
-	{
-		FIL fp;
-		f_open(&fp, "auto.bak", FA_WRITE | FA_CREATE_ALWAYS);
-		f_puts("[load:PH_0]\n", &fp);
-		f_puts("if=StarDust/uboot/u-boot.elf\n", &fp);
-		f_puts("skip=0x00010000\n", &fp);
-		f_puts("count=0x0006e13f\n", &fp);
-		f_puts("dst=0x80110000\n", &fp);
-		f_puts("\n", &fp);
-		f_puts("[load:script]\n", &fp);
-		f_puts("if=StarDust/uboot/ums_emmc.scr.img\n", &fp);
-		f_puts("dst=0x80100000\n", &fp);
-		f_puts("\n", &fp);
-		f_puts("[boot:ENTRY]\n", &fp);
-		f_puts("pc=0x80110000\n", &fp);
-		f_puts("pwroffHoldTime=4\n", &fp);
-		f_puts("\n", &fp);
-		f_close(&fp);
-		launch_payload("StarDust/payloads/memloader.bin");
-	}
-
-	if (fil == 3)
-	{
-		//sd
-		FIL fp;
-		f_open(&fp, "auto.bak", FA_WRITE | FA_CREATE_ALWAYS);
-		f_puts("[load:PH_0]\n", &fp);
-		f_puts("if=StarDust/uboot/u-boot.elf\n", &fp);
-		f_puts("skip=0x00010000\n", &fp);
-		f_puts("count=0x0007c1bf\n", &fp);
-		f_puts("dst=0x80110000\n", &fp);
-		f_puts("\n", &fp);
-		f_puts("[load:script]\n", &fp);
-		f_puts("if=StarDust/uboot/ums_sd.scr.img\n", &fp);
-		f_puts("dst=0x80100000\n", &fp);
-		f_puts("\n", &fp);
-		f_puts("[boot:ENTRY]\n", &fp);
-		f_puts("pc=0x80110000\n", &fp);
-		f_puts("pwroffHoldTime=4\n", &fp);
-		f_puts("\n", &fp);
-		f_close(&fp);
-		launch_payload("StarDust/payloads/memloader.bin");
-	}
 	return 0;
 }
 
@@ -1335,7 +1213,7 @@ int Incognito(char *order)
 		}
 
 		u32 size = strlen(buffer_blk) - 1;
-		sd_save_to_file(buffer_blk, size, "exosphere.ini");
+		sd_save_to_file(buffer_blk, size, "atmosphere/config/exosphere.ini");
 		pre_load_menus(4, 0);
 		gui_init_argon_menu();
 		return 0;
@@ -1403,7 +1281,7 @@ void medislay(char *flags)
 		sd_save_to_file("", 0, "StarDust/flags/b50.flag");
 	pre_load_menus(1, 0);
 }
-
+/*
 int uLaunch(u32 fil)
 {
 	SDStrap();
@@ -1439,6 +1317,7 @@ int uLaunch(u32 fil)
 	gui_init_argon_menu();
 	return 0;
 }
+*/
 
 void hekateOFW(u32 tipo)
 {
@@ -1465,9 +1344,10 @@ void hekateOFW(u32 tipo)
 		}
 		copyfile("bootloader/stock", "bootloader/hekate_ipl.ini");
 	}
-	launch_payload("/StarDust/payloads/zHekate.bin");
+	launch_payload("/StarDust/payloads/hekate.bin");
 }
 
+/*
 void HBhide(char *folder)
 {
 	SDStrap();
@@ -1482,7 +1362,7 @@ void HBhide(char *folder)
 		sd_save_to_file("", 0, folder);
 	pre_load_menus(5, 0);
 }
-
+*/
 void change_brightness(u32 type)
 {
 	SDStrap();

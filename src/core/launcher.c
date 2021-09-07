@@ -70,7 +70,7 @@ int launch_payload(char *path)
     	boot=1;
     if(strstr(path,"sxos") != NULL)
     	boot=3;
-    if(strstr(path,"Atmos") != NULL)
+    if(strstr(path,"fusee") != NULL)
     	boot=1;
     if(strstr(path,"SXOS") != NULL)
     	boot=3;

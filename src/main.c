@@ -31,7 +31,7 @@
 #include "menu/gui/gui_argon_menu.h"
 #include "menu/gui/gui_menu_pool.h"
 #include "minerva/minerva.h"
-#include "utils/clean.h"
+#include "utils/update.h"
 bool quit = false;
 extern void pivot_stack(u32 stack_top);
 static inline void setup_gfx()
@@ -52,6 +52,7 @@ void ipl_main()
 	pivot_stack(0x90010000);
 	heap_init(0x90020000);
 
+	/* Train DRAM */
 	g_gfx_con.mute = 1; /* Silence minerva, comment for debug */
 	minerva();
 	g_gfx_con.mute = 0;
@@ -66,32 +67,11 @@ void ipl_main()
 	/* Mount Sd card and launch payload */
 	if (sd_mount())
 	{
-		/* Train DRAM */
 		/* Cofigure touch input */
 		touch_power_on();
 		
-		//some test verify payload
-		if (sd_file_exists("StarDust/flags/ONE.flag"))
-		{
-			f_unlink("StarDust/flags/ONE.flag");
-			launch_payload("payload.bin");
-		}
-
-		//update stardust
-		bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
-		if (sd_file_exists("StarDust_update/fixer.del") & !cancel_auto_chainloading)
-		{
-			moverall("/StarDust_update", "", "*", "Updating");
-			gfx_con_setpos(&g_gfx_con, 1, 100);
-			gfx_printf(&g_gfx_con, "Clean Update\n");
-			gfx_swap_buffer(&g_gfx_ctxt);
-			deleteall("/StarDust_update", "*", "Clean Update");
-			f_rename("/StarDust_update", "/StarDust_corrupt_update"); //just in case
-			launch_payload("payload.bin");
-		}
-
-		if (sd_file_exists("fixer.del"))
-			clean_up();
+		Update_SDT();
+		clean_up();
 			
 		gui_init_argon_boot();
 		//gui_init_argon_menu();

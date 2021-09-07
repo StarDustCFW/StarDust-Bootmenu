@@ -3,12 +3,12 @@
 #include <stdio.h>
 #include "gfx/di.h"
 #include "gfx/gfx.h"
-#include "utils/clean.h"
+#include "utils/update.h"
+#include "utils/btn.h"
+#include "core/launcher.h"
 
 #include "utils/util.h"
 #include "utils/fs_utils.h"
-
-#include "utils/clean.h"
 
 char *type = "*";
 char *clip = "";
@@ -20,7 +20,7 @@ void lineHandler(char line[])
 		return;
 
 	/* If line is a message print it */
-	if (line[0] == '|')
+	if (line[0] == '[')
 	{
 		memmove(line, line + 1, strlen(line));
 		printerCU(line, "", 0);
@@ -43,8 +43,16 @@ void lineHandler(char line[])
 		return;
 	}
 
+	/* If line is rename */
+	if (line[0] == '~')
+	{
+		memmove(line, line + 1, strlen(line));
+		f_rename(clip, line);
+		return;
+	}
+
 	/* If line is a Title print it */
-	if (line[0] == '}')
+	if (line[0] == '.')
 	{
 		memmove(line, line + 1, strlen(line));
 		printerCU("", line, 0);
@@ -85,22 +93,29 @@ void lineHandler(char line[])
 	if (line[strlen(line) - 1] == '/')
 	{
 		line[strlen(line) - 1] = 0;
-		deleteall(line, type, "");
+		deleteall(line, type, line);
 		return;
 	}
-
-	f_unlink(line);
+	if (strlen(line) > 0)
+	{
+		if (line[0] == '/')
+		{
+			f_unlink(line);
+		}
+	}
 }
 
 void clean_up()
 {
+	if (!sd_file_exists("fixer.del")){return;}
+	
 	printerCU("Clean old files", "CleanUP...", 0);
 
 	FIL delet;
-	f_open(&delet, "fixer.del", FA_READ);
+	f_open(&delet, "/StarDust/Main.del", FA_READ);
 	FILINFO stats;
 
-	f_stat("fixer.del", &stats);
+	f_stat("/StarDust/Main.del", &stats);
 	__off_t size = stats.fsize;
 
 	char buff[size];
@@ -132,6 +147,25 @@ void clean_up()
 
 	f_unlink("/fixer.del");
 	printerCU("", "", 1); //flush print
+}
+
+void Update_SDT(){
+	//some test verify payload
+	if (sd_file_exists("StarDust/flags/ONE.flag"))
+	{
+		f_unlink("StarDust/flags/ONE.flag");
+		launch_payload("payload.bin");
+	}
+	//update stardust
+	bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
+	if (sd_file_exists("StarDust_update/fixer.del") & !cancel_auto_chainloading)
+	{
+		moverall("/StarDust_update", "", "*", "Updating");
+		printerCU("Clean Update", "", 0);
+		deleteall("/StarDust_update", "*", "Clean Update");
+		f_rename("/StarDust_update", "/StarDust_corrupt_update"); //just in case
+		launch_payload("payload.bin");
+	}
 }
 
 void fix_emu()

@@ -365,7 +365,7 @@ char* destfile = (char*)malloc(256);
 			strcat(destfile, "/");
 			strcat(destfile, &files[i * 256]);
 			if(strlen(coment) > 0){
-				printerCU(destfile,coment,0);
+				printerCU(destfile,coment,2);
 			}
 			f_unlink(destfile);
 			}
