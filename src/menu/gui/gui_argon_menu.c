@@ -225,12 +225,12 @@ void pre_load_menus(int menus, bool StarUp)
 		//
 		gui_menu_append_entry(menu_0, gui_create_menu_entry("", theme("Icons/Stock.bmp"), 540, main_iconY + 100, 200, 100, (int (*)(void *))hekateOFW, (void *)1));
 		if (sd_file_exists("/switchroot/android/coreboot.rom"))
-			gui_menu_append_entry(menu_0, gui_create_menu_entry("", theme("Icons/Android.bmp"), 590, main_iconY - 10, 100, 100, (int (*)(void *))launch_payload, (void *)"/switchroot/android/coreboot.rom"));
+			gui_menu_append_entry(menu_0, gui_create_menu_entry("", theme("Icons/Android.bmp"), 590, main_iconY - 30, 100, 100, (int (*)(void *))launch_payload, (void *)"/switchroot/android/coreboot.rom"));
 		else if (sd_file_exists("/switchroot_android/coreboot.rom"))
-			gui_menu_append_entry(menu_0, gui_create_menu_entry("", theme("Icons/Android.bmp"), 590, main_iconY - 10, 100, 100, (int (*)(void *))launch_payload, (void *)"/switchroot_android/coreboot.rom"));
+			gui_menu_append_entry(menu_0, gui_create_menu_entry("", theme("Icons/Android.bmp"), 590, main_iconY - 30, 100, 100, (int (*)(void *))launch_payload, (void *)"/switchroot_android/coreboot.rom"));
 
 		if (sd_file_exists("/switchroot/ubuntu/coreboot.rom"))
-			gui_menu_append_entry(menu_0, gui_create_menu_entry("", theme("Icons/Ubuntu.bmp"), 590, main_iconY + 210, 100, 100, (int (*)(void *))launch_payload, (void *)"/switchroot/ubuntu/coreboot.rom"));
+			gui_menu_append_entry(menu_0, gui_create_menu_entry("", theme("Icons/Ubuntu.bmp"), 590, main_iconY + 230, 100, 100, (int (*)(void *))launch_payload, (void *)"/switchroot/ubuntu/coreboot.rom"));
 		//
 		u64 iconrowY = low_icons-5;
 		u64 iconrowX = 130;

@@ -80,11 +80,15 @@ touch_event_t touch_wait()
 	
 		touch_poll(&event);
 		if (event.type == STMFTS_EV_MULTI_TOUCH_ENTER || event.type == STMFTS_EV_MULTI_TOUCH_MOTION){
-			//draw pointier o enter
 			maar=1;
-			g_gfx_con.scale = 5;
-			gfx_con_setpos(&g_gfx_con, event.y-25, event.x-25);
-			gfx_printf(&g_gfx_con, "X");
+			if ((event.y + event.x) > 100)
+			{
+				//draw pointier o enter
+				g_gfx_con.scale = 5;
+				gfx_con_setpos(&g_gfx_con, event.y-25, event.x-25);
+				gfx_printf(&g_gfx_con, "X");
+			}
+			
 		} else if(maar==1) {
 			//if not touching screen, then leave just once per touch
 			maar=0;
