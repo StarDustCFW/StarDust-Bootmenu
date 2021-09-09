@@ -177,22 +177,37 @@ void pre_load_menus(int menus, bool StarUp)
 		u32 buttonY = main_iconY - 67;
 		if (sd_file_exists("emummc/emummc.ini"))
 		{
-
 			char *str = sd_file_read("emummc/emummc.ini");
+			u32 count = strlen(str)-1;
+			if (str[count] != '\n'){
+				while (true) {
+					if (count==0) break;
+					if (str[count] == '\n'){
+						str[count]='\n';
+						sd_save_to_file(str, count+1, "emummc/emummc.ini");
+						break;
+					}
+					str[count]='\0';
+					count--;
+				}
+			}
+
 			if (retir == 0)
 			{
 				if (strstr(str, "emummc_") != NULL)
 				{
 					str = str_replace(str, "emummc_", "");
-					u32 size = strlen(str) - 1;
-					sd_save_to_file(str, size, "emummc/emummc.ini");
+					u32 size = strlen(str);
+					str[size]=0;
+					sd_save_to_file(str, size-1, "emummc/emummc.ini");
 				}
 
 				if (strstr(str, " ") != NULL)
 				{
 					str = str_replace(str, " ", "");
-					u32 size = strlen(str) - 1;
-					sd_save_to_file(str, size, "emummc/emummc.ini");
+					u32 size = strlen(str);
+					str[size]=0;
+					sd_save_to_file(str, size-1, "emummc/emummc.ini");
 				}
 				retir = 1;
 				if (strstr(str, "enabled=1") != NULL)
@@ -904,6 +919,8 @@ int tool_emu(u32 status)
 		f_open(&op, "emummc/emummc.ini", FA_READ);
 		u32 size = f_size(&op);
 		f_close(&op);
+		payload_wo_bin[size]='\0';
+		payload_wo_bin[size]='\n';
 		sd_save_to_file(payload_wo_bin, size, "emummc/emummc.ini");
 		retir = 2;
 		pre_load_menus(0, 0);
@@ -917,6 +934,8 @@ int tool_emu(u32 status)
 		f_open(&op, "emummc/emummc.ini", FA_READ);
 		u32 size = f_size(&op);
 		f_close(&op);
+		payload_wo_bin[size]='\0';
+		payload_wo_bin[size]='\n';
 		sd_save_to_file(payload_wo_bin, size, "emummc/emummc.ini");
 		retir = 1;
 		pre_load_menus(0, 0);

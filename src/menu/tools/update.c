@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "gfx/di.h"
 #include "gfx/gfx.h"
-#include "utils/update.h"
+#include "menu/tools/update.h"
 #include "utils/btn.h"
 #include "core/launcher.h"
 
