@@ -13,6 +13,7 @@
 #include <string.h>
 #include "soc/t210.h"
 #include "soc/fuse.h"
+#include "menu/tools/tools.h"
 
 #define MINOR_VERSION 3
 #define MAJOR_VERSION 0

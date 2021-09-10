@@ -6,6 +6,7 @@
 #include "menu/tools/update.h"
 #include "utils/btn.h"
 #include "core/launcher.h"
+#include "menu/tools/tools.h"
 
 #include "utils/util.h"
 #include "utils/fs_utils.h"

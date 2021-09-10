@@ -28,6 +28,7 @@
 #include "mem/heap.h"
 #include "menu/gui/gui_menu_pool.h"
 #include "utils/btn.h"
+#include "menu/tools/tools.h"
 
 // This is a safe and unused DRAM region for our payloads.
 #define IPL_LOAD_ADDR      0x40008000

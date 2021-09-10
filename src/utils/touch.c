@@ -20,6 +20,8 @@
 #include "core/custom-gui.h"
 #include "utils/touch.h"
 #include "gfx/gfx.h"
+#include "menu/tools/tools.h"
+
 extern gfx_ctxt_t g_gfx_ctxt;
 
 touch_event_t last_event;

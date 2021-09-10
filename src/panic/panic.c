@@ -82,7 +82,6 @@ void check_and_display_panic(void) {
         }
 
         display_color_screen(color);
-        wait_for_button_and_reboot();
     } else {
         g_panic_code = 0;
         PMC(APBDEV_PMC_SCRATCH200) = 0;

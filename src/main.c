@@ -23,6 +23,7 @@
 #include "mem/heap.h"
 #include "soc/fuse.h"
 #include "core/launcher.h"
+#include "core/payloads.h"
 #include "utils/util.h"
 #include "utils/fs_utils.h"
 #include "utils/touch.h"
@@ -32,6 +33,8 @@
 #include "menu/gui/gui_menu_pool.h"
 #include "minerva/minerva.h"
 #include "menu/tools/update.h"
+#include "menu/tools/tools.h"
+
 bool quit = false;
 extern void pivot_stack(u32 stack_top);
 static inline void setup_gfx()

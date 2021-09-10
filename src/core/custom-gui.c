@@ -20,6 +20,7 @@
 #include "utils/fs_utils.h"
 #include "utils/util.h"
 #include "menu/tools/theme.h"
+#include "menu/tools/tools.h"
 #include <string.h>
 
 

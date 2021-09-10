@@ -35,6 +35,7 @@
 #include "core/custom-gui.h"
 #include "mem/heap.h"
 #include "minerva/minerva.h"
+#include "menu/tools/tools.h"
 
 #define COLUMNS 4
 #define ROWS 2
@@ -106,7 +107,7 @@ void gui_init_argon_boot(void)
 	if (sd_file_exists("/atmosphere/contents/0100000000001013/exefs.on"))
 	{
 		f_move("/atmosphere/contents/0100000000001013/exefs.on", "/atmosphere/contents/0100000000001013/exefs.nsp");
-		f_unlink("/atmosphere/contents/0100000000001013/exefs.off");
+		f_unlink("/atmosphere/contents/0100000000001013/exefs.on");
 	}
 
 	//prevent accidental boot to ofw
@@ -1299,6 +1300,7 @@ void medislay(char *flags)
 	else
 		sd_save_to_file("", 0, "StarDust/flags/b50.flag");
 	pre_load_menus(1, 0);
+	gui_init_argon_menu();
 }
 /*
 int uLaunch(u32 fil)
