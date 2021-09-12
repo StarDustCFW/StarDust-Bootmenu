@@ -31,24 +31,24 @@ custom_gui_t* custom_gui_load(u32 mem)
 	switch(mem)
 	{
 		case 1:
-		custom_gui->custom_bg = (u8*)theme("back-set.bmp");
+		custom_gui->custom_bg = (u8*)sd_file_read(theme("back-set.bmp"));
 		break;
 		
 		case 2:
 		case 5:
-		custom_gui->custom_bg = (u8*)theme("back-exp.bmp");
+		custom_gui->custom_bg = (u8*)sd_file_read(theme("back-exp.bmp"));
 		break;
 		
 		case 3:
-		custom_gui->custom_bg = (u8*)theme("back-mem.bmp");
+		custom_gui->custom_bg = (u8*)sd_file_read(theme("back-mem.bmp"));
 		break;
 		
 		case 4:
-		custom_gui->custom_bg = (u8*)theme("back-inc.bmp");
+		custom_gui->custom_bg = (u8*)sd_file_read(theme("back-inc.bmp"));
 		break;
 		
 		default:
-		custom_gui->custom_bg = (u8*)theme("background.bmp");
+		custom_gui->custom_bg = (u8*)sd_file_read(theme("background.bmp"));
 	}
     custom_gui->title_bmp = (u8*)sd_file_read(CUSTOM_TITLE_PATH);
     return custom_gui;
