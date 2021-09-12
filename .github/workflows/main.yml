@@ -23,6 +23,7 @@ jobs:
         export DEVKITARM=${DEVKITPRO}/devkitARM
         export DEVKITPPC=${DEVKITPRO}/devkitPPC
         export PATH=${DEVKITPRO}/tools/bin:$PATH
+        mkdir -p build/Bootmenu
         make -j$(nproc)
         
     - uses: actions/upload-artifact@master
