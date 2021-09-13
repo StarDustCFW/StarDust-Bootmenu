@@ -91,13 +91,13 @@ void lineHandler(char line[])
 		return;
 	}
 
-	printerCU(line,"",2);
 	
 	/* if line is delete */
 	if (line[0] == '-')
 	{
 		memmove(line, line + 1, strlen(line));
-		
+		printerCU(line,"",2);
+
 		/* If line is a directory delete it all*/
 		if (line[strlen(line) - 1] == '/')
 		{
@@ -201,3 +201,22 @@ void fix_emu()
 	f_close(&fp);
 	sd_save_to_file("", 0, "emuMMC/EF00/file_based");
 }
+
+/*
+//Script Main
+//Simple Instruccion
+	# Coment
+	[ Print Message
+	. Print Title
+
+//Logic instruccion
+	: Fix Archive Bit
+	< Copy to Clipboard
+	> Paste
+	~ Rename, Move
+	+ Make Folder
+	* Set name of file to delete recursive,  * is for all, only for folders with /
+	- Delete files o folders
+		add / at the end of folder to delete recursive
+
+*/
