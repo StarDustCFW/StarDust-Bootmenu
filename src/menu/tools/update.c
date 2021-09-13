@@ -14,8 +14,10 @@
 char *type = "*";
 char *clip = "";
 
+//ScriptHandler
 void lineHandler(char line[])
 {
+//Simple Instruccion
 	/* If line is a comment return */
 	if (line[0] == '#')
 		return;
@@ -28,6 +30,27 @@ void lineHandler(char line[])
 		return;
 	}
 	
+	/* If line is a Title print it */
+	if (line[0] == '.')
+	{
+		memmove(line, line + 1, strlen(line));
+		printerCU("", line, 0);
+		return;
+	}
+
+	/* If line is a ArchBit */
+	if (line[0] == ':')
+	{
+		memmove(line, line + 1, strlen(line));
+		if (HasArchBit(line))
+		{
+			printerCU(line, "", 0);
+			Killflags(line);
+		}
+		return;
+	}
+
+//Logic instruccion
 	/* If line is copy */
 	if (line[0] == '<')
 	{
@@ -52,26 +75,6 @@ void lineHandler(char line[])
 		return;
 	}
 
-	/* If line is a Title print it */
-	if (line[0] == '.')
-	{
-		memmove(line, line + 1, strlen(line));
-		printerCU("", line, 0);
-		return;
-	}
-
-	/* If line is a ArchBit */
-	if (line[0] == ':')
-	{
-		memmove(line, line + 1, strlen(line));
-		if (HasArchBit(line))
-		{
-			printerCU(line, "", 0);
-			Killflags(line);
-		}
-		return;
-	}
-
 	/* If line is make folder */
 	if (line[0] == '+')
 	{
@@ -80,7 +83,7 @@ void lineHandler(char line[])
 		return;
 	}
 
-	/* If line is a type set type for next directory */
+	/* If line is a type set type for directories */
 	if (line[0] == '*')
 	{
 		memmove(line, line + 1, strlen(line));
@@ -90,18 +93,26 @@ void lineHandler(char line[])
 
 	printerCU(line,"",2);
 	
-	/* If line is a directory delete it all*/
-	if (line[strlen(line) - 1] == '/')
+	/* if line is delete */
+	if (line[0] == '-')
 	{
-		line[strlen(line) - 1] = 0;
-		deleteall(line, type, line);
-		return;
-	}
-	if (strlen(line) > 0)
-	{
-		if (line[0] == '/')
+		memmove(line, line + 1, strlen(line));
+		
+		/* If line is a directory delete it all*/
+		if (line[strlen(line) - 1] == '/')
 		{
-			f_unlink(line);
+			line[strlen(line) - 1] = 0;
+			deleteall(line, type, line);
+			return;
+		}
+		/* If line is a file delete */
+		if (strlen(line) > 0)
+		{
+			if (line[0] == '/')
+			{
+				f_unlink(line);
+				return
+			}
 		}
 	}
 }
@@ -109,8 +120,6 @@ void lineHandler(char line[])
 void clean_up()
 {
 	if (!sd_file_exists("fixer.del")){return;}
-	
-	printerCU("Clean old files", "CleanUP...", 0);
 
 	FIL delet;
 	f_open(&delet, "/StarDust/Main.del", FA_READ);
@@ -131,9 +140,6 @@ void clean_up()
 		lineHandler(p);
 		p = strtok(NULL, "\n");
 	}
-
-	//Pequeña correccion
-	f_rename("/Backup/prodinfo.bin", "/prodinfo_sysnand.bin");
 
 	//not pegascape units
 	if (fusesB() > 5)
