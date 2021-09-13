@@ -236,9 +236,8 @@ void printerCU(char *text,const char *title,int clean)
 		static char titw[999] = "-.-";
 		static char buff[999] = "\0";
 		static int count = 0;
-		if(strlen(title) > 0){
-			strcpy(titw, "\0");
-			strcpy(titw, title);
+		if(strlen(title) <= 0){
+			title=titw;
 		}
 
 		
@@ -253,15 +252,19 @@ void printerCU(char *text,const char *title,int clean)
 		g_gfx_con.scale = 3;
 		gfx_con_setpos(&g_gfx_con, 10, 5);
 		gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
-		gfx_printf(&g_gfx_con, "%s\n",titw);
+		gfx_printf(&g_gfx_con, "%s\n",title);
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
 		g_gfx_con.scale = 2;
 		gfx_printf(&g_gfx_con, "%s\n",buff);
-		gfx_printf(&g_gfx_con, "\n> %s-\n",text);
+		gfx_printf(&g_gfx_con, "\n> %s\n",text);
 		gfx_swap_buffer(&g_gfx_ctxt);
 		if (clean > 100){msleep(clean);clean=0;}
 		if (clean == 0)
 		{
+			if(strlen(title) > 0){
+				strcpy(titw, "\0");
+				strcpy(titw, title);
+			}
 			if (count > 38)
 			{
 				count = 0;
@@ -273,7 +276,9 @@ void printerCU(char *text,const char *title,int clean)
 				count++;
 			}
 		}
-}/*
+}
+
+/*
 void keys(){
 	if (!sd_file_exists ("/bootloader/hekate_keys.ini"))
 	{		
