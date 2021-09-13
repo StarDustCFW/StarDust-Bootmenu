@@ -22,6 +22,7 @@
 #include "mem/heap.h"
 #include "gfx/gfx.h"
 #include <string.h>
+#include <stdlib.h>
 sdmmc_t g_sd_sdmmc;
 sdmmc_storage_t g_sd_storage;
 FATFS g_sd_fs;

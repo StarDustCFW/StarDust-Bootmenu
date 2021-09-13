@@ -111,7 +111,7 @@ void lineHandler(char line[])
 			if (line[0] == '/')
 			{
 				f_unlink(line);
-				return
+				return;
 			}
 		}
 	}
