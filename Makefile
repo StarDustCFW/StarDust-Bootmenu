@@ -7,7 +7,7 @@ include $(DEVKITARM)/base_rules
 TARGET 					:= Bootmenu
 BLVERSION_MAJOR := 0
 BLVERSION_MINOR := 3
-BUILD_VER := 122
+BUILD_VER := 123
 
 
 
