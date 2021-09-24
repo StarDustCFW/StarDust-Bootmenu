@@ -47,5 +47,5 @@ void hekateOFW(u32 tipo);
 void medislay(char *flags);
 int static_menu_elements(gui_menu_t *menu);
 void pre_load_menus(int menus, bool StarUp);
-
+int launcher(char *path);
 #endif

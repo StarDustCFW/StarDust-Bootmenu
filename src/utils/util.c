@@ -18,7 +18,7 @@
 
 #include "utils/util.h"
 #include "utils/btn.h"
-#include "utils/fs_utils.h"
+#include "menu/tools/fs_utils.h"
 #include "soc/t210.h"
 #include "soc/fuse.h"
 #include "power/max77620.h"
@@ -30,8 +30,7 @@
 #include "mem/heap.h"
 #include <string.h>
 #include "core/launcher.h"
-#include "core/payloads.h"
-#include "core/custom-gui.h"
+#include "menu/gui/custom-gui.h"
 #include "power/max17050.h"
 #define REVI_VERSION LOAD_BUILD_VER
 

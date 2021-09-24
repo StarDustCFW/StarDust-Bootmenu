@@ -2,7 +2,7 @@
 
 #include "utils/util.h"
 #include "utils/btn.h"
-#include "utils/fs_utils.h"
+#include "menu/tools/fs_utils.h"
 #include "soc/t210.h"
 #include "soc/fuse.h"
 #include "power/max77620.h"
@@ -14,8 +14,7 @@
 #include "mem/heap.h"
 #include <string.h>
 #include "core/launcher.h"
-#include "core/payloads.h"
-#include "core/custom-gui.h"
+#include "menu/gui/custom-gui.h"
 #include "power/max17050.h"
 #include "menu/tools/tools.h"
 #define REVI_VERSION LOAD_BUILD_VER
@@ -153,7 +152,6 @@ gfx_swap_buffer(&g_gfx_ctxt);
 gfx_clear_buffer(&g_gfx_ctxt);
 while (btn_read() & BTN_POWER);
 display_backlight_brightness(a, 1000);
-reboot_normal();
 	while (true)
 	{
 		max17050_get_property(MAX17050_RepSOC, (int *)&battPercent);
@@ -256,9 +254,9 @@ void printerCU(char *text,const char *title,int clean)
 		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
 		g_gfx_con.scale = 2;
 		gfx_printf(&g_gfx_con, "%s\n",buff);
-		gfx_printf(&g_gfx_con, "\n> %s\n",text);
+		gfx_printf(&g_gfx_con, "\n->%s<-\n",text);
 		gfx_swap_buffer(&g_gfx_ctxt);
-		if (clean > 100){msleep(clean);clean=0;}
+		if (clean > 100){msleep(clean);clean=2;}
 		if (clean == 0)
 		{
 			if(strlen(title) > 0){

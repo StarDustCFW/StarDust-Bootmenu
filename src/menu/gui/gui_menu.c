@@ -1,19 +1,20 @@
 
 #include "menu/gui/gui_menu.h"
 #include "menu/gui/gui_menu_pool.h"
-#include "utils/touch.h"
+#include "menu/tools/touch.h"
 #include "utils/btn.h"
-#include "utils/fs_utils.h"
+#include "menu/tools/fs_utils.h"
 #include "utils/util.h"
 #include "gfx/di.h"
 #include "gfx/gfx.h"
 #include "mem/heap.h"
 #include "power/max17050.h"
-#include "core/custom-gui.h"
+#include "menu/gui/custom-gui.h"
 #include <string.h>
 #include "soc/t210.h"
 #include "soc/fuse.h"
 #include "menu/tools/tools.h"
+#include <stdio.h>
 
 #define MINOR_VERSION 3
 #define MAJOR_VERSION 0
@@ -249,3 +250,62 @@ static int handle_touch_input(gui_menu_t *menu)
     return 1;
 }
 
+void create(gui_menu_t *menu, char *path, int x, int y, int (*handler)(void *), void *param)
+{
+	bit_hdr_t file_header;
+	dip_hdr_t file_info_header;
+	FIL fptr;
+	f_open(&fptr, theme(path), FA_READ);
+
+	__off_t size = f_size(&fptr);
+
+	f_read(&fptr, &file_header, sizeof(file_header), NULL);
+	f_read(&fptr, &file_info_header, sizeof(file_info_header), NULL);
+
+	f_lseek(&fptr, 0);
+
+	void *buf = malloc(size);
+	f_read(&fptr, buf, size, NULL);
+
+	f_close(&fptr);
+
+	gui_menu_append_entry(menu, gui_create_menu_entry("", buf, x, y, file_info_header.width, file_info_header.height, handler, param));
+}
+
+void create_no_bitmap(gui_menu_t *menu, char *text, int x, int y, int width, int height)
+{
+	gui_menu_append_entry(menu, gui_create_menu_entry_no_bitmap(text, x, y, width, height, NULL, NULL));
+}
+
+char *them = "skins/xbox";
+
+void loadTheme()
+{
+	if (!sd_file_exists("/StarDust/theme"))
+		return;
+	them = read_file_string("/StarDust/theme");
+}
+
+void saveTheme(char *param)
+{
+	them = param;
+	sd_save_to_file(param, strlen(param), "/StarDust/theme");
+}
+
+void *theme(char *path)
+{
+	char root[] = "/StarDust/";
+	char *buff = malloc(strlen(path) + strlen(them) + strlen(root));
+	u64 total = sizeof(buff);
+	memset(buff, 0, total);
+	strcat(buff, root);
+	strcat(buff, them);
+	strcat(buff, path);
+	if (sd_file_exists(buff))
+		return buff;
+	memset(buff, 0, total);
+	strcpy(buff, root);
+	strcat(buff, "skins/xbox/");
+	strcat(buff, path);
+	return buff;
+}

@@ -14,12 +14,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "core/custom-gui.h"
+#include "menu/gui/custom-gui.h"
 #include "gfx/gfx.h"
 #include "mem/heap.h"
-#include "utils/fs_utils.h"
+#include "menu/tools/fs_utils.h"
 #include "utils/util.h"
-#include "menu/tools/theme.h"
 #include "menu/tools/tools.h"
 #include <string.h>
 

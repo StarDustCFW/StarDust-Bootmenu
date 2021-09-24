@@ -35,7 +35,7 @@
 #include "soc/uart.h"
 #include "storage/sdmmc.h"
 #include "utils/util.h"
-#include "utils/fs_utils.h"
+#include "menu/tools/fs_utils.h"
 
 void _config_oscillators()
 {

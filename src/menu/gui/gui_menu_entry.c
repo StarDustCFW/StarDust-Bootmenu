@@ -21,8 +21,8 @@
 
 #include "gfx/gfx.h"
 
-#include "utils/touch.h"
-#include "utils/fs_utils.h"
+#include "menu/tools/touch.h"
+#include "menu/tools/fs_utils.h"
 
 #include <string.h>
 

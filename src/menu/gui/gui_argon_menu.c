@@ -19,24 +19,21 @@
 #include "menu/gui/gui_argon_menu.h"
 #include "menu/gui/gui_menu.h"
 #include "menu/gui/gui_menu_pool.h"
-#include "menu/tools/theme.h"
-#include "core/custom-gui.h"
+#include "menu/gui/custom-gui.h"
 #include "gfx/di.h"
 #include "gfx/gfx.h"
 #include <stdio.h>
 #include "utils/types.h"
-#include "utils/fs_utils.h"
+#include "menu/tools/fs_utils.h"
 #include "utils/dirlist.h"
 #include "utils/util.h"
-#include "utils/touch.h"
+#include "menu/tools/touch.h"
 #include "utils/btn.h"
 #include "core/launcher.h"
-#include "core/payloads.h"
-#include "core/custom-gui.h"
+#include "menu/gui/custom-gui.h"
 #include "mem/heap.h"
 #include "minerva/minerva.h"
 #include "menu/tools/tools.h"
-#include "menu/tools/entries.h"
 
 #define COLUMNS 4
 #define ROWS 2
@@ -132,19 +129,19 @@ void gui_init_argon_boot(void)
 	{
 		//autoboot
 		if (strstr(Sversion, "A") != NULL)
-			launch_payload("StarDust/payloads/fusee.bin");
+			launcher("StarDust/payloads/fusee.bin");
 
 		if (strstr(Sversion, "S") != NULL)
-			launch_payload("StarDust/payloads/SXOS.bin");
+			launcher("StarDust/payloads/SXOS.bin");
 
 		if (sd_file_exists("/switchroot/ubuntu/coreboot.rom") && (strstr(Sversion, "Ub") != NULL))
 		{
-			launch_payload("switchroot/ubuntu/coreboot.rom");
+			launcher("switchroot/ubuntu/coreboot.rom");
 		}
 
 		if (sd_file_exists("/switchroot/android/coreboot.rom") && (strstr(Sversion, "TW") != NULL))
 		{
-			launch_payload("switchroot/android/coreboot.rom");
+			launcher("switchroot/android/coreboot.rom");
 		}
 	}
 	f_unlink("StarDust/payload.bin");
@@ -181,12 +178,14 @@ void pre_load_menus(int menus, bool StarUp)
 		{
 			char *str = sd_file_read("emummc/emummc.ini");
 			u32 count = strlen(str)-1;
-			if (str[count] != '\n'){
+			if (str[count] != '#'){
 				while (true) {
 					if (count==0) break;
 					if (str[count] == '\n'){
 						str[count]='\n';
-						sd_save_to_file(str, count+1, "emummc/emummc.ini");
+						str[count+1]='#';
+
+						sd_save_to_file(str, count+2, "emummc/emummc.ini");
 						break;
 					}
 					str[count]='\0';
@@ -201,7 +200,8 @@ void pre_load_menus(int menus, bool StarUp)
 					str = str_replace(str, "emummc_", "");
 					u32 size = strlen(str);
 					str[size]=0;
-					sd_save_to_file(str, size-1, "emummc/emummc.ini");
+					str[size]='#';
+					sd_save_to_file(str, size, "emummc/emummc.ini");
 				}
 
 				if (strstr(str, " ") != NULL)
@@ -209,7 +209,8 @@ void pre_load_menus(int menus, bool StarUp)
 					str = str_replace(str, " ", "");
 					u32 size = strlen(str);
 					str[size]=0;
-					sd_save_to_file(str, size-1, "emummc/emummc.ini");
+					str[size]='#';
+					sd_save_to_file(str, size, "emummc/emummc.ini");
 				}
 				retir = 1;
 				if (strstr(str, "enabled=1") != NULL)
@@ -229,32 +230,32 @@ void pre_load_menus(int menus, bool StarUp)
 			}
 		}
 
-		create(menu_0, "Icons/Atmosphere.bmp", main_iconX, main_iconY, (int (*)(void *))launch_payload, (void *)"/StarDust/payloads/fusee.bin");
+		create(menu_0, "Icons/Atmosphere.bmp", main_iconX, main_iconY, (int (*)(void *))launcher, (void *)"/StarDust/payloads/fusee.bin");
 		main_iconX = main_iconX + main_iconXS;
 
 		//			if(retir <= 1)
 		//			{
-		//			gui_menu_append_entry(menu_0,gui_create_menu_entry("",theme("Icons/ReiNX.bmp"), main_iconX, main_iconY, 300 , 300,(int (*)(void *))launch_payload, (void*)"/StarDust/payloads/ReiNX.bin"));
+		//			gui_menu_append_entry(menu_0,gui_create_menu_entry("",theme("Icons/ReiNX.bmp"), main_iconX, main_iconY, 300 , 300,(int (*)(void *))launcher, (void*)"/StarDust/payloads/ReiNX.bin"));
 		main_iconX = main_iconX + main_iconXS;
 		//			}
 
-		create(menu_0, "Icons/SXOS.bmp", main_iconX, main_iconY, (int (*)(void *))launch_payload, (void *)"/StarDust/payloads/SXOS.bin");
+		create(menu_0, "Icons/SXOS.bmp", main_iconX, main_iconY, (int (*)(void *))launcher, (void *)"/StarDust/payloads/SXOS.bin");
 		//
 		create(menu_0, "Icons/Stock.bmp", 540, main_iconY + 100, (int (*)(void *))hekateOFW, (void *)1);
 		if (sd_file_exists("/switchroot/android/coreboot.rom"))
-			create(menu_0, "Icons/Android.bmp", 590, main_iconY - 30, (int (*)(void *))launch_payload, (void *)"/switchroot/android/coreboot.rom");
+			create(menu_0, "Icons/Android.bmp", 590, main_iconY - 30, (int (*)(void *))launcher, (void *)"/switchroot/android/coreboot.rom");
 		else if (sd_file_exists("/switchroot_android/coreboot.rom"))
-			create(menu_0, "Icons/Android.bmp", 590, main_iconY - 30, (int (*)(void *))launch_payload, (void *)"/switchroot_android/coreboot.rom");
+			create(menu_0, "Icons/Android.bmp", 590, main_iconY - 30, (int (*)(void *))launcher, (void *)"/switchroot_android/coreboot.rom");
 
 		if (sd_file_exists("/switchroot/ubuntu/coreboot.rom"))
-			create(menu_0, "Icons/Ubuntu.bmp", 590, main_iconY + 230, (int (*)(void *))launch_payload, (void *)"/switchroot/ubuntu/coreboot.rom");
+			create(menu_0, "Icons/Ubuntu.bmp", 590, main_iconY + 230, (int (*)(void *))launcher, (void *)"/switchroot/ubuntu/coreboot.rom");
 		//
 		u64 iconrowY = low_icons-5;
 		u64 iconrowX = 130;
 		u64 iconrowXS = 250;
-		create(menu_0, "Icons/Lockpick_RCM.bmp", iconrowX, iconrowY, (int (*)(void *))launch_payload, (void *)"/StarDust/payloads/Lockpick_RCM.bin");
+		create(menu_0, "Icons/Lockpick_RCM.bmp", iconrowX, iconrowY, (int (*)(void *))launcher, (void *)"/StarDust/payloads/Lockpick_RCM.bin");
 		iconrowX = iconrowX + iconrowXS;
-		create(menu_0, "Icons/TegraEX.bmp", iconrowX, iconrowY, (int (*)(void *))launch_payload, (void *)"/StarDust/payloads/TegraExplorer.bin");
+		create(menu_0, "Icons/TegraEX.bmp", iconrowX, iconrowY, (int (*)(void *))launcher, (void *)"/StarDust/payloads/TegraExplorer.bin");
 		iconrowX = iconrowX + iconrowXS;
 		iconrowX = iconrowX + 80;
 		if (Incac == 0)
@@ -267,7 +268,7 @@ void pre_load_menus(int menus, bool StarUp)
 		//	gui_menu_append_entry(menu_0,gui_create_menu_entry("",theme("Icons/Incognito.bmp"),iconrowX+700, iconrowY, 200 , 200,(int (*)(void *))tool_Menus, (void*)6));
 
 		create(menu_0, "Icons/SD.bmp", 10, low_icons, tool_extr_rSD, NULL);
-		//create(menu_0, "Icons/rcm.bmp", 700, low_icons, (int (*)(void *))launch_payload, (void *)"payload.bin");
+		//create(menu_0, "Icons/rcm.bmp", 700, low_icons, (int (*)(void *))launcher, (void *)"payload.bin");
 		if (iamsafe == 0)
 			create(menu_0, "Icons/themes.bmp", 605, low_icons, tool_menu_rem, NULL);
 		//			gui_menu_append_entry(menu_0,gui_create_menu_entry("",theme("Icons/Reinx-off.bmp"),366, main_iconY, 300 , 300, NULL, NULL));
@@ -921,8 +922,13 @@ int tool_emu(u32 status)
 		f_open(&op, "emummc/emummc.ini", FA_READ);
 		u32 size = f_size(&op);
 		f_close(&op);
-		payload_wo_bin[size]='\0';
-		payload_wo_bin[size]='\n';
+		printerCU(payload_wo_bin,"",5000);
+//		payload_wo_bin[size]='\0';
+//		payload_wo_bin[size]='\n';
+		payload_wo_bin[size]=0;
+		payload_wo_bin[size]='#';
+		printerCU(payload_wo_bin,"",5000);
+
 		sd_save_to_file(payload_wo_bin, size, "emummc/emummc.ini");
 		retir = 2;
 		pre_load_menus(0, 0);
@@ -936,10 +942,14 @@ int tool_emu(u32 status)
 		f_open(&op, "emummc/emummc.ini", FA_READ);
 		u32 size = f_size(&op);
 		f_close(&op);
-		payload_wo_bin[size]='\0';
-		payload_wo_bin[size]='\n';
+		printerCU(payload_wo_bin,"",5000);
+//		payload_wo_bin[size]='\0';
+//		payload_wo_bin[size]='\n';
+		payload_wo_bin[size]=0;
+		payload_wo_bin[size]='#';
 		sd_save_to_file(payload_wo_bin, size, "emummc/emummc.ini");
 		retir = 1;
+		printerCU(payload_wo_bin,"",5000);
 		pre_load_menus(0, 0);
 	}
 
@@ -1064,6 +1074,7 @@ void tool_Themes_off(char *cfw)
 		f_unlink("atmosphere/contents/0100000000001000/fsmitm.flag");
 	}
 	pre_load_menus(1, 0);
+	gui_init_argon_menu();
 }
 
 //safe boot
@@ -1112,7 +1123,7 @@ int tool_menu_rem(void *param)
 	}
 	sd_save_to_file("", 0, "StarDust/flags/IamSafe.flag");
 	sd_save_to_file("#Safeboot flag", 13, "fixer.del");
-	launch_payload("payload.bin");
+	launcher("payload.bin");
 	return 0;
 }
 
@@ -1241,7 +1252,7 @@ int Incognito(char *order)
 	}
 
 	sd_save_to_file(order, 1, "StarDust/autoboot.inc");
-	launch_payload("StarDust/payloads/Incognito_RCM.bin");
+	launcher("StarDust/payloads/Incognito_RCM.bin");
 	return 0;
 }
 
@@ -1366,8 +1377,69 @@ void hekateOFW(u32 tipo)
 		}
 		copyfile("bootloader/stock", "bootloader/hekate_ipl.ini");
 	}
-	launch_payload("/StarDust/payloads/hekate.bin");
+	launcher("/StarDust/payloads/hekate.bin");
 }
+
+int launcher(char *path){
+	SDStrap();
+	display_backlight_brightness(0, 1000);	
+
+    u32 boot = 0;
+
+    if(strstr(path,"fusee") != NULL)
+    	boot=1;
+    else if(strstr(path,"sxos") != NULL)
+    	boot=3;
+    else if(strstr(path,"fusee") != NULL)
+    	boot=1;
+    else if(strstr(path,"SXOS") != NULL)
+    	boot=3;
+    else if(strstr(path,"android") != NULL)
+		boot=4;
+    else if(strstr(path,"ubuntu") != NULL)
+		boot=5;
+
+    if(boot==1)
+    {
+		display_backlight_brightness(0, 1000);
+		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
+		sd_save_to_file("Atmosphere", 10, "StarDust/autobootecho.txt");
+    }
+
+	if(boot==3)
+    {
+		display_backlight_brightness(50, 1000);
+		gfx_swap_buffer(&g_gfx_ctxt);
+		g_gfx_con.scale = 3;
+
+		u32 bootS = sd_file_size("StarDust/boot.dat");
+		u32 bootR = sd_file_size("boot.dat");
+
+		if (bootS != bootR){
+			gfx_con_setpos(&g_gfx_con, 370, 350);
+			gfx_printf(&g_gfx_con, "Loading Boot.dat\n",bootS,bootR);
+			gfx_swap_buffer(&g_gfx_ctxt);
+			copyfile("StarDust/boot.dat","boot.dat");
+		}
+			
+		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
+		sd_save_to_file("SXOS", 4, "StarDust/autobootecho.txt");
+	}
+
+	if(boot==4)
+    {
+		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
+		sd_save_to_file("TWRP", 4, "StarDust/autobootecho.txt");		
+    }
+	if(boot==5)
+    {
+		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
+		sd_save_to_file("Ubuntu", 6, "StarDust/autobootecho.txt");		
+    }
+	launch_payload(path);
+	return 0;
+}
+
 
 /*
 void HBhide(char *folder)

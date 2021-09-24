@@ -22,7 +22,7 @@
 #include "libs/fatfs/ff.h"
 #include "utils/types.h"
 #include "utils/util.h"
-#include "utils/fs_utils.h"
+#include "menu/tools/fs_utils.h"
 #include "gfx/gfx.h"
 #include "soc/hw_init.h"
 #include "mem/heap.h"
@@ -62,62 +62,6 @@ void reloc_patcher(u32 payload_size)
 
 int launch_payload(char *path)
 {
-	SDStrap();
-	display_backlight_brightness(0, 1000);	
-
-    u32 boot = 0;
-
-    if(strstr(path,"atmos") != NULL)
-    	boot=1;
-    if(strstr(path,"sxos") != NULL)
-    	boot=3;
-    if(strstr(path,"fusee") != NULL)
-    	boot=1;
-    if(strstr(path,"SXOS") != NULL)
-    	boot=3;
-    if(strstr(path,"android") != NULL)
-		boot=4;
-    if(strstr(path,"ubuntu") != NULL)
-		boot=5;
-
-    if(boot==1)
-    {
-		display_backlight_brightness(0, 1000);
-		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
-		sd_save_to_file("Atmosphere", 10, "StarDust/autobootecho.txt");
-    }
-
-	if(boot==3)
-    {
-		display_backlight_brightness(50, 1000);
-		gfx_swap_buffer(&g_gfx_ctxt);
-		g_gfx_con.scale = 3;
-
-		u32 bootS = sd_file_size("StarDust/boot.dat");
-		u32 bootR = sd_file_size("boot.dat");
-
-		if (bootS != bootR){
-			gfx_con_setpos(&g_gfx_con, 370, 350);
-			gfx_printf(&g_gfx_con, "Loading Boot.dat\n",bootS,bootR);
-			gfx_swap_buffer(&g_gfx_ctxt);
-			copyfile("StarDust/boot.dat","boot.dat");
-		}
-			
-		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
-		sd_save_to_file("SXOS", 4, "StarDust/autobootecho.txt");
-	}
-
-	if(boot==4)
-    {
-		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
-		sd_save_to_file("TWRP", 4, "StarDust/autobootecho.txt");		
-    }
-	if(boot==5)
-    {
-		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
-		sd_save_to_file("Ubuntu", 6, "StarDust/autobootecho.txt");		
-    }
-
     FIL fp;
     if (f_open(&fp, path, FA_READ))
     {

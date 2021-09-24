@@ -16,13 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "utils/dirlist.h"
-#include "utils/fs_utils.h"
+#include "menu/tools/fs_utils.h"
 #include "utils/util.h"
 #include "gfx/di.h"
 #include "mem/heap.h"
 #include "gfx/gfx.h"
 #include <string.h>
 #include <stdlib.h>
+#include "menu/tools/tools.h"
+
 sdmmc_t g_sd_sdmmc;
 sdmmc_storage_t g_sd_storage;
 FATFS g_sd_fs;
@@ -367,7 +369,10 @@ char* destfile = (char*)malloc(256);
 			strcat(destfile, &files[i * 256]);
 			if(strlen(coment) > 0){
 				printerCU(destfile,coment,2);
+			} else {
+				printerCU(destfile,"",2);
 			}
+				
 			f_unlink(destfile);
 			}
 	i++;

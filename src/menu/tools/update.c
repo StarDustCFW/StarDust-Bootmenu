@@ -9,7 +9,7 @@
 #include "menu/tools/tools.h"
 
 #include "utils/util.h"
-#include "utils/fs_utils.h"
+#include "menu/tools/fs_utils.h"
 
 char *type = "*";
 char *clip = "";
@@ -75,13 +75,6 @@ void lineHandler(char line[])
 		return;
 	}
 
-	/* If line is make folder */
-	if (line[0] == '+')
-	{
-		memmove(line, line + 1, strlen(line));
-		f_mkdir(line);
-		return;
-	}
 
 	/* If line is a type set type for directories */
 	if (line[0] == '*')
@@ -91,6 +84,20 @@ void lineHandler(char line[])
 		return;
 	}
 
+	/* If line is make folder */
+	if (line[0] == '+')
+	{
+		memmove(line, line + 1, strlen(line));
+		if (line[strlen(line) - 1] == '/')
+		{
+			line[strlen(line) - 1] = 0;
+			f_mkdir(line);
+			return;
+		}
+		printerCU(line,"",0);
+		sd_save_to_file(clip, strlen(clip), line);
+		return;
+	}
 	
 	/* if line is delete */
 	if (line[0] == '-')
@@ -102,7 +109,8 @@ void lineHandler(char line[])
 		if (line[strlen(line) - 1] == '/')
 		{
 			line[strlen(line) - 1] = 0;
-			deleteall(line, type, line);
+			deleteall(line, type, "");
+			//printerCU(line,"",0);
 			return;
 		}
 		/* If line is a file delete */
@@ -214,9 +222,10 @@ void fix_emu()
 	< Copy to Clipboard
 	> Paste
 	~ Rename, Move
-	+ Make Folder
-	* Set name of file to delete recursive,  * is for all, only for folders with /
-	- Delete files o folders
-		add / at the end of folder to delete recursive
+	+ Make Folder or file with the contents of Clipboard with < can be 0 bytes
+	- Delete files or folders
+		* Set name of file to delete recursive,  * is for all, only for folders with /
+	
+	add / at the end of the line to delimtate if is a folder
 
 */

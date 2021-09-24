@@ -20,7 +20,7 @@
 #include "gfx/gfx.h"
 #include "gfx/di.h"
 
-#include "utils/fs_utils.h"
+#include "menu/tools/fs_utils.h"
 #include "utils/util.h"
 #include "mem/heap.h"
 #include <string.h>

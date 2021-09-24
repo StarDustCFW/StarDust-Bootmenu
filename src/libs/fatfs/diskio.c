@@ -10,7 +10,7 @@
 #include <string.h>
 #include "libs/fatfs/diskio.h"		/* FatFs lower layer API */
 #include "storage/sdmmc.h"
-#include "utils/fs_utils.h"
+#include "menu/tools/fs_utils.h"
 
 DSTATUS disk_status (
 	BYTE pdrv		/* Physical drive nmuber to identify the drive */

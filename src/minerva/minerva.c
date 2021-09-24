@@ -2,7 +2,7 @@
 
 #include "utils/types.h"
 #include "utils/util.h"
-#include "utils/fs_utils.h"
+#include "menu/tools/fs_utils.h"
 
 #include "soc/fuse.h"
 #include "soc/t210.h"
