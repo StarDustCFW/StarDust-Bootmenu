@@ -4,34 +4,22 @@ endif
 
 include $(DEVKITARM)/base_rules
 
-TARGET 					:= Bootmenu
-BLVERSION_MAJOR := 0
-BLVERSION_MINOR := 3
-BUILD_VER := 123
-
-
+TARGET 				:= Bootmenu
+BLVERSION_MAJOR		:= 0
+BLVERSION_MINOR		:= 3
+BUILD_VER			:= 124
 
 BUILD 				:= build
 OUTPUT 				:= output
 SOURCEDIR 			:= src
 DATA				:= data
-SOURCES		      	:= src \
-										src/core \
-										src/ianos \
-										src/gfx \
-										src/libs/fatfs src/libs/elfload src/libs/compr \
-										src/mem \
-										src/menu/gui \
-										src/menu/tools \
-										src/minerva \
-										src/panic \
-										src/power \
-										src/sec \
-										src/soc \
-										src/storage \
-										src/utils
+SOURCES		      	:= src
+INCLUDES			:= include src
 
-INCLUDES				:= include src
+#Get SOURCE Subdirs
+SOURCES	+=	$(foreach dir,$(SOURCES)/,$(shell find $(dir) -maxdepth 10 -type d))
+#$(error $(SOURCES))
+
 VPATH = $(dir  ./$(SOURCEDIR)/) $(dir $(wildcard ./$(SOURCEDIR)/*/)) $(dir $(wildcard ./$(SOURCEDIR)/*/*/))
 CFILES			:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 SFILES			:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
@@ -41,12 +29,12 @@ OFILES_BIN		:= $(addsuffix .o,$(BINFILES))
 OFILES_SRC		:= $(SFILES:.s=.o) $(CFILES:.c=.o)
 HFILES_BIN		:= $(addsuffix .h,$(subst .,_,$(BINFILES)))
 
-OBJS 					= $(addprefix $(BUILD)/$(TARGET)/, $(OFILES_BIN) $(OFILES_SRC))
+OBJS 					= $(addprefix $(BUILD)/, $(OFILES_BIN) $(OFILES_SRC))
 
 
 INCLUDE				:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 										$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
-										-I$(BUILD)/$(TARGET)
+										-I$(BUILD)
 
 CUSTOMDEFINES := -DLOAD_BUILD_VER=$(BUILD_VER)
 
@@ -66,7 +54,7 @@ all: directories $(TARGET).bin
 
 directories:
 	@mkdir -p "$(BUILD)"
-	@mkdir -p "$(BUILD)/$(TARGET)"
+	@mkdir -p "$(BUILD)"
 	@mkdir -p "$(OUTPUT)"
 	
 clean:
@@ -78,23 +66,23 @@ clean:
 $(MODULEDIRS):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
 
-$(TARGET).bin: $(BUILD)/$(TARGET)/$(TARGET).elf $(MODULEDIRS)
+$(TARGET).bin: $(BUILD)/$(TARGET).elf $(MODULEDIRS)
 	$(OBJCOPY) -S -O binary $< $(OUTPUT)/$@
 	@printf ICTC$(BLVERSION_MAJOR)$(BLVERSION_MINOR) >> $(OUTPUT)/$@
 
-$(BUILD)/$(TARGET)/$(TARGET).elf: $(OBJS)
+$(BUILD)/$(TARGET).elf: $(OBJS)
 	$(CC) $(LDFLAGS) -T $(SOURCEDIR)/link.ld $^ -o $@
 
-$(BUILD)/$(TARGET)/%.o: %.c
+$(BUILD)/%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BUILD)/$(TARGET)/%.o: %.s
+$(BUILD)/%.o: %.s
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(BUILDDIR)/$(TARGET):
 $(OFILES_SRC)	: $(HFILES_BIN)
 
-$(BUILD)/$(TARGET)/%.bmp.o %_bmp.h:	data/%.bmp
+$(BUILD)/%.bmp.o %_bmp.h:	data/%.bmp
 	@echo $(notdir $<)
 	@$(bin2o)	
 	
