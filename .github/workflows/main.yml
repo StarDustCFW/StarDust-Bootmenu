@@ -16,7 +16,9 @@ jobs:
         
     - name: Make app
       run: |
+        ls
         make -j$(nproc)
+        ls
         
     - uses: actions/upload-artifact@master
       with:

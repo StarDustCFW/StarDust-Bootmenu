@@ -16,6 +16,10 @@ DATA				:= data
 SOURCES		      	:= src
 INCLUDES			:= include src
 
+
+$(shell mkdir -p $(BUILD))
+$(shell mkdir -p $(OUTPUT))
+
 #Get SOURCE Subdirs
 SOURCES	+=	$(foreach dir,$(SOURCES)/,$(shell find $(dir) -maxdepth 10 -type d))
 #$(error $(SOURCES))
@@ -55,6 +59,7 @@ all: directories $(TARGET).bin
 directories:
 	@mkdir -p "$(BUILD)"
 	@mkdir -p "$(OUTPUT)"
+#	$(error "i am here")
 	
 clean:
 	@rm -rf $(OBJS)
