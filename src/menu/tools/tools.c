@@ -116,8 +116,8 @@ char *fusesM()
             case 13:mine = "10.0.0";break;
             case 14:mine = "11.0.0";break;
             case 15:mine = "12.1.0";break;
-            case 16:mine = "12.2.0";break;//just guess
-            default:mine = " -.-";
+            case 16:mine = "13.1.0";break;//just guess
+            default:mine = " -";
 	}
 return mine;
 }
