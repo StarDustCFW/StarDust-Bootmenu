@@ -16,11 +16,9 @@ jobs:
         
     - name: Make app
       run: |
-        ls
         make -j$(nproc)
-        ls
         
     - uses: actions/upload-artifact@master
       with:
         name: Payload
-        path: payload.bin
+        path: output/*

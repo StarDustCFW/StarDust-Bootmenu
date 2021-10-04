@@ -4,7 +4,7 @@ endif
 
 include $(DEVKITARM)/base_rules
 
-TARGET 				:= Bootmenu
+TARGET 				:= payload
 BLVERSION_MAJOR		:= 0
 BLVERSION_MINOR		:= 3
 BUILD_VER			:= 124
@@ -49,12 +49,11 @@ LDFLAGS = $(ARCH) -nostartfiles -lgcc -Wl,--nmagic,--gc-sections
 
 .PHONY: all clean
 
-all: directories $(TARGET).bin
+all: directories $(OUTPUT)/$(TARGET).bin
 	@echo $(HFILES_BIN)
 	@echo -n "Payload size is "
 	@wc -c < $(OUTPUT)/$(TARGET).bin
 	@echo "Max size is 126296 Bytes."
-	mv $(OUTPUT)/$(TARGET).bin payload.bin
 
 directories:
 	@mkdir -p "$(BUILD)"
@@ -72,9 +71,14 @@ $(MODULEDIRS):
 	@mkdir -p "$(OUTPUT)"
 	$(MAKE) -C $@ $(MAKECMDGOALS)
 
+
+$(OUTPUT)/$(TARGET).bin: $(BUILD)/$(TARGET).elf $(MODULEDIRS)
+	$(OBJCOPY) -S -O binary $< $@
+	@printf STDV$(BUILD_VER) >> $@
+
 $(TARGET).bin: $(BUILD)/$(TARGET).elf $(MODULEDIRS)
 	$(OBJCOPY) -S -O binary $< $(OUTPUT)/$@
-	@printf ICTC$(BLVERSION_MAJOR)$(BLVERSION_MINOR) >> $(OUTPUT)/$@
+	@printf STDV$(BUILD_VER) >> $(OUTPUT)/$@
 
 $(BUILD)/$(TARGET).elf: $(OBJS)
 	$(CC) $(LDFLAGS) -T $(SOURCEDIR)/link.ld $^ -o $@
