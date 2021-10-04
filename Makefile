@@ -54,7 +54,6 @@ all: directories $(TARGET).bin
 
 directories:
 	@mkdir -p "$(BUILD)"
-	@mkdir -p "$(BUILD)"
 	@mkdir -p "$(OUTPUT)"
 	
 clean:
@@ -64,6 +63,8 @@ clean:
 	@rm -rf logo_bmp.h
 
 $(MODULEDIRS):
+	@mkdir -p "$(BUILD)"
+	@mkdir -p "$(OUTPUT)"
 	$(MAKE) -C $@ $(MAKECMDGOALS)
 
 $(TARGET).bin: $(BUILD)/$(TARGET).elf $(MODULEDIRS)
