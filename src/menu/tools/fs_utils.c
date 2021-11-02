@@ -38,7 +38,7 @@ bool sd_mount()
 	{
 		display_backlight_brightness(100, 1000);
         gfx_printf(&g_gfx_con, "-\n", 0xFFFFDD00, 0xFFCCCCCC);
-        gfx_printf(&g_gfx_con, "%kFailed to init SD card.\nMake sure that it is inserted.\nOr that SD reader is properly seated!%k\n", 0xFFFFDD00, 0xFFCCCCCC);
+        gfx_printf(&g_gfx_con, "%kFallo al montar la SD.\nNo se detecta la SD .\nAsegurese este haciendo buen contacto y este puesta !%k\n", 0xFFFFDD00, 0xFFCCCCCC);
 //		msleep(3000);
 	}
 	else
@@ -53,7 +53,7 @@ bool sd_mount()
 		else
 		{
         gfx_printf(&g_gfx_con, "-\n", 0xFFFFDD00, 0xFFCCCCCC);
-        gfx_printf(&g_gfx_con, "%kFailed to mount SD card (FatFS Error %d).\nMake sure that a FAT partition exists..%k\n", 0xFFFFDD00, res, 0xFFCCCCCC);
+        gfx_printf(&g_gfx_con, "%kFallo al montar la SD (FatFS Error %d).\nNo se encuentra una partición valida saca la sd\nAsegúrese que este en fat32 y haga buen contacto la sd en el slot %k\n", 0xFFFFDD00, res, 0xFFCCCCCC);
 		}
 	}
 
@@ -169,8 +169,8 @@ void copyfile(const char* source, const char* target)
         if (f_open(&fp, source, FA_READ) != FR_OK)
          {
 		gfx_printf(&g_gfx_con, "file %s mising\n",source);
-	    gfx_swap_buffer(&g_gfx_ctxt);
-		msleep(3000);
+	    //gfx_swap_buffer(&g_gfx_ctxt);
+		//msleep(3000);
 		 }else{
 
         u32 size = f_size(&fp);

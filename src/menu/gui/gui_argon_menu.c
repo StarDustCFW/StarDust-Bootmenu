@@ -178,12 +178,12 @@ void pre_load_menus(int menus, bool StarUp)
 		{
 			char *str = sd_file_read("emummc/emummc.ini");
 			u32 count = strlen(str)-1;
-			if (str[count] != '#'){
+			if (str[count] != '\n'){
 				while (true) {
 					if (count==0) break;
 					if (str[count] == '\n'){
 						str[count]='\n';
-						str[count+1]='#';
+						str[count+1]='\n';
 
 						sd_save_to_file(str, count+2, "emummc/emummc.ini");
 						break;
@@ -200,7 +200,7 @@ void pre_load_menus(int menus, bool StarUp)
 					str = str_replace(str, "emummc_", "");
 					u32 size = strlen(str);
 					str[size]=0;
-					str[size]='#';
+					str[size]='\n';
 					sd_save_to_file(str, size, "emummc/emummc.ini");
 				}
 
@@ -209,7 +209,7 @@ void pre_load_menus(int menus, bool StarUp)
 					str = str_replace(str, " ", "");
 					u32 size = strlen(str);
 					str[size]=0;
-					str[size]='#';
+					str[size]='\n';
 					sd_save_to_file(str, size, "emummc/emummc.ini");
 				}
 				retir = 1;
@@ -319,11 +319,11 @@ void pre_load_menus(int menus, bool StarUp)
 			create(menu_1, "Icons/Autoff.bmp", 1050, 600, (int (*)(void *))Autoboot, (void *)1);
 
 		//draw Ulaunch
-		/*
 		if (sd_file_exists("StarDust/flags/ulaunch.flag"))
 			create(menu_1, "Icons/ulon.bmp", 850, 600, (int (*)(void *))uLaunch, (void *)0);
 		else
 			create(menu_1, "Icons/uloff.bmp", 850, 600, (int (*)(void *))uLaunch, (void *)1);
+		/*
 		*/
 
 		//draw CFW select
@@ -926,7 +926,7 @@ int tool_emu(u32 status)
 //		payload_wo_bin[size]='\0';
 //		payload_wo_bin[size]='\n';
 		payload_wo_bin[size]=0;
-		payload_wo_bin[size]='#';
+		payload_wo_bin[size]='\n';
 		printerCU(payload_wo_bin,"",5000);
 
 		sd_save_to_file(payload_wo_bin, size, "emummc/emummc.ini");
@@ -946,7 +946,7 @@ int tool_emu(u32 status)
 //		payload_wo_bin[size]='\0';
 //		payload_wo_bin[size]='\n';
 		payload_wo_bin[size]=0;
-		payload_wo_bin[size]='#';
+		payload_wo_bin[size]='\n';
 		sd_save_to_file(payload_wo_bin, size, "emummc/emummc.ini");
 		retir = 1;
 		printerCU(payload_wo_bin,"",5000);
@@ -1218,8 +1218,7 @@ void serv_display(gui_menu_t *menu, char *titleid, char *name)
 	}
 }
 
-int Incognito(char *order)
-{
+int Incognito(char *order){
 	SDStrap();
 	if (strstr(order, "B") != NULL)
 	{
@@ -1256,8 +1255,7 @@ int Incognito(char *order)
 	return 0;
 }
 
-int Autoboot(u32 fil)
-{
+int Autoboot(u32 fil){
 	SDStrap();
 	if (fil == 0)
 		f_unlink("StarDust/autobootecho.txt");
@@ -1270,8 +1268,7 @@ int Autoboot(u32 fil)
 	return 0;
 };
 
-int AThemes_list(gui_menu_t *menu, u32 gridX, u32 gridY)
-{
+int AThemes_list(gui_menu_t *menu, u32 gridX, u32 gridY){
 	//generate themes Dinamy
 	u32 tm_ajust = 90;
 	char *folder = listfol("StarDust/skins", "*", true);
@@ -1303,8 +1300,7 @@ int AThemes_list(gui_menu_t *menu, u32 gridX, u32 gridY)
 	return 0;
 }
 
-void medislay(char *flags)
-{
+void medislay(char *flags){
 	SDStrap();
 	change_brightness(0);
 	if (sd_file_exists("StarDust/flags/b50.flag"))
@@ -1314,7 +1310,8 @@ void medislay(char *flags)
 	pre_load_menus(1, 0);
 	gui_init_argon_menu();
 }
-/*
+/**/
+
 int uLaunch(u32 fil)
 {
 	SDStrap();
@@ -1338,10 +1335,10 @@ int uLaunch(u32 fil)
 
 	if (fil == 1)
 	{
-		copyarall("/StarDust/ulaunch/ulaunch", "/ulaunch", "*", "Installing ulaunch");
-		copyarall("/StarDust/ulaunch/titles", "/atmosphere/contents", "*", "Installing ulaunch");
+		copyarall("/StarDust/ulaunch/SdOut/ulaunch", "/ulaunch", "*", "Installing ulaunch");
+		copyarall("/StarDust/ulaunch/SdOut/atmosphere", "/atmosphere", "*", "Installing ulaunch");
 		//		copyarall("/StarDust/ulaunch/titles", "/ReiNX/titles", "*","Installing ulaunch");
-		copyarall("/StarDust/ulaunch/titles", "/sxos/titles", "*", "Installing ulaunch");
+		//copyarall("/StarDust/ulaunch/titles", "/sxos/titles", "*", "Installing ulaunch");
 		f_mkdir("StarDust/flags");
 		sd_save_to_file("", 0, "StarDust/flags/ulaunch.flag");
 	}
@@ -1350,10 +1347,8 @@ int uLaunch(u32 fil)
 	gui_init_argon_menu();
 	return 0;
 }
-*/
 
-void hekateOFW(u32 tipo)
-{
+void hekateOFW(u32 tipo) {
 	SDStrap();
 	if (tipo == 0)
 	{

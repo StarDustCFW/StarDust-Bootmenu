@@ -7,7 +7,7 @@ include $(DEVKITARM)/base_rules
 TARGET 				:= payload
 BLVERSION_MAJOR		:= 0
 BLVERSION_MINOR		:= 3
-BUILD_VER			:= 124
+BUILD_VER			:= 128
 
 BUILD 				:= build
 OUTPUT 				:= output
@@ -21,7 +21,7 @@ $(shell mkdir -p $(BUILD))
 $(shell mkdir -p $(OUTPUT))
 
 #Get SOURCE Subdirs
-SOURCES	+=	$(foreach dir,$(SOURCES)/,$(shell find $(dir) -maxdepth 10 -type d))
+SOURCES	:=	$(foreach dir,$(SOURCES),$(shell find $(dir) -maxdepth 10 -type d))
 #$(error $(SOURCES))
 
 VPATH = $(dir  ./$(SOURCEDIR)/) $(dir $(wildcard ./$(SOURCEDIR)/*/)) $(dir $(wildcard ./$(SOURCEDIR)/*/*/))

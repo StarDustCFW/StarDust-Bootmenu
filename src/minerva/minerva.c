@@ -59,7 +59,6 @@ static u32 increase_freq(mtc_config_t* mtc_cfg, u32 from, u32 to, enum train_mod
 
 void minerva()
 {
-    mtc_config_t mtc_cfg;
 
     /* Mount sd card */
     if(!sd_mount())
@@ -68,6 +67,7 @@ void minerva()
         return;
     }
 
+    mtc_config_t mtc_cfg;
 	gfx_printf(&g_gfx_con, "-- Minerva Training Cell --\n");
 	
     // Set table to ram.
