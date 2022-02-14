@@ -129,7 +129,7 @@ void gui_init_argon_boot(void)
 	{
 		//autoboot
 		if (strstr(Sversion, "A") != NULL)
-			launcher("StarDust/payloads/fusee.bin");
+			launcher("StarDust/payloads/Atmosphere.bin");
 
 		if (strstr(Sversion, "S") != NULL)
 			launcher("StarDust/payloads/SXOS.bin");
@@ -230,7 +230,7 @@ void pre_load_menus(int menus, bool StarUp)
 			}
 		}
 
-		create(menu_0, "Icons/Atmosphere.bmp", main_iconX, main_iconY, (int (*)(void *))launcher, (void *)"/StarDust/payloads/fusee.bin");
+		create(menu_0, "Icons/Atmosphere.bmp", main_iconX, main_iconY, (int (*)(void *))launcher, (void *)"/StarDust/payloads/Atmosphere.bin");
 		main_iconX = main_iconX + main_iconXS;
 
 		//			if(retir <= 1)
@@ -927,7 +927,7 @@ int tool_emu(u32 status)
 //		payload_wo_bin[size]='\n';
 		payload_wo_bin[size]=0;
 		payload_wo_bin[size]='\n';
-		printerCU(payload_wo_bin,"",5000);
+		//printerCU(payload_wo_bin,"",5000);
 
 		sd_save_to_file(payload_wo_bin, size, "emummc/emummc.ini");
 		retir = 2;
@@ -949,7 +949,7 @@ int tool_emu(u32 status)
 		payload_wo_bin[size]='\n';
 		sd_save_to_file(payload_wo_bin, size, "emummc/emummc.ini");
 		retir = 1;
-		printerCU(payload_wo_bin,"",5000);
+		//printerCU(payload_wo_bin,"",5000);
 		pre_load_menus(0, 0);
 	}
 
@@ -1084,7 +1084,7 @@ int tool_menu_rem(void *param)
 	change_brightness(1);
 	f_unlink("/atmosphere/contents/0100000000001000/fsmitm.flag");
 	f_unlink("/atmosphere/contents/0100000000001000/romfs_metadata.bin");
-	deleteall("/atmosphere/contents/0100000000001000/romfs", "*", "Delete 0100000000001000");
+	deleteall("/atmosphere/contents/0100000000001000/romfs/lyt", "*", "Delete 0100000000001000");
 	f_unlink("/SXOS/titles/0100000000001000/fsmitm.flag");
 	f_unlink("/sxos/titles/0100000000001000/romfs_metadata.bin");
 	f_unlink("/sxos/titles/0100000000000034-OFF/exefs.nsp");
@@ -1377,34 +1377,34 @@ void hekateOFW(u32 tipo) {
 
 int launcher(char *path){
 	SDStrap();
-	display_backlight_brightness(0, 1000);	
+	gfx_swap_buffer(&g_gfx_ctxt);
+	display_backlight_brightness(30, 1000);	
 
     u32 boot = 0;
 
-    if(strstr(path,"fusee") != NULL)
+    if(strstr(path,"Atmosphere") != NULL)
     	boot=1;
-    else if(strstr(path,"sxos") != NULL)
-    	boot=3;
     else if(strstr(path,"fusee") != NULL)
     	boot=1;
+    else if(strstr(path,"sxos") != NULL)
+    	boot=2;
     else if(strstr(path,"SXOS") != NULL)
-    	boot=3;
+    	boot=2;
     else if(strstr(path,"android") != NULL)
-		boot=4;
+		boot=3;
     else if(strstr(path,"ubuntu") != NULL)
-		boot=5;
+		boot=4;
 
+	//Atmosphere
     if(boot==1)
     {
-		display_backlight_brightness(0, 1000);
 		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
 		sd_save_to_file("Atmosphere", 10, "StarDust/autobootecho.txt");
     }
-
-	if(boot==3)
+	
+	//SxOS
+	if(boot==2)
     {
-		display_backlight_brightness(50, 1000);
-		gfx_swap_buffer(&g_gfx_ctxt);
 		g_gfx_con.scale = 3;
 
 		u32 bootS = sd_file_size("StarDust/boot.dat");
@@ -1421,16 +1421,17 @@ int launcher(char *path){
 		sd_save_to_file("SXOS", 4, "StarDust/autobootecho.txt");
 	}
 
-	if(boot==4)
+	if(boot==3)
     {
 		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
 		sd_save_to_file("TWRP", 4, "StarDust/autobootecho.txt");		
     }
-	if(boot==5)
+	if(boot==4)
     {
 		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
 		sd_save_to_file("Ubuntu", 6, "StarDust/autobootecho.txt");		
     }
+	display_backlight_brightness(10, 1000);
 	launch_payload(path);
 	return 0;
 }
