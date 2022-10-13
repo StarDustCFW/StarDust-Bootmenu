@@ -53,9 +53,11 @@ void ipl_main()
 	display_init();
 	setup_gfx();
 	display_backlight_pwm_init();
-	display_backlight_brightness(10, 1000);
+	display_backlight_brightness(20, 1000);
 
 	/* Train DRAM */
+	//gfx_printf(&g_gfx_con, "> StartDustCFW Kronos2308...\n\n");
+	//gfx_swap_buffer(&g_gfx_ctxt);
 	g_gfx_con.mute = 1; /* Silence minerva, comment for debug */
 	minerva();
 	g_gfx_con.mute = 0;

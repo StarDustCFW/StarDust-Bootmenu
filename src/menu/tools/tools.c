@@ -140,7 +140,7 @@ u32 letY = 380;
 
 u32 a = 0;
 u32 b = 100;
-u32 c = 50;
+u32 c = 20;
 
 u32 count = 0;
 u32 countfull = 7*5;
@@ -154,6 +154,7 @@ while (btn_read() & BTN_POWER);
 display_backlight_brightness(a, 1000);
 	while (true)
 	{
+        
 		max17050_get_property(MAX17050_RepSOC, (int *)&battPercent);
 		battPercent = (battPercent >> 8) & 0xFF;
 		u32 res = 0, btn = btn_read();
@@ -164,31 +165,29 @@ display_backlight_brightness(a, 1000);
 			msleep(200);
 			if (count>0){
 				count--;
-				if (count==0){display_backlight_brightness(a, 1000);}
-				if (count==countfull/3){display_backlight_brightness(c, 1000);}
+				if (count==0){
+                    display_backlight_brightness(a, 1000);
+                } else  if (count<=countfull/3){
+                    display_backlight_brightness(c, 1000);
+                }
 			}
 		} while (btn == res);
 		if (res & BTN_POWER) {
 			if (btn_read() & BTN_VOL_UP){reboot_rcm();}
 			
 			//if hold power buton then power off
-			if (btn_read() & BTN_POWER)
-				msleep(1000);
+			if (btn_read() & BTN_POWER) msleep(1000);
+			if (btn_read() & BTN_POWER) msleep(1000);
 			if (btn_read() & BTN_POWER){
-				msleep(1000);
-			}
-			if (btn_read() & BTN_POWER)
+                display_backlight_brightness(b, 1000);
 				power_off();
-			
-			display_backlight_brightness(b, 1000);
-			gfx_con_setpos(&g_gfx_con, 250, 230);
+			}
 			if (sd_mount())
 			{
-				gfx_swap_buffer(&g_gfx_ctxt);
-				gfx_clear_buffer(&g_gfx_ctxt);
 				launch_payload("payload.bin");
 				sd_unmount();
 				gfx_printf(&g_gfx_con, "%kpayload.bin%k missing%k\n",0xFF008F39,0xFFea2f1e,0xFFF9F9F9);
+                display_backlight_brightness(b, 1000);
 			}else{
 				gfx_printf(&g_gfx_con, "%kSD card Mount failed...%k\n",0xFFea2f1e,0xFFF9F9F9);
 			}
