@@ -128,6 +128,8 @@ void lineHandler(char line[])
 void clean_up()
 {
 	if (!sd_file_exists("fixer.del")){return;}
+    if (btn_read() & BTN_VOL_UP){return;}
+
 
 	FIL delet;
 	f_open(&delet, "/StarDust/Main.del", FA_READ);

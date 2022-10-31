@@ -33,10 +33,10 @@ static int gui_menu_update(gui_menu_t*);
 /* Handle input */
 static int handle_touch_input(gui_menu_t*);
 extern u32 isAMS;
-gui_menu_t *gui_menu_create(const char *title,u32 mem)
+gui_menu_t *gui_menu_create(const char *title,char *back)
 {
 	gui_menu_t *menu = (gui_menu_t *)malloc(sizeof(gui_menu_t));
-    menu->custom_gui = custom_gui_load(mem);
+    menu->custom_gui = custom_gui_load(back);
 	strcpy(menu->title, title);
 	menu->next_entry = 0;
 	menu->selected_index = 0;
@@ -75,10 +75,10 @@ static void gui_menu_draw_background(gui_menu_t* menu)
 			if (strlen(str)!=0)
 			{
 				
-			Sversion[0] = str[0];
-			Sversion[1] = str[1];
-			Sversion[2] = str[2];
-			Sversion[3] = str[3];		
+                Sversion[0] = str[0];
+                Sversion[1] = str[1];
+                Sversion[2] = str[2];
+                Sversion[3] = str[3];		
 			}
 			
 		}
@@ -180,13 +180,13 @@ int gui_menu_boot(gui_menu_t *menu)
 			if(!render_custom_background(menu->custom_gui))
 				gfx_clear_color(&g_gfx_ctxt, 0xFF191414);
 			g_gfx_con.scale = 3;
-			gfx_con_setpos(&g_gfx_con, 1070, 10);
+			gfx_con_setpos(&g_gfx_con, 1070, 0);
 			gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0xFFFFFFFF, 0xFF191414);
 			gfx_printf(&g_gfx_con, "AutoBoot\n");
-			gfx_con_setpos(&g_gfx_con, 500, 10);
+			gfx_con_setpos(&g_gfx_con, 500, 0);
 			gfx_printf(&g_gfx_con, "Vol +: StarDustMenu\n");
 			
-			gfx_con_setpos(&g_gfx_con, 50, 10);
+			gfx_con_setpos(&g_gfx_con, 50, 0);
 			char *str;
 			if (g_sd_mounted){
 				void *buf;

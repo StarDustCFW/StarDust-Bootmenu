@@ -33,12 +33,14 @@ bool sd_mount()
 {
 	if (g_sd_mounted)
 		return true;
-
+    u8 save = g_gfx_con.scale;
+    g_gfx_con.scale = 2;
+	gfx_con_setpos(&g_gfx_con, 1, 100);
 	if (!sdmmc_storage_init_sd(&g_sd_storage, &g_sd_sdmmc, SDMMC_1, SDMMC_BUS_WIDTH_4, 11))
 	{
 		display_backlight_brightness(100, 1000);
-        gfx_printf(&g_gfx_con, "-\n", 0xFFFFDD00, 0xFFCCCCCC);
-        gfx_printf(&g_gfx_con, "%kFallo al montar la SD.\nNo se detecta la SD .\nAsegurese este haciendo buen contacto y este puesta !%k\n", 0xFFFFDD00, 0xFFCCCCCC);
+        //gfx_printf(&g_gfx_con, "-\n", 0xFFFFDD00, 0xFFCCCCCC);
+        gfx_printf(&g_gfx_con, "%kFallo al montar la SD.\nNo se detectar la SD .\nAsegurese este haciendo buen contacto y este puesta !%k\n", 0xFFFFDD00, 0xFFCCCCCC);
 //		msleep(3000);
 	}
 	else
@@ -56,6 +58,7 @@ bool sd_mount()
         gfx_printf(&g_gfx_con, "%kFallo al montar la SD (FatFS Error %d).\nNo se encuentra una partición valida saca la sd\nAsegúrese que este en fat32 y haga buen contacto la sd en el slot %k\n", 0xFFFFDD00, res, 0xFFCCCCCC);
 		}
 	}
+    g_gfx_con.scale = save;
 
 	return false;
 }
@@ -165,26 +168,25 @@ bool sd_file_size(char *path)
 
 void copyfile(const char* source, const char* target)
 {
-        FIL fp;
-        if (f_open(&fp, source, FA_READ) != FR_OK)
-         {
-		gfx_printf(&g_gfx_con, "file %s mising\n",source);
-	    //gfx_swap_buffer(&g_gfx_ctxt);
-		//msleep(3000);
-		 }else{
-
+    FIL fp;
+    if (f_open(&fp, source, FA_READ) != FR_OK)
+    {
+        gfx_printf(&g_gfx_con, "file %s mising\n",source);
+        //gfx_swap_buffer(&g_gfx_ctxt);
+        //msleep(3000);
+	}else{
         u32 size = f_size(&fp);
-	f_close(&fp);
-	sd_save_to_file(sd_file_read(source),size,target);
+        f_close(&fp);
+        sd_save_to_file(sd_file_read(source),size,target);
 	}
 }
 
 void copyfileparam(char* param, char* source, char* target)
 {
 	char* path = (char*)malloc(256);
-			strcpy(path, param);
-			strcat(path, "/");
-			strcat(path, source);
+    strcpy(path, param);
+    strcat(path, "/");
+    strcat(path, source);
 /*		
 		g_gfx_con.scale = 2;
         gfx_con_setpos(&g_gfx_con, 15, 50);
@@ -192,44 +194,43 @@ void copyfileparam(char* param, char* source, char* target)
 		gfx_printf(&g_gfx_con, "copy %s %s\n",path ,target);
 	    gfx_swap_buffer(&g_gfx_ctxt);
 */		
-        FIL fp;
-        if (f_open(&fp, path, FA_READ) != FR_OK)
-         {
+    FIL fp;
+    if (f_open(&fp, path, FA_READ) != FR_OK)
+    {
 		gfx_printf(&g_gfx_con, "file %s mising\n",path);
 	    gfx_swap_buffer(&g_gfx_ctxt);
 		msleep(3000);
-		 }else{
-
+    }else{
         u32 size = f_size(&fp);
-	f_close(&fp);
-	sd_save_to_file(sd_file_read(path),size,target);
+        f_close(&fp);
+        sd_save_to_file(sd_file_read(path),size,target);
 	}
 }
 
 void copy_folder(char* sourse_folder, char* dest_folder)
 {
-if (!sd_file_exists(sourse_folder)) return;
-char* Files = listfil(sourse_folder, "*", true);
+    if (!sd_file_exists(sourse_folder)) return;
+    char* Files = listfil(sourse_folder, "*", true);
     u32 i = 0;
     while(Files[i * 256])
     {
-	char* source_file = (char*)malloc(256);
-			if(strlen(&Files[i * 256]) <= 100){			
-			strcpy(source_file, sourse_folder);
-			strcat(source_file, "/");
-			strcat(source_file, &Files[i * 256]);
-			}
-	char* dest_file = (char*)malloc(256);
-			if(strlen(&Files[i * 256]) <= 100){			
-			strcpy(dest_file, dest_folder);
-			strcat(dest_file, "/");
-			strcat(dest_file, &Files[i * 256]);
-			gfx_con_setpos(&g_gfx_con, 10, 90);
-			gfx_printf(&g_gfx_con, "\ncopy %s to %s\n",source_file,dest_file);
-			gfx_swap_buffer(&g_gfx_ctxt);
-			copyfile(source_file,dest_file);//action
-			}
-	i++;
+        char* source_file = (char*)malloc(256);
+        if(strlen(&Files[i * 256]) <= 100){	
+            strcpy(source_file, sourse_folder);
+            strcat(source_file, "/");
+            strcat(source_file, &Files[i * 256]);
+        }
+        char* dest_file = (char*)malloc(256);
+        if(strlen(&Files[i * 256]) <= 100){		
+            strcpy(dest_file, dest_folder);
+            strcat(dest_file, "/");
+            strcat(dest_file, &Files[i * 256]);
+            gfx_con_setpos(&g_gfx_con, 10, 90);
+            gfx_printf(&g_gfx_con, "\ncopy %s to %s\n",source_file,dest_file);
+            gfx_swap_buffer(&g_gfx_ctxt);
+            copyfile(source_file,dest_file);//action
+        }
+        i++;
     }
 }
 
@@ -411,12 +412,19 @@ bool HasArchBit(const char *directory)
 
 void Killflags(char *directory)
 {
-char* folder = listfol(directory, "*", true);
+	gfx_con_setpos(&g_gfx_con, 1, 10);
+	printerCU(directory,"",2);
+	f_chmod(directory, 0, AM_RDO | AM_ARC);
+    if (strstr(directory, "//") != NULL){
+        return;
+    }
+    
+    char* folder = listfol(directory, "*", true);
     u32 r = 0;
     while(folder[r * 256])
     {
 		char* folderpath = (char*)malloc(256);
-			if((strlen(&folder[r * 256]) <= 100) & (strlen(&folder[r * 256]) > 0))
+			if((strlen(&folder[r * 256]) <= 200) & (strlen(&folder[r * 256]) > 0))
 			{		
 				strcpy(folderpath, directory);
 				strcat(folderpath, "/");
@@ -425,7 +433,4 @@ char* folder = listfol(directory, "*", true);
 			}
 	r++;
     }
-	gfx_con_setpos(&g_gfx_con, 1, 10);
-	printerCU(directory,"",2);
-	f_chmod(directory, 0, AM_RDO | AM_ARC);
 }

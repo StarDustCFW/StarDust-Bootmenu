@@ -15,6 +15,7 @@
  */
 
 #include "menu/gui/custom-gui.h"
+#include "menu/gui/gui_menu.h"
 #include "gfx/gfx.h"
 #include "mem/heap.h"
 #include "menu/tools/fs_utils.h"
@@ -23,33 +24,13 @@
 #include <string.h>
 
 
-custom_gui_t* custom_gui_load(u32 mem)
+custom_gui_t* custom_gui_load(char *back)
 {
     custom_gui_t* custom_gui = (custom_gui_t*)malloc(sizeof(custom_gui_t));
 	//custom backgroun for heach menu
-	switch(mem)
-	{
-		case 1:
-		custom_gui->custom_bg = (u8*)sd_file_read(theme("back-set.bmp"));
-		break;
-		
-		case 2:
-		case 5:
-		custom_gui->custom_bg = (u8*)sd_file_read(theme("back-exp.bmp"));
-		break;
-		
-		case 3:
-		custom_gui->custom_bg = (u8*)sd_file_read(theme("back-mem.bmp"));
-		break;
-		
-		case 4:
-		custom_gui->custom_bg = (u8*)sd_file_read(theme("back-inc.bmp"));
-		break;
-		
-		default:
-		custom_gui->custom_bg = (u8*)sd_file_read(theme("background.bmp"));
-	}
-    custom_gui->title_bmp = (u8*)sd_file_read(CUSTOM_TITLE_PATH);
+	custom_gui->custom_bg = (u8*)sd_file_read(theme(back));
+
+    //custom_gui->title_bmp = (u8*)sd_file_read(CUSTOM_TITLE_PATH);
     return custom_gui;
 }
 
@@ -65,6 +46,7 @@ bool render_custom_background(custom_gui_t* cg)
     if (cg->custom_bg == NULL)
         return false;
     
+    //gfx_render_bmp_arg_bitmap(&g_gfx_ctxt, cg->custom_bg, 0, 0, 1280, 720);
     gfx_render_splash(&g_gfx_ctxt, cg->custom_bg);
     return true;
 }
@@ -131,7 +113,7 @@ SDStrap();
 			char charValue=i+'0';
 			char tmp2[2];
 			tmp2[0]=charValue;
-			tmp2[1]=NULL;
+			tmp2[1]='\0';
 			
 			strcpy(tmp, "\0");
 			strcpy(tmp, "StarDust/screenshot_");

@@ -132,26 +132,26 @@ void SDStrap(){
 
 void BootStrapNX()
 {
-gfx_clear_buffer(&g_gfx_ctxt);
-sd_unmount();
-u32 battPercent = 0;
-u32 letX = 20;
-u32 letY = 380;
+    gfx_clear_buffer(&g_gfx_ctxt);
+    sd_unmount();
+    u32 battPercent = 0;
+    u32 letX = 20;
+    u32 letY = 380;
 
-u32 a = 0;
-u32 b = 100;
-u32 c = 20;
+    u32 a = 0;
+    u32 b = 100;
+    u32 c = 20;
 
-u32 count = 0;
-u32 countfull = 7*5;
+    u32 count = 0;
+    u32 countfull = 7*5;
 
-u32 burntFuses = fusesB();
-char* mindowngrade = fusesM();
-g_gfx_con.mute = 0;
-gfx_swap_buffer(&g_gfx_ctxt);
-gfx_clear_buffer(&g_gfx_ctxt);
-while (btn_read() & BTN_POWER);
-display_backlight_brightness(a, 1000);
+    u32 burntFuses = fusesB();
+    char* mindowngrade = fusesM();
+    g_gfx_con.mute = 0;
+    gfx_swap_buffer(&g_gfx_ctxt);
+    gfx_clear_buffer(&g_gfx_ctxt);
+    while (btn_read() & BTN_POWER);
+    display_backlight_brightness(a, 1000);
 	while (true)
 	{
         

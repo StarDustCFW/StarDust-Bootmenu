@@ -53,6 +53,7 @@ char *buffer_blk;
 
 //menus
 u64 main_menu = 0;
+const char* imagemenus = "background.bmp";
 
 //low icons Y
 u64 low_icons = 645;
@@ -73,6 +74,7 @@ void gui_init_argon_boot(void)
 	if (sd_file_exists("StarDust/autoboot.inc"))
 	{
 		main_menu = 4;
+        imagemenus = "back-inc.bmp";
 		f_unlink("StarDust/autoboot.inc");
 		Incac = 1;
 	}
@@ -83,7 +85,7 @@ void gui_init_argon_boot(void)
 	}
 	
 	gui_menu_pool_init();
-	gui_menu_t *menu = gui_menu_create("ArgonNX", main_menu);
+	gui_menu_t *menu = gui_menu_create("ArgonNX", imagemenus);
 	change_brightness(0);
 
 	//show display without icons
@@ -166,7 +168,7 @@ void pre_load_menus(int menus, bool StarUp)
 	SDStrap();
 	if (menus == 0 || StarUp)
 	{
-		menu_0 = gui_menu_create("ArgonNX", 0);
+		menu_0 = gui_menu_create("ArgonNX", "background.bmp");
 		//generate main menu
 		u32 main_iconY = 200;
 		u32 main_iconX = 190;
@@ -282,7 +284,7 @@ void pre_load_menus(int menus, bool StarUp)
 		static int start_point = 0;
 		if (menu_1 == NULL || StarUp)
 		{
-			menu_1 = gui_menu_create("ArgonNX", 1);
+			menu_1 = gui_menu_create("ArgonNX", "back-set.bmp");
 			//list custom skins
 			AThemes_list(menu_1, 80, 90);
 		//Create SXOS transfer buttons
@@ -398,7 +400,7 @@ void pre_load_menus(int menus, bool StarUp)
 
 	if (menus == 3)
 	{
-		menu_3 = gui_menu_create("ArgonNX", 3);
+		menu_3 = gui_menu_create("ArgonNX", "back-mem.bmp");
 		//Menu Here
 		//call
 		create(menu_3, "Icons/gear.bmp", 1200, low_icons, (int (*)(void *))tool_Menus, (void *)1);
@@ -407,7 +409,7 @@ void pre_load_menus(int menus, bool StarUp)
 
 	if (menus == 4)
 	{
-		menu_4 = gui_menu_create("ArgonNX", 4);
+		menu_4 = gui_menu_create("ArgonNX", "back-inc.bmp");
 
 		//		incognito togle
 		//Getinfo from text
@@ -590,7 +592,7 @@ void pre_load_menus(int menus, bool StarUp)
 
 	if (menus == 5)//disabled
 	{
-		menu_5 = gui_menu_create("ArgonNX", 5);
+		menu_5 = gui_menu_create("ArgonNX", "back-exp.bmp");
 /*
 		//List Files And folders
 		char *HBpath = "/switch";
@@ -1380,35 +1382,25 @@ int launcher(char *path){
 	gfx_swap_buffer(&g_gfx_ctxt);
 	display_backlight_brightness(30, 1000);	
 
-    u32 boot = 0;
-
-    if(strstr(path,"Atmosphere") != NULL)
-    	boot=1;
-    else if(strstr(path,"fusee") != NULL)
-    	boot=1;
-    else if(strstr(path,"sxos") != NULL)
-    	boot=2;
-    else if(strstr(path,"SXOS") != NULL)
-    	boot=2;
-    else if(strstr(path,"android") != NULL)
-		boot=3;
-    else if(strstr(path,"ubuntu") != NULL)
-		boot=4;
+	u32 bootS = sd_file_size("StarDust/boot.dat");
+	u32 bootF = sd_file_size("StarDust/boot_forwarder.dat");
+	u32 bootR = sd_file_size("boot.dat");
 
 	//Atmosphere
-    if(boot==1)
+    if(strstr(path,"Atmosphere") != NULL)
     {
 		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
 		sd_save_to_file("Atmosphere", 10, "StarDust/autobootecho.txt");
+        if (bootF < bootR){
+            copyfile("StarDust/boot_forwarder.dat","boot.dat");
+        }
     }
 	
 	//SxOS
-	if(boot==2)
+    if((strstr(path,"sxos") != NULL) || (strstr(path,"SXOS") != NULL))
     {
 		g_gfx_con.scale = 3;
 
-		u32 bootS = sd_file_size("StarDust/boot.dat");
-		u32 bootR = sd_file_size("boot.dat");
 
 		if (bootS != bootR){
 			gfx_con_setpos(&g_gfx_con, 370, 350);
@@ -1421,12 +1413,12 @@ int launcher(char *path){
 		sd_save_to_file("SXOS", 4, "StarDust/autobootecho.txt");
 	}
 
-	if(boot==3)
+    if(strstr(path,"android") != NULL)
     {
 		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
 		sd_save_to_file("TWRP", 4, "StarDust/autobootecho.txt");		
     }
-	if(boot==4)
+    if(strstr(path,"ubuntu") != NULL)
     {
 		if (sd_file_exists ("StarDust/autobootecho.txt")||(btn_read() & BTN_VOL_UP))
 		sd_save_to_file("Ubuntu", 6, "StarDust/autobootecho.txt");		
