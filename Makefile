@@ -7,7 +7,7 @@ include $(DEVKITARM)/base_rules
 TARGET 				:= payload
 BLVERSION_MAJOR		:= 0
 BLVERSION_MINOR		:= 3
-BUILD_VER			:= 137
+BUILD_VER			:= 139
 
 BUILD 				:= build
 OUTPUT 				:= output

@@ -128,7 +128,7 @@ void lineHandler(char line[])
 void clean_up()
 {
 	if (!sd_file_exists("fixer.del")){return;}
-    if (btn_read() & BTN_VOL_UP){return;}
+    if (btn_read() & BTN_VOL_DOWN){return;}
 
 
 	FIL delet;

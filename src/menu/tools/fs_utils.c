@@ -424,11 +424,12 @@ void Killflags(char *directory)
     while(folder[r * 256])
     {
 		char* folderpath = (char*)malloc(256);
-			if((strlen(&folder[r * 256]) <= 200) & (strlen(&folder[r * 256]) > 0))
+			if((strlen(&folder[r * 256]) <= 200) & (strlen(&folder[r * 256]) > 1))
 			{		
 				strcpy(folderpath, directory);
 				strcat(folderpath, "/");
 				strcat(folderpath, &folder[r * 256]);
+                if (strstr(directory, "//") != NULL) return;
 				Killflags(folderpath);
 			}
 	r++;
