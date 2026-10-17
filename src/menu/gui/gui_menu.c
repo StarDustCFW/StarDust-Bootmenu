@@ -1,19 +1,19 @@
 
-#include "menu/gui/gui_menu.h"
-#include "menu/gui/gui_menu_pool.h"
-#include "menu/tools/touch.h"
+#include "bootloader/menu/gui/gui_menu.h"
+#include "bootloader/menu/gui/gui_menu_pool.h"
+#include "bootloader/menu/tools/touch.h"
 #include "utils/btn.h"
-#include "menu/tools/fs_utils.h"
+#include "bootloader/menu/tools/fs_utils.h"
 #include "utils/util.h"
 #include "gfx/di.h"
 #include "gfx/gfx.h"
 #include "mem/heap.h"
 #include "power/max17050.h"
-#include "menu/gui/custom-gui.h"
+#include "bootloader/menu/gui/custom-gui.h"
 #include <string.h>
 #include "soc/t210.h"
 #include "soc/fuse.h"
-#include "menu/tools/tools.h"
+#include "bootloader/menu/tools/tools.h"
 #include <stdio.h>
 
 #define MINOR_VERSION 3
@@ -57,7 +57,7 @@ void gui_menu_append_entry(gui_menu_t *menu, gui_menu_entry_t *menu_entry)
 static void gui_menu_draw_background(gui_menu_t* menu)
 {
     if(!render_custom_background(menu->custom_gui))
-        gfx_clear_color(&g_gfx_ctxt, 0xFF191414);
+        gfx_clear_color(&gfx_ctxt, 0xFF191414);
     
     /* Render title */
 //    if (!render_custom_title(menu->custom_gui)) 
@@ -110,7 +110,7 @@ static void gui_menu_render_menu(gui_menu_t* menu)
 {
     gui_menu_draw_background(menu);
     gui_menu_draw_entries(menu);
-    gfx_swap_buffer(&g_gfx_ctxt);
+    gfx_swap_buffer();
 }
 
 static void gui_menu_draw_entries(gui_menu_t *menu)
@@ -129,7 +129,7 @@ static int gui_menu_update(gui_menu_t *menu)
 
     res = handle_touch_input(menu);
 
-    gfx_swap_buffer(&g_gfx_ctxt);
+    gfx_swap_buffer();
 
     return res;
 }
@@ -178,7 +178,7 @@ int gui_menu_boot(gui_menu_t *menu)
 		{
 		gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
 			if(!render_custom_background(menu->custom_gui))
-				gfx_clear_color(&g_gfx_ctxt, 0xFF191414);
+				gfx_clear_color(&gfx_ctxt, 0xFF191414);
 			g_gfx_con.scale = 3;
 			gfx_con_setpos(&g_gfx_con, 1070, 0);
 			gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0xFFFFFFFF, 0xFF191414);
@@ -207,7 +207,7 @@ int gui_menu_boot(gui_menu_t *menu)
 			gfx_printf(&g_gfx_con, "-> Ubuntu\n");
 
 			if(strstr(Sversion,"S") != NULL)
-			{gfx_printf(&g_gfx_con, "-> SXOS\n"); isAMS = 0;}
+			{gfx_printf(&g_gfx_con, "-> SXOS\n"); }//isAMS = 0;
 
 			gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
 			return 1;
@@ -300,6 +300,12 @@ void *theme(char *path)
 	memset(buff, 0, total);
 	strcat(buff, root);
 	strcat(buff, them);
+	strcat(buff, path);
+	if (sd_file_exists(buff))
+		return buff;
+	memset(buff, 0, total);
+	strcpy(buff, root);
+	strcat(buff, "skins/Retro/");
 	strcat(buff, path);
 	if (sd_file_exists(buff))
 		return buff;
