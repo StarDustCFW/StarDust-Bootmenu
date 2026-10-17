@@ -36,7 +36,7 @@
 typedef struct _gfx_ctxt_t
 {
 	u32 *fb;
-    u32* next;
+    u32 *next;
 	u32 width;
 	u32 height;
 	u32 stride;
