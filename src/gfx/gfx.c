@@ -130,11 +130,12 @@ static const u8 _gfx_font[] = {
 
 void gfx_init_ctxt(gfx_ctxt_t *ctxt, u32 *fb, u32 width, u32 height, u32 stride)
 {
-    ctxt->fb = fb;
+    //ctxt->fb = fb;
+    ctxt->next = fb;
     ctxt->width = width;
     ctxt->height = height;
     ctxt->stride = stride;
-    ctxt->next = fb + ctxt->width * ctxt->stride * 4;
+    //ctxt->next = fb + ctxt->width * ctxt->stride * 4;
     set_active_framebuffer(fb);
 }
 
@@ -150,12 +151,13 @@ void gfx_clear_buffer(gfx_ctxt_t *ctxt)
     memset(ctxt->next, 0, ctxt->width * ctxt->stride * 4);
 }
 void gfx_swap_buffer(gfx_ctxt_t *ctxt)
-{
+{/*
     u32* tmp = ctxt->fb;
     ctxt->fb = ctxt->next;
     ctxt->next = tmp;
     set_active_framebuffer(ctxt->fb);
     gfx_clear_buffer(ctxt);
+    */
 }
 
 void gfx_clear_grey(gfx_ctxt_t *ctxt, u8 color)
