@@ -16,24 +16,24 @@
  */
 #include "power/max17050.h"
 #include <string.h>
-#include "menu/gui/gui_argon_menu.h"
-#include "menu/gui/gui_menu.h"
-#include "menu/gui/gui_menu_pool.h"
-#include "menu/gui/custom-gui.h"
+#include "bootloader/menu/gui/gui_argon_menu.h"
+#include "bootloader/menu/gui/gui_menu.h"
+#include "bootloader/menu/gui/gui_menu_pool.h"
+#include "bootloader/menu/gui/custom-gui.h"
 #include "gfx/di.h"
 #include "gfx/gfx.h"
 #include <stdio.h>
 #include "utils/types.h"
-#include "menu/tools/fs_utils.h"
+#include "bootloader/menu/tools/fs_utils.h"
 #include "utils/dirlist.h"
 #include "utils/util.h"
-#include "menu/tools/touch.h"
+#include "bootloader/menu/tools/touch.h"
 #include "utils/btn.h"
 #include "core/launcher.h"
-#include "menu/gui/custom-gui.h"
+#include "bootloader/menu/gui/custom-gui.h"
 #include "mem/heap.h"
 #include "minerva/minerva.h"
-#include "menu/tools/tools.h"
+#include "bootloader/menu/tools/tools.h"
 
 #define COLUMNS 4
 #define ROWS 2
@@ -95,7 +95,7 @@ void gui_init_argon_boot(void)
 	}
 			
 
-	if (res > 0){gfx_swap_buffer(&g_gfx_ctxt);}
+	if (res > 0){gfx_swap_buffer();}
 	//corrections on start
 	f_mkdir("StarDust/flags");
 	f_unlink("auto.bak");
@@ -124,7 +124,7 @@ void gui_init_argon_boot(void)
 
 	//waith user input
 	if (sd_file_exists("StarDust/autobootecho.txt") & (Incac == 0))
-		btn_wait_timeout(3000, BTN_VOL_UP);
+		btn_wait_timeout(1000, BTN_VOL_UP);
 
 	bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
 	if (sd_file_exists("StarDust/autobootecho.txt") && (!cancel_auto_chainloading) & (Incac == 0))
@@ -241,7 +241,8 @@ void pre_load_menus(int menus, bool StarUp)
 		main_iconX = main_iconX + main_iconXS;
 		//			}
 
-		create(menu_0, "Icons/SXOS.bmp", main_iconX, main_iconY, (int (*)(void *))launcher, (void *)"/StarDust/payloads/SXOS.bin");
+		//create(menu_0, "Icons/SXOS.bmp", main_iconX, main_iconY, (int (*)(void *))launcher, (void *)"/StarDust/payloads/SXOS.bin");
+        create(menu_0, "Icons/Hekate.bmp", main_iconX, main_iconY, (int (*)(void *))hekateOFW, (void *)0);
 		//
 		create(menu_0, "Icons/Stock.bmp", 540, main_iconY + 100, (int (*)(void *))hekateOFW, (void *)1);
 		if (sd_file_exists("/switchroot/android/coreboot.rom"))
@@ -252,6 +253,7 @@ void pre_load_menus(int menus, bool StarUp)
 		if (sd_file_exists("/switchroot/ubuntu/coreboot.rom"))
 			create(menu_0, "Icons/Ubuntu.bmp", 590, main_iconY + 230, (int (*)(void *))launcher, (void *)"/switchroot/ubuntu/coreboot.rom");
 		//
+/*
 		u64 iconrowY = low_icons-5;
 		u64 iconrowX = 130;
 		u64 iconrowXS = 250;
@@ -264,10 +266,10 @@ void pre_load_menus(int menus, bool StarUp)
 			create(menu_0, "Icons/Incognito.bmp", iconrowX, iconrowY, (int (*)(void *))Incognito, (void *)"1");
 		else
 			create(menu_0, "Icons/Incognito.bmp", iconrowX, iconrowY, (int (*)(void *))tool_Menus, (void *)4);
-
 		iconrowX = iconrowX + iconrowXS;
-		create(menu_0, "Icons/zHekate.bmp", iconrowX, iconrowY, (int (*)(void *))hekateOFW, (void *)0);
+		//create(menu_0, "Icons/zHekate.bmp", iconrowX, iconrowY, (int (*)(void *))hekateOFW, (void *)0);
 		//	gui_menu_append_entry(menu_0,gui_create_menu_entry("",theme("Icons/Incognito.bmp"),iconrowX+700, iconrowY, 200 , 200,(int (*)(void *))tool_Menus, (void*)6));
+*/
 
 		create(menu_0, "Icons/SD.bmp", 10, low_icons, tool_extr_rSD, NULL);
 		//create(menu_0, "Icons/rcm.bmp", 700, low_icons, (int (*)(void *))launcher, (void *)"payload.bin");
@@ -287,15 +289,33 @@ void pre_load_menus(int menus, bool StarUp)
 			menu_1 = gui_menu_create("ArgonNX", "back-set.bmp");
 			//list custom skins
 			AThemes_list(menu_1, 80, 90);
-		//Create SXOS transfer buttons
-			if (sd_file_exists("emuMMC/EF00/eMMC/00") & sd_file_exists("emuMMC/EF00/eMMC/boot0") & sd_file_exists("emuMMC/EF00/eMMC/boot1"))
-				create(menu_1, "Icons/swap.bmp", 380, 600, (int (*)(void *))tool_emu, (void *)66);
+            
+            //incognito icon
+            if (Incac == 0)
+                create(menu_1, "Icons/Incognito.bmp", 400, 600, (int (*)(void *))Incognito, (void *)"1");
+            else
+                create(menu_1, "Icons/Incognito.bmp", 400, 600, (int (*)(void *))tool_Menus, (void *)4);
+            
+            //tegra explorer
+            create(menu_1, "Icons/TegraEX.bmp", 620, 600, (int (*)(void *))launcher, (void *)"/StarDust/payloads/TegraExplorer.bin");
+            
+            //lockpick
+            if (sd_file_exists("/StarDust/payloads/Lockpick_RCM.bin"))
+                create(menu_1, "Icons/Lockpick_RCM.bmp", 840, 600, (int (*)(void *))launcher, (void *)"/StarDust/payloads/Lockpick_RCM.bin");
 
-			if (sd_file_exists("sxos/emunand/full.00.bin") & sd_file_exists("sxos/emunand/boot0.bin") & sd_file_exists("sxos/emunand/boot1.bin"))
-				create(menu_1, "Icons/Transfer.bmp", 380, 600, (int (*)(void *))tool_emu, (void *)33); //- 80, - 500
+            
+            //Create SXOS transfer buttons
+            /*
+                if (sd_file_exists("emuMMC/EF00/eMMC/00") & sd_file_exists("emuMMC/EF00/eMMC/boot0") & sd_file_exists("emuMMC/EF00/eMMC/boot1"))
+                    create(menu_1, "Icons/swap.bmp", 380, 600, (int (*)(void *))tool_emu, (void *)66);
 
-			if (!sd_file_exists("emummc/emummc.ini"))
-				create(menu_1, "Icons/link_hide.bmp", 580, 600, (int (*)(void *))tool_emu, (void *)99);
+                if (sd_file_exists("sxos/emunand/full.00.bin") & sd_file_exists("sxos/emunand/boot0.bin") & sd_file_exists("sxos/emunand/boot1.bin"))
+                    create(menu_1, "Icons/Transfer.bmp", 380, 600, (int (*)(void *))tool_emu, (void *)33); //- 80, - 500
+
+                if (!sd_file_exists("emummc/emummc.ini"))
+                    create(menu_1, "Icons/link_hide.bmp", 580, 600, (int (*)(void *))tool_emu, (void *)99);
+            
+            */
 
 			//call menu 5 create(menu_1, "Icons/HB.bmp", 790, 600, (int (*)(void *))tool_Menus, (void *)5);
 
@@ -320,29 +340,29 @@ void pre_load_menus(int menus, bool StarUp)
 		else
 			create(menu_1, "Icons/Autoff.bmp", 1050, 600, (int (*)(void *))Autoboot, (void *)1);
 
+		/*
+
 		//draw Ulaunch
 		if (sd_file_exists("StarDust/flags/ulaunch.flag"))
 			create(menu_1, "Icons/ulon.bmp", 850, 600, (int (*)(void *))uLaunch, (void *)0);
 		else
 			create(menu_1, "Icons/uloff.bmp", 850, 600, (int (*)(void *))uLaunch, (void *)1);
-		/*
-		*/
 
 		//draw CFW select
 		if (isAMS)
 			create(menu_1, "Icons/serv-ams.bmp", 350, 165, (int (*)(void *))serv_CFW, (void *)0);
 		else
 			create(menu_1, "Icons/serv-sxos.bmp", 350, 165, (int (*)(void *))serv_CFW, (void *)1);
+		*/
 
 		//services
 		//		gui_menu_append_entry(menu_1,gui_create_menu_entry_no_bitmap("Services",servX+30, servY-10, 150, 100, NULL, NULL));
 		servstep = 0;
-		serv_display(menu_1, "420000000000000E", "FTP");
+		serv_display(menu_1, "420000000000000B", "SigPatch");
 		serv_display(menu_1, "420000000007E51A", "TeslaOVL");
+		serv_display(menu_1, "420000000000000E", "FTP");
 		serv_display(menu_1, "010000000000bd00", "MissionCon");
-		serv_display(menu_1, "0100000000000081", "nx-btred");
 		serv_display(menu_1, "690000000000000D", "Sys-Con");
-		serv_display(menu_1, "0100000000000352", "Emuiio");
 		serv_display(menu_1, "4200000000000010", "LanPlay");
 		serv_display(menu_1, "00FF0000A53BB665", "SysDVR");
 		serv_display(menu_1, "0000000000534C56", "ReverseNX");
@@ -350,7 +370,8 @@ void pre_load_menus(int menus, bool StarUp)
 		serv_display(menu_1, "00FF0000636C6BFF", "Sys-Clk");
 		serv_display(menu_1, "430000000000000B", "sys-botbase");
 		serv_display(menu_1, "4200000000000000", "SysTune");
-		serv_display(menu_1, "420000000000000B", "SysPlay");
+		serv_display(menu_1, "0100000000000352", "Emuiio");
+		serv_display(menu_1, "0100000000000081", "nx-btred");
 		//serv_display(menu_1,"0100000000000BEF","Disk-USB");
 		//serv_display(menu_1,"0100000000000069","ReiSpoof");
 		//serv_display(menu_1,"0100000000000FAF","HDI");
@@ -365,14 +386,20 @@ void pre_load_menus(int menus, bool StarUp)
 			create(menu_1, "Icons/sw-on.bmp", temX, temY, (int (*)(void *))tool_Themes_off, (void *)"atmosphere");
 		gui_menu_append_entry(menu_1, gui_create_menu_entry_no_bitmap("AMS", temX + 30, temY + 30, 150, 100, NULL, NULL));
 		temX = temX + temS;
+        
+        //draw Ulaunch
+		if (sd_file_exists("StarDust/flags/ulaunch.flag"))
+			create(menu_1, "Icons/ulon.bmp", temX, temY, (int (*)(void *))uLaunch, (void *)0);
+		else
+			create(menu_1, "Icons/uloff.bmp", temX, temY, (int (*)(void *))uLaunch, (void *)1);
 
+/*
 		if (!sd_file_exists("sxos/titles/0100000000001000/fsmitm.flag"))
 			create(menu_1, "Icons/sw-off.bmp", temX, temY, (int (*)(void *))tool_Themes_on, (void *)"sxos");
 		else
 			create(menu_1, "Icons/sw-on.bmp", temX, temY, (int (*)(void *))tool_Themes_off, (void *)"sxos");
 		gui_menu_append_entry(menu_1, gui_create_menu_entry_no_bitmap("SXOS", temX + 30, temY + 30, 150, 100, NULL, NULL));
 		temX = temX + temS;
-
 		if (isAMS)
 		{
 			if (!sd_file_exists("atmosphere/contents/0100000000001013/exefs.nsp"))
@@ -389,6 +416,7 @@ void pre_load_menus(int menus, bool StarUp)
 		}
 
 		gui_menu_append_entry(menu_1, gui_create_menu_entry_no_bitmap("Profile", temX + 30, temY + 30, 150, 100, NULL, NULL));
+*/
 
 		//Ajustar brillo
 		if (!sd_file_exists("StarDust/flags/b50.flag"))
@@ -791,7 +819,7 @@ int tool_extr_rSD(void *param)
 {
 	SDStrap();
 	gui_menu_pool_cleanup();
-	gfx_swap_buffer(&g_gfx_ctxt);
+	gfx_swap_buffer();
 	change_brightness(0);
 	g_gfx_con.scale = 3;
 	gfx_con_setpos(&g_gfx_con, 160, 100);
@@ -802,7 +830,7 @@ int tool_extr_rSD(void *param)
 	gfx_printf(&g_gfx_con, "You can now extract the SD, When you finish\n");
 	gfx_con_setpos(&g_gfx_con, 230, 630);
 	gfx_printf(&g_gfx_con, "Put the SD and press POWER\n");
-	gfx_swap_buffer(&g_gfx_ctxt);
+	gfx_swap_buffer();
 	btn_wait_timeout(10000, BTN_POWER);
 	display_backlight_brightness(0, 1000);
 	/* Clear all entries and menus */
@@ -1082,6 +1110,8 @@ void tool_Themes_off(char *cfw)
 //safe boot
 int tool_menu_rem(void *param)
 {
+
+    printerCU("", "SafeBoot", 0);
 	SDStrap();
 	change_brightness(1);
 	f_unlink("/atmosphere/contents/0100000000001000/fsmitm.flag");
@@ -1104,6 +1134,8 @@ int tool_menu_rem(void *param)
 			strcpy(source_ams, "/atmosphere/contents/");
 			strcat(source_ams, &folder_ams[r * 256]);
 			strcat(source_ams, "/flags/boot2.flag");
+            printerCU(source_ams, "", 0);
+
 			f_unlink(source_ams);
 		}
 		r++;
@@ -1123,8 +1155,12 @@ int tool_menu_rem(void *param)
 		}
 		e++;
 	}
+    //Sigpatches
+    sd_save_to_file("", 0, "atmosphere/contents/420000000000000B/flags/boot2.flag");
+    
 	sd_save_to_file("", 0, "StarDust/flags/IamSafe.flag");
 	sd_save_to_file("#Safeboot flag", 13, "fixer.del");
+    printerCU("", "", 1);
 	launcher("payload.bin");
 	return 0;
 }
@@ -1379,7 +1415,7 @@ void hekateOFW(u32 tipo) {
 
 int launcher(char *path){
 	SDStrap();
-	gfx_swap_buffer(&g_gfx_ctxt);
+	gfx_swap_buffer();
 	display_backlight_brightness(30, 1000);	
 
 	u32 bootS = sd_file_size("StarDust/boot.dat");
@@ -1405,7 +1441,7 @@ int launcher(char *path){
 		if (bootS != bootR){
 			gfx_con_setpos(&g_gfx_con, 370, 350);
 			gfx_printf(&g_gfx_con, "Loading Boot.dat\n",bootS,bootR);
-			gfx_swap_buffer(&g_gfx_ctxt);
+			gfx_swap_buffer();
 			copyfile("StarDust/boot.dat","boot.dat");
 		}
 			
